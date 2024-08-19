@@ -1,0 +1,428 @@
+---
+layout: remark
+title: Distributions
+subtitle: Statistics I — Data Exploration
+author: Deepayan Sarkar
+mathjax: true
+---
+
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/de-distribution/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+			   ## engine.path = list(python = "/usr/bin/python3"),
+               fig.width = 12, fig.height = 5,
+               dev = "svglite", dev.args = list(pointsize = 12),
+               knitr.table.format = "html",
+			   fig.path='figures/distribution-')
+options(warnPartialMatchDollar = FALSE, width = 80)
+suppressWarnings(require(dplyr))
+```
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+
+# Goals
+
+* Some preliminary concepts
+
+	* Visualization
+
+	* Probability distributions
+
+	* Data Frame (R equivalent of a spreadsheet)
+
+---
+
+layout: true
+
+# Probability distribution 
+
+---
+
+* Example: _Number of distinct birthdays_ in a group of $n$ people
+
+* This is different from the earlier problem (probability of all distinct)
+
+--
+
+* One way to simulate:
+
+```{r}
+distinct_birthdays <- function(n) {
+    sample(1:365, n, replace = TRUE) |> unique() |> length()
+}
+```
+
+* The `|>` notation represents a "pipe" operator
+
+* This is equivalent to 
+
+```r
+distinct_birthdays <- function(n) {
+    length(unique(sample(1:365, n, replace = TRUE)))
+}
+```
+
+---
+
+* This is a 'random' quantity — depends on the sample drawn
+
+--
+
+* We can repeat the simulation experiment and obtain 'data'
+
+```{r}
+d <- replicate(25, distinct_birthdays(23))
+d # each element represents result of one simulation
+```
+
+--
+
+* How can we plot this data? 
+
+* Do we even want to?
+
+---
+
+layout: true
+
+# The `plot()` function
+
+---
+
+```{r}
+plot(d) # not very useful in this case
+```
+
+---
+
+```{r}
+plot(sort(d), pch = 16) # sorting makes it slightly more useful 
+```
+
+---
+
+layout: true
+
+# The `stripchart()` function
+
+---
+
+```{r}
+stripchart(d) # also mostly useless
+```
+
+---
+
+```{r}
+stripchart(d, method = "jitter") # but stripchart() has some useful options
+```
+
+---
+
+```{r}
+stripchart(d, method = "stack") # more useful: the "stack" method
+```
+
+---
+
+* Let's try with a larger $n$ and more replications
+
+```{r}
+d50 <- replicate(100, distinct_birthdays(50))
+d50
+```
+
+---
+
+```{r}
+stripchart(d50, method = "stack", pch = 16)
+```
+
+---
+
+layout: true
+
+# Tables: `barplot()` and `dotchart()`
+
+---
+
+* By stacking, we are basically counting the "frequency" of each value
+
+--
+
+* This can be done directly using the `table()` function
+
+```{r}
+table(d50)
+```
+
+---
+
+* We are actually interested in just the proportion
+
+```{r}
+table(d50) |> prop.table()
+```
+
+* Tables can be plotted using "bar charts" and "dot plots"
+
+---
+
+```{r}
+table(d50) |> prop.table() |> barplot()
+```
+
+---
+
+```{r, warning = FALSE}
+table(d50) |> prop.table() |> dotchart(pch = 16)
+```
+
+---
+
+layout: true
+
+# Alternative functions: `barchart()` and `dotplot()`
+
+---
+
+* Did you notice that the names are switched around?
+
+--
+
+* R comes with an add-on package called `lattice` which has alternative implementations
+
+* To use it, you need to "load" the `lattice` package
+
+```{r}
+library(package = "lattice")
+```
+
+---
+
+```{r}
+table(d50) |> prop.table() |>
+    barchart()
+```
+
+---
+
+```{r}
+table(d50) |> prop.table() |>
+    barchart(horizontal = FALSE)
+```
+
+---
+
+```{r}
+replicate(100, distinct_birthdays(50)) |> table() |> prop.table() |>
+    barchart(horizontal = FALSE) # another simulation
+```
+
+---
+
+```{r}
+replicate(100000, distinct_birthdays(50)) |> table() |> prop.table() |>
+    barchart(horizontal = FALSE) # increase replications
+```
+
+---
+
+```{r}
+replicate(100000, distinct_birthdays(60)) |> table() |> prop.table() |>
+    barchart(horizontal = FALSE) # n = 60
+```
+
+---
+
+```{r}
+replicate(100000, distinct_birthdays(70)) |> table() |> prop.table() |>
+    barchart(horizontal = FALSE) # n = 70
+```
+
+---
+
+```{r}
+replicate(100000, distinct_birthdays(80)) |> table() |> prop.table() |>
+    barchart(horizontal = FALSE) # n = 80
+```
+
+---
+
+```{r}
+replicate(100000, distinct_birthdays(80)) |> table() |> prop.table() |>
+    dotplot(horizontal = FALSE) # n = 70
+```
+
+---
+
+layout: true
+
+# Distribution
+
+---
+
+* What we are really trying to visualize is a "probability distribution"
+
+--
+
+* Let $X$ be the number of distinct birthdays in a group of 80 people
+
+	* What is $P(X = 80)$ ?
+
+--
+
+	* What is $P(X = 79)$ ?
+
+	* What is $P(X = 78)$ ?
+
+--
+
+	* What is the most likely value of $X$ ?
+
+	* What is the expected value of $X$ ?
+
+--
+
+* In this case, true answer is difficult to calculate
+
+* Simulation will give us answers that will be close (by "law of large numbers")
+
+
+---
+
+layout: true
+
+# The Binomial distribution
+
+---
+
+* An important distribution: number of successes in $n$ independent trials (e.g., coin tosses)
+
+* The probabily of success in one trial is $p$ (which is known, but not necessarily $\frac12$)
+
+--
+
+* We can simulate exactly as before
+
+```{r}
+n <- 80
+sample(c(0, 1), size = n, replace = TRUE)
+sample(c(0, 1), size = n, replace = TRUE) |> sum()
+```
+
+---
+
+```{r}
+replicate(100000, sum(sample(c(0, 1), size = 80, replace = TRUE))) |>
+    table()
+```
+
+---
+
+```{r}
+replicate(100000, sum(sample(c(0, 1), size = 80, replace = TRUE))) |>
+    table() |> prop.table()
+```
+
+---
+
+```{r}
+replicate(100000, sum(sample(c(0, 1), size = 80, replace = TRUE))) |> 
+    table() |> prop.table() |> barchart(horizontal = FALSE)
+```
+
+---
+
+```{r}
+replicate(100000, sum(sample(c(0, 1), size = 80, replace = TRUE, prob = c(0.1, 0.9)))) |> 
+    table() |> prop.table() |> barchart(horizontal = FALSE)
+```
+
+---
+
+* In this example, the exact probabilities are actually easy to calculate
+
+* Let $X$ be the number of successes in $n$ independent trials with probabily of success $p$. Then, 
+
+$$
+P(X = k) = { n \choose k } \, p^k \, (1-p)^{n - k}\,, \, k = 0, 1, 2, \dotsc, n
+$$
+
+---
+
+* To compare, we need both simulation probabilities and exact probabilities
+
+* This is where data frames become useful
+
+--
+
+* Data frames are like a spreadsheet, containing multiple columns
+
+* Every column must have a name, and must have the same length
+
+---
+
+* Example: Proportions observed in simulation
+
+```{r}
+X <- replicate(100000, sum(sample(c(0, 1), size = 80, replace = TRUE, prob = c(0.1, 0.9))))
+T <- prop.table(table(X))
+```
+
+--
+
+```{r}
+T
+str(T)
+```
+
+
+---
+
+.scrollable500[
+
+```{r}
+df <- data.frame(k = as.integer(names(T)), proportion = as.numeric(T))
+df
+```
+
+]
+
+---
+
+.scrollable500[
+
+```{r}
+df$probability <- with(df, choose(80, k) * 0.9^k * 0.1^(80-k))
+df
+```
+
+]
+
+---
+
+```{r}
+with(df, plot(k, proportion, pch = 16))
+with(df, lines(k, probability, col = "blue"))
+```
+
+---
+
+layout: false
+class: center, middle
+
+# Questions?
+
+
+
+
+

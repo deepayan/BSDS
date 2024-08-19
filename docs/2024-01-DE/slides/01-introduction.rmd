@@ -8,7 +8,7 @@ mathjax: true
 
 
 ```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
-opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/lgp-intro/', autodep = TRUE,
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/de-intro/', autodep = TRUE,
                comment = "", warning = TRUE, message = TRUE,
 			   ## engine.path = list(python = "/usr/bin/python3"),
                fig.width = 12, fig.height = 7,
@@ -816,7 +816,7 @@ layout: false
 
 * Main features: Vectorized arithmetic, functions
 
-* I have omitted many details, which we can clarify in the tutorials
+* Many omitted details, which we can clarify as we go along
 
 --
 
