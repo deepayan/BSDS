@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Data Collection and Summarization</title>
+    <link rel='stylesheet' href='assets/remark.css'>
+  </head>
+  <body>
+    <textarea id='source'>
+
+class: center, middle
+
+# Data Collection and Summarization
+
+## Statistics I — Data Exploration
+
+### Deepayan Sarkar
+
+<h1 onclick='document.documentElement.requestFullscreen();' style='cursor: pointer;'>
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrows-fullscreen' viewBox='0 0 16 16'>
+  <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'/>
+</svg>
+</h1>
+
+---
+
+
+
+
+
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\set}[1]{\left\lbrace {#1} \right\rbrace}
+\newcommand{\nseq}[1]{{#1}\sub{1}, {#1}\sub{2}, \dotsc, {#1}\sub{n}}
+$$
+</div>
+
+
+# Goals
+
+* Where do data come from?
+
+* Can we classify datasets by how they were collected?
+
+* How can we summarize data numerically or graphically?
+
+---
+
+layout: true
+
+# Sources of data
+
+---
+
+* Traditional data types
+
+	* Categorical - nominal / ordered
+
+	* Numeric - discrete / continuous
+
+--
+
+* Data "modes" that more difficult to analyse (but are of increasing interest)
+
+	* Free text
+	
+	* Images
+	
+	* Sound
+	
+	* Many others
+	
+--
+
+* But how are such data typically collected?
+
+---
+
+* Key methodologies
+
+	* Census
+	
+	* Sample survey
+	
+	* Observational studies / Case-control studies
+	
+	* Randomized studies / Randomized controlled trials
+
+
+* Key concepts
+
+	* Observational units
+
+	* Population
+	
+	* Sample
+	
+---
+
+layout: true
+
+# Some scenarios
+
+---
+
+* We will consider some specific scenarios along with a question of interest
+
+* In each case, we want to plan a data collection experiment that will answer the question 
+
+---
+
+* What is the leading cause of death for adults in India?
+
+	* Does it vary by sex?
+	
+	* Does it vary by state? By district?
+	
+	* Does it vary by education level? By income?
+	
+	* Do the answers change over time?
+	
+--
+
+* What is the target population?
+
+* Can we do a census?
+
+* Can we do a survey?
+
+* How should we sample?
+
+* What are the observational units?
+
+* Observational or randomized? Controls?
+
+---
+
+* How much money does a typical adult in India make?
+
+	* Does it vary by sex?
+	
+	* Does it vary by state? By district?
+	
+	* Does it vary by education level? By employment status?
+	
+	* Do the answers change over time?
+	
+--
+
+* What is the target population?
+
+* Can we do a census?
+
+* Can we do a survey?
+
+* How should we sample?
+
+* What are the observational units?
+
+* Observational or randomized? Controls?
+
+---
+
+* Consider a "random" person who will be born in India in 2025
+
+* How likely is it that they will be born on January 1? January 2? ... December 31?
+
+--
+
+* What is the target population?
+
+* Can we do a census?
+
+* Can we do a survey?
+
+* How should we sample?
+
+* What are the observational units?
+
+* Observational or randomized? Controls?
+
+--
+
+* Here is a [relevant dataset](https://www.ons.gov.uk/visualisations/nesscontent/dvc307/line_chart/data.csv)  (CSV) from [England and Wales](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/livebirths/articles/howpopularisyourbirthday/2015-12-18)
+
+* Can we use this data to answer the same question for England and Wales?
+
+--
+
+* Similar but more important question: Predict the __air quality__ in Delhi from October to December?
+
+---
+
+* A medicine factory produces tablets that are supposed to have a certain chemical composition
+
+	* A regulator wants to check whether the actual composition is within acceptable limits
+
+	* However, the only way to test a tablet is "destructive", i.e., the tablet cannot be used afterward
+
+--
+
+* What is the target population?
+
+* Can we do a census?
+
+* Can we do a survey?
+
+* How should we sample?
+
+* What are the observational units?
+
+* Observational or randomized? Controls?
+
+---
+
+* A new yearly injection can potentially delay the onset of diabetes
+
+	* However, both the amount of benefit and the possible side effects are currently unknown
+
+	* We want to plan an experiment to study both
+
+--
+
+* What is the target population?
+
+* Can we do a census?
+
+* Can we do a survey?
+
+* How should we sample?
+
+* What are the observational units?
+
+* Observational or randomized? Controls?
+
+---
+
+* Your friend loves a particular type of pizza from Dominos
+
+* He also claims he can differentiate between the pizzas from two different outlets in your neighbourhood
+
+* You want to test whether this claim is true
+
+--
+
+* What is the target population?
+
+* Can we do a census?
+
+* Can we do a survey?
+
+* How should we sample?
+
+* What are the observational units?
+
+* Observational or randomized? Controls?
+
+---
+
+* What is the GDP of India? What is the average life expectancy in India?
+
+* How do they compare with other contries?
+
+* How have they changed over time?
+
+--
+
+* How do we measure?
+
+* More basic question: how are they defined?
+
+--
+
+* These are by definition __summary__ measures
+
+* Example: [TSV data](https://deepayan.github.io/BSDS/2024-01-DE/data/gapminder.tsv) and [visualization](https://www.gapminder.org/tools/) from GapMinder
+
+* The actual process to calculate these from unit-level data is probably quite complicated
+
+
+---
+
+layout: true
+
+# What do we actually do with data?
+
+---
+
+* The process of data analysis is often involves just calculating various summary measures
+
+--
+
+* In fact, the technical name for a summary measure computed from data is a __statistic__
+
+* In this course, we will mostly learn about commonly used summary statistics
+
+--
+
+* But also important to remember that summary statistics are usually computed from _samples_
+
+* We need to be careful when we use them to make conclusions about a larger _population_
+
+---
+
+* Example: Are birthdays equally likely? 
+
+* Let $X$ be the smallest birth month frequency in a 'random sample' of $n = 65$ people
+
+* We take one sample, where we observe $X = 3$. What can we conclude?
+
+--
+
+
+```r
+min_count <- function(n, pmonths = NULL)
+{
+    b <- sample(1:12, n, prob = pmonths, replace = TRUE)
+    T <- table(b)
+    if (length(T) < 12) {
+        return(0)
+    }
+    else {
+        return(min(T))
+    }
+}
+```
+
+---
+
+
+```r
+replicate(10000, min_count(65)) |>
+    table() |> prop.table() |> barplot()
+```
+
+![plot of chunk unnamed-chunk-2](figures/data-summary-unnamed-chunk-2-1.svg)
+
+
+---
+
+
+```r
+replicate(10000, min_count(65, pmonths = c(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31) / 365)) |>
+    table() |> prop.table() |> barplot()
+```
+
+![plot of chunk unnamed-chunk-3](figures/data-summary-unnamed-chunk-3-1.svg)
+
+---
+
+* Example: Are birthdays equally likely? 
+
+* Let $X$ be the smallest birth month frequency in a 'random sample' of $n = 65$ people
+
+* We take one sample, where we observe $X = 3$. What can we conclude?
+
+--
+
+* We __cannot__ conclude that birthdays are _not_ equally likely
+
+---
+
+layout: true
+
+# What statistics are useful?
+
+---
+
+* This is a natural and important question
+
+* The answer depends on the type of data and the problem of interest
+
+---
+
+* How can we summarize categorical variables such as _cause of death_?
+
+--
+
+	* We usually want to find the probabilities of various categories
+
+	* Natural summary statistic is sample proportion
+	
+	* The 'most likely' category is known as the __mode__
+
+---
+
+* How can we summarize numeric variables such as _income_?
+
+	* This is much more difficult to answer
+	
+	* Common summary statistics: __mean__ and __median__
+	
+	* But these capture only limited aspects of the distribution
+	
+--
+
+* We will learn about mean, median and similar summary statistics
+
+* But first we will learn about the _empirical distribution_
+
+
+---
+
+layout: true
+
+# Empirical distribution
+
+---
+
+* Suppose we have observed values $\nseq{X}$ of some variable
+
+* Assume that the values of $\nseq{X}$ are all _distinct_
+
+* The empirical distribution is a probability distribution whose
+
+	* Sample space is the set $\set{ \nseq{X} }$
+	
+	* All elements in the sample space are equally likely (has probability $1/n$)
+	
+--
+
+* This is adjusted suitably if values are not distinct
+
+	* The sample space consists of all distinct values
+
+	* If the $i$th value appears $k\sub{i}$ times, the corresponding probability if $k\sub{i} / n$
+
+---
+
+* The empirical distribution contains all information in the data...
+
+	* as long as the observations are "independent" (a 'random sample')
+	
+* As it is a probability distribution, we can apply the tools we have to study distributions
+
+--
+
+* Why is the empirical distribution important?
+
+	* We have seen that sample proportions 'converge' to probabilities as sample size $n$ increases
+
+	* More generally, the empirical distribution also 'converges' to the population distribution
+
+--
+	
+	* This is one of the _main justifications_ for using observed data to 'infer' about underlying population
+
+--
+
+	* This convergence is mathematically more complicated (which will not be discussed in this course)
+	
+	* However, understanding this convergence graphically is important 
+
+---
+
+layout: true
+
+# Visualizing the empirical distribution
+
+---
+
+* Visualizing the empirical distribution is important but challenging
+
+--
+
+* Let us consider the height data we collected in our survey
+
+
+```r
+survey <- read.csv("https://deepayan.github.io/BSDS/2024-01-DE/data/bsds-survey.csv")
+height <- survey$height
+height
+```
+
+```
+ [1] 160.000 181.000 155.000 167.000 185.000 173.000 176.000 173.000 175.000
+[10] 183.000 178.000 175.000 165.000 190.000 175.000 168.000 164.000 182.000
+[19] 168.000 168.000 180.000 170.000 172.000 180.000 180.000 130.000 166.000
+[28] 176.000 175.000 175.000 169.500 170.000 152.400 169.000 180.000 168.000
+[37] 192.024 163.000 162.000 175.000 176.000 169.000 175.000 165.000 182.000
+[46] 157.000 170.000 173.000 172.000 178.000 178.000 176.000 178.000 167.640
+[55] 162.000 182.000 165.000 175.000 186.000 178.000 178.000 172.000 167.640
+[64] 159.000 159.000
+```
+
+* How do we visualize it?
+
+---
+
+
+```r
+stripchart(height, method = "stack")
+```
+
+![plot of chunk unnamed-chunk-5](figures/data-summary-unnamed-chunk-5-1.svg)
+
+---
+
+* For comparison, let us simulate data uniformly between 150 and 200
+
+
+```r
+n <- length(height)
+u <- sample(150:195, n, replace = TRUE)
+stripchart(list(unif = u, obs = height), method = "stack")
+```
+
+![plot of chunk unnamed-chunk-6](figures/data-summary-unnamed-chunk-6-1.svg)
+
+---
+
+* Are the two samples similar or very different? Not very easy to say
+
+--
+
+* Another possible way to compare
+
+
+```r
+par(mfrow = c(1, 2)); plot(u, ylim = c(150, 195)); plot(height, ylim = c(150, 195))
+```
+
+![plot of chunk unnamed-chunk-7](figures/data-summary-unnamed-chunk-7-1.svg)
+
+---
+
+* There seems to be some qualitative difference
+
+* This difference becomes clearer if we plot _sorted_ data
+
+
+```r
+par(mfrow = c(1, 2)); plot(sort(u), ylim = c(150, 195)); plot(sort(height), ylim = c(150, 195))
+```
+
+![plot of chunk unnamed-chunk-8](figures/data-summary-unnamed-chunk-8-1.svg)
+
+---
+
+* It is more traditional to swap the axes and convert the y-axis to a probability scale
+
+
+```r
+par(mfrow = c(1, 2)); plot(sort(u), ppoints(n), xlim = c(150, 195));
+                      plot(sort(height), ppoints(n), xlim = c(150, 195))
+```
+
+![plot of chunk unnamed-chunk-9](figures/data-summary-unnamed-chunk-9-1.svg)
+
+---
+
+* This is equivalent to the _empirical cumulative distribution function_ (ECDF)
+
+
+```r
+par(mfrow = c(1, 2)); plot(ecdf(u), xlim = c(150, 195));
+                      plot(ecdf(height), xlim = c(150, 195))
+```
+
+![plot of chunk unnamed-chunk-10](figures/data-summary-unnamed-chunk-10-1.svg)
+
+---
+
+layout: true
+
+# The empirical cumulative distribution function (ECDF)
+
+---
+
+* Height data from a different source (the NHANES survey)
+
+
+```r
+library(NHANES)
+dim(NHANES)
+```
+
+```
+[1] 10000    76
+```
+
+```r
+nhsub1 <- subset(NHANES, !is.na(Height)) # remove missing height values
+n1 <- nrow(nhsub1)
+n1
+```
+
+```
+[1] 9647
+```
+
+---
+
+* ECDF of height of a random sample of Americans
+
+
+```r
+plot(sort(nhsub1$Height), ppoints(n1), type = "l")
+```
+
+![plot of chunk unnamed-chunk-12](figures/data-summary-unnamed-chunk-12-1.svg)
+
+---
+
+* Low heights are from children
+
+* We are interested in the height distribution among adults
+
+
+```r
+nhsub2 <- subset(nhsub1, Age >= 20) # remove children
+n2 <- nrow(nhsub2)
+n2
+```
+
+```
+[1] 7182
+```
+
+---
+
+* ECDF of height of a random sample of American adults
+
+
+```r
+plot(sort(nhsub2$Height), ppoints(n2), type = "l")
+```
+
+![plot of chunk unnamed-chunk-14](figures/data-summary-unnamed-chunk-14-1.svg)
+
+---
+
+* ECDF of the magic distribution: Normal
+
+
+```r
+plot(sort(rnorm(n2)), ppoints(n2), type = "l")
+```
+
+![plot of chunk unnamed-chunk-15](figures/data-summary-unnamed-chunk-15-1.svg)
+
+---
+
+<!-- layout: true -->
+
+<!-- # Quantile-Quantile plots -->
+
+<!-- --- -->
+
+
+<!-- * Useful alternative -->
+
+
+<!-- --- -->
+
+
+layout: false
+class: center, middle
+
+# Questions?
+
+
+
+
+
+
+
+
+    </textarea>
+  </body>
+
+  <script 
+	  src='assets/remark-latest.min.js'
+	  type='text/javascript'></script>
+
+  <script type='text/javascript'>
+    var slideshow = remark.create(
+	{
+	    navigation: {scroll: false,},
+	    ratio: '16:9',
+	    // ratio: '4:3',
+	    countIncrementalSlides: false
+	});
+    
+    // Setup MathJax; unused if mathjax == false
+    MathJax = {
+	tex: {
+	    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+	    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ]
+	},
+	svg: {
+	    fontCache: 'global'
+	},
+    };
+
+  </script>
+
+  <script type='text/javascript' async
+	  src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'>
+  </script>
+
+</html>
+
