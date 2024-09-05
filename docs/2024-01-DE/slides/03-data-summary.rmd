@@ -485,7 +485,7 @@ stripchart(list(unif = u, obs = height), method = "stack")
 * Another possible way to compare
 
 ```{r}
-par(mfrow = c(1, 2)); plot(u, ylim = c(150, 195)); plot(height, ylim = c(150, 195))
+par(mfrow = c(1, 2)); plot(u,       ylim = c(150, 195)); plot(height,       ylim = c(150, 195))
 ```
 
 ---
@@ -572,17 +572,181 @@ plot(sort(rnorm(n2)), ppoints(n2), type = "l")
 
 ---
 
-<!-- layout: true -->
+layout: true
 
-<!-- # Quantile-Quantile plots -->
+# Quantile-Quantile plots
 
-<!-- --- -->
+---
+
+* These ECDF plots essentially show sorted data vs equally spaced probabilities
+
+--
+
+* Useful alternative: plot sorted data against sorted data from the 'Normal distribution'
+
+```{r}
+par(mfrow = c(1, 2)); plot(sort(rnorm(n2)), sort(nhsub2$Height))
+```
+
+---
+
+* How do we get data from the 'Normal distribution'? Simulate using `rnorm()`
+
+* Problem: Every time we simulate, we will get a slightly different plot
+
+```{r}
+par(mfrow = c(1, 2)); plot(sort(rnorm(n2)), sort(nhsub2$Height));
+```
+
+---
+
+* Solution: Instead of simulating, use something called 'theoretical quantiles' of the Normal distribution
+
+* The result is known as a _Normal Quantile-Quantile Plot_ or simply _Normal Q-Q plot_
+
+```{r}
+par(mfrow = c(1, 2)); plot(sort(rnorm(n2)), sort(nhsub2$Height)); qqnorm(nhsub2$Height)
+```
+
+---
+
+* As before, the lattice package has a different implementation that is more powerful
+
+```{r}
+qqmath(~ Height, data = nhsub2, grid = TRUE, aspect = 1, groups = Gender, auto.key = TRUE)
+```
+
+---
+
+layout: true
+
+# Questions
+
+---
+
+* This raises several important questions:
+
+	* What is the Normal distribution and why should we compare with it?
+
+	* What are quantiles?
+
+	* What are theoretical quantiles?
+
+	* What can Q-Q plots tell us?
+	
+--
+
+* The first two questions will be discussed in your probability course
+
+* We will give very vague answers for now
+
+---
+
+* What is the Normal distribution
+
+	* The Normal distribution is a very simple _continuous_ distribution
+	
+	* It is best for now to think of it as an _approximation_ to various distributions that we observe in real life
+
+	* We will see examples of this soon
+
+---
+
+* What are quantiles?
+
+	* In Q-Q plots we plot sorted data
+	
+	* Sorted data have a special name in statistics: _order statistics_
+	
+--
+
+	* Specifically, the $k$-th value of $X\sub{i}$ in sorted order is known as the $k$-th order statistic
+	
+	* The standard notation for the $k$-th order statistic is $X\sub{(k)}$
+
+--
+
+	* Roughly speaking, quantiles are order statistics, but identified by their _relative rank_ (like percentiles)
+	
+---
+
+* Examples of quantiles:
+
+	* The $90$-th percentile is the same as the $0.9$ quantile
+	
+	* This is defined as the number $Q$ such that 90% of the data is less than (or equal to) $Q$
+	
+	* In a sample of size $n = 100$, this would be $X\sub{(90)}$
+
+	* In a sample of size $n = 1000$, this would be $X\sub{(900)}$
+
+--
+
+	* In a sample of size $n = 7182$, this would be ?? 
+
+--
+
+```{r}
+0.9 * 7182
+```
+
+---
+	
+* Several approximations available; see `help(quantile)`
+	
+```{r}
+with(subset(nhsub2, Gender == "male"), quantile(Height, prob = c(0.2, 0.4, 0.6, 0.8)))
+with(subset(nhsub2, Gender == "female"), quantile(Height, prob = c(0.2, 0.4, 0.6, 0.8)))
+```
+
+---
+
+* What are theoretical quantiles?
+
+	* Similar idea, but with probability instead of relative rank
+	
+	* $p$-th quantile is the number $Q$ such that $P(X \leq Q) = p$
+	
+	* Needs to be modified suitably to account for discrete jumps
+	
+--
+
+* R has _quantile functions_ for all standard distributions
+
+```{r}
+qbinom(c(0.2, 0.4, 0.6, 0.8), size = 20, prob = 0.25)
+qbinom(c(0.2, 0.4, 0.6, 0.8), size = 200, prob = 0.25)
+qnorm(c(0.2, 0.4, 0.6, 0.8))
+```
+
+---
+
+* Why are Q-Q plots useful?
+
+	* Sample quantiles converge to theoretical quantiles of underlying population
+	
+	* Q-Q plots compare order statistics with corresponding theoretical quantiles 
+
+--
+
+* Why not ECDF?
+
+	* This has to do with _human perception_
+	
+	* We find it easier to detect departures from a straight line (as opposed to a curve)
+
+--
+	
+	* In principle, the theoretical quantiles can be from any appropriate distribution
+
+	* The Normal distribution has been found to be the most useful default choice
+
+---
 
 
-<!-- * Useful alternative -->
 
 
-<!-- --- -->
+---
 
 
 layout: false
