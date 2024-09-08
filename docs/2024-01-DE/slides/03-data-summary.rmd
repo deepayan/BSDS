@@ -1335,6 +1335,32 @@ c(histogram(~ rnorm(5000)), histogram(~ rnorm(5000)), histogram(~ rnorm(5000))) 
     update(grid = TRUE, aspect = 1)
 ```
 
+
+---
+
+layout: true
+
+# Histograms for NHANES data
+
+---
+
+```{r}
+histogram(~ Height | Race1 + Gender, NHANES, subset = Age >= 20)
+```
+
+---
+
+```{r}
+histogram(~ Weight | Race1 + Gender, NHANES, subset = Age >= 20)
+```
+
+---
+
+```{r}
+histogram(~ Weight^(1/3) | Race1 + Gender, NHANES, subset = Age >= 20)
+```
+
+
 ---
 
 layout: false
