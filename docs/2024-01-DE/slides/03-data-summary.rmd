@@ -695,8 +695,8 @@ layout: true
 * Several approximations available; see `help(quantile)`
 	
 ```{r}
-with(subset(nhsub2, Gender == "male"), quantile(Height, prob = c(0.2, 0.4, 0.6, 0.8)))
-with(subset(nhsub2, Gender == "female"), quantile(Height, prob = c(0.2, 0.4, 0.6, 0.8)))
+with(subset(nhsub2, Gender == "male"), quantile(Height, probs = c(0.2, 0.4, 0.6, 0.8)))
+with(subset(nhsub2, Gender == "female"), quantile(Height, probs = c(0.2, 0.4, 0.6, 0.8)))
 ```
 
 ---
@@ -743,11 +743,625 @@ qnorm(c(0.2, 0.4, 0.6, 0.8))
 
 ---
 
+* Two final points before moving on from Q-Q plots
 
+	* In what sense do sample quantiles converge to population quantiles?
+	
+	* Why is the Normal distribution a useful reference for Q-Q plots?
+
+* We will illustrate both these through simulation
+
+* Theoretical answers will be discussed later in other courses
+
+---
+
+layout: true
+
+# Convergence of sample quantiles
+
+---
+
+* Suppose data are generated from the Normal distribution
+
+* Ideally, Q-Q plot should look like a straight line
+
+* However, this will rarely happen for small sample sizes
+
+---
+
+```{r}
+library(latticeExtra)
+c(qqmath(~ rnorm(  10)), qqmath(~ rnorm(  10)), qqmath(~ rnorm(  10))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+c(qqmath(~ rnorm(  50)), qqmath(~ rnorm(  50)), qqmath(~ rnorm(  50))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+c(qqmath(~ rnorm( 100)), qqmath(~ rnorm( 100)), qqmath(~ rnorm( 100))) |>
+    update(grid = TRUE, aspect = 1)
+```
 
 
 ---
 
+```{r}
+c(qqmath(~ rnorm( 500)), qqmath(~ rnorm( 500)), qqmath(~ rnorm( 500))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+
+---
+
+```{r}
+c(qqmath(~ rnorm(5000)), qqmath(~ rnorm(5000)), qqmath(~ rnorm(5000))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+---
+
+* Exercise: 
+
+	* Try this for more sample sizes
+
+	* Repeat several times to understand variability (as function of sample size)
+
+--
+
+* Q-Q plots can compare with quantiles of other distributions as well
+
+* Let's try with Binomial
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom(  10, size = size, prob = prob)
+qqmath(~ x, distribution = function(p) qbinom(p, size = size, prob = prob),
+       grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom(  50, size = size, prob = prob)
+qqmath(~ x, distribution = function(p) qbinom(p, size = size, prob = prob),
+       grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom( 100, size = size, prob = prob)
+qqmath(~ x, distribution = function(p) qbinom(p, size = size, prob = prob),
+       grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom( 500, size = size, prob = prob)
+qqmath(~ x, distribution = function(p) qbinom(p, size = size, prob = prob),
+       grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom(5000, size = size, prob = prob)
+qqmath(~ x, distribution = function(p) qbinom(p, size = size, prob = prob),
+       grid = TRUE, aspect = 1)
+```
+
+
+---
+
+* So similar pattern: 
+
+	* more variable for low sample size
+	
+	* Converges to straight line as sample size increases
+
+--
+
+* But what happens if we compare with Normal quantiles instead of Binomial quantiles?
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom(  10, size = size, prob = prob)
+qqmath(~ x, grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom(  50, size = size, prob = prob)
+qqmath(~ x, grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom( 100, size = size, prob = prob)
+qqmath(~ x, grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom( 500, size = size, prob = prob)
+qqmath(~ x, grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+size <- 100; prob <- 0.25; x <- rbinom(5000, size = size, prob = prob)
+qqmath(~ x, grid = TRUE, aspect = 1)
+```
+
+---
+
+* This suggests that the Binomial$(n = 100, p = 0.25)$ distribution is well approximated by Normal
+
+--
+
+* This approximation improves with the number of Bernoulli trials $n$
+
+* Let's try Binomial$(n = 1000, p = 0.25)$ 
+
+---
+
+```{r}
+size <- 1000; prob <- 0.25; x <- rbinom(5000, size = size, prob = prob)
+qqmath(~ x, grid = TRUE, aspect = 1)
+```
+
+---
+
+* But the approximation is not as good for, say, Binomial$(n = 1000, p = 0.0025)$
+
+```{r}
+size <- 1000; prob <- 0.0025; x <- rbinom(5000, size = size, prob = prob)
+qqmath(~ x, grid = TRUE, aspect = 1)
+```
+
+---
+
+* Comparing to the true distribution will lead to a better visual fit
+
+```{r}
+qqmath(~ x, grid = TRUE, aspect = 1,
+       distribution = function(p) qbinom(p, size = size, prob = prob))
+```
+
+---
+
+* Summary
+
+	* Sample quantiles (order statistics) converge to "theoretical quantiles" as sample size increases
+	
+	* Theoretical quantiles essentially determine underlying population
+
+--
+
+	* This means that looking at sample quantiles (through ECDF) tells us about underlying population
+	
+	* Q-Q plots transform ECDF to compare with a reference distribution (usually Normal)
+	
+--
+
+	* The Normal distribution is a good reference in a surprisingly wide range of situations
+	
+	* However, there are also many situations where it is not appropriate
+	
+	* Systematic patterns in the Normal Q-Q plot can suggest alternative distributions (later)
+
+
+---
+
+layout: true
+
+# Comparing multiple samples
+
+---
+
+* Q-Q plots are typically used to compare a sample to a reference distribution
+
+* We are usually more interested in comparing two or more samples
+
+---
+
+* This is possible, as we saw before: compare heights of males and females in NHANES data
+
+```{r}
+qqmath(~ Height, data = NHANES, grid = TRUE, aspect = 1, groups = Gender, auto.key = TRUE, subset = Age >= 20)
+```
+
+---
+
+* The difference can be summarized as a _constant_ shift in all the quantiles
+
+* This can also be seen in a smaller subset of quantiles:
+
+```{r}
+s <- with(subset(NHANES, Age >= 20), split(Height, Gender))
+str(s)
+lapply(s, quantile, probs = c(0.2, 0.4, 0.6, 0.8),  na.rm = TRUE)
+```
+
+---
+
+* It is traditional to summarize a sample with a specific set of __five__ quantiles
+
+* This in known as the [__five number summary__](https://en.wikipedia.org/wiki/Five-number_summary), and can be produced by `fivenum()`
+
+```{r}
+lapply(s, fivenum)
+```
+
+---
+
+* These are actually just the quantiles corresponding to probabilities $0, \frac14, \frac12, \frac34, 1$
+
+* In other words: minimum, _first quartile_, median, _third quartile_, maximum
+
+```{r}
+lapply(s, quantile, probs = c(0, 0.25, 0.5, 0.75, 1),  na.rm = TRUE)
+```
+
+---
+
+* We usually compare these quantiles _graphically_ using a __box and whisker plot__
+
+```{r}
+bwplot(Gender ~ Height, data = NHANES, subset = Age >= 20, coef = 0)
+```
+
+---
+
+* The _compactness_ of this design makes it easier to compare multiple groups together
+
+```{r}
+bwplot(Race1 ~ Height | Gender, data = NHANES, subset = Age >= 20, coef = 0)
+```
+
+---
+
+* Common axes makes comparison easier
+
+```{r}
+bwplot(Height ~ Gender | Race1, data = NHANES, subset = Age >= 20, layout = c(5, 1), coef = 0)
+```
+
+---
+
+* Similar plot for a different variable: `Weight`
+
+```{r}
+bwplot(Weight ~ Gender | Race1, data = NHANES, subset = Age >= 20, layout = c(5, 1), coef = 0)
+```
+
+---
+
+* What happens if we drop the `coef = 0`? Plots "outlier" data points that are too extreme (if Normal)
+
+```{r}
+bwplot(Weight ~ Gender | Race1, data = NHANES, subset = Age >= 20, layout = c(5, 1))
+```
+
+---
+
+* We can go back to Q-Q plots if we see something unusual
+
+```{r}
+qqmath( ~ Weight | Race1, data = NHANES, subset = Age >= 20, layout = c(5, 1),
+       groups = Gender, auto.key = TRUE, grid = TRUE)
+```
+
+
+---
+
+* Sometimes transforming the data can make the distribution "closer" to Normal
+
+```{r}
+qqmath( ~ Weight^(1/3) | Race1, data = NHANES, subset = Age >= 20, layout = c(5, 1),
+       groups = Gender, auto.key = TRUE, grid = TRUE)
+```
+
+---
+
+* Why do we care about the Normal distribution?
+
+--
+
+* Mainly because
+
+	* It is good approximation for many observed distributions
+	
+	* It is defined by just __two__ parameters: the median and the length of the box
+	
+	* The length of the box is known as the __IQR__ or _inter-quartile range_
+
+--
+
+* Many statistical problems have "nice" solutions when the underlying population is Normal
+
+* So one focus of initial "data exploration" is to decide if observed data look like Normal
+
+--
+
+* This means that we need to be able to tell when data are _not_ like Normal
+
+* This is possible from a Q-Q plot, but it is not as easy to describe the __type of departure__ 
+
+--
+
+* For this, another tool known as the __histogram__ is more useful
+
+---
+
+layout: true
+
+# Data binning and histograms
+
+---
+
+* The idea of binning is useful in a variety of contexts
+
+* Motivation from a data summary perspective:
+
+	* Categorical or discrete data can be summarized by table counts (without loss of information)
+
+	* Binning provides a similar summary for continuous data (with some loss of information)
+
+--
+
+* Another motivation is probabilistic, which we will discuss later
+
+---
+
+* Consider the NHANES height data (after removing `NA`-s and rows with Age less than 20)
+
+```{r}
+str(nhsub2$Height)                          # raw data ~ 7000 records
+T1 <- table(nhsub2$Height); str(T1)         # table of unique values (lossless summary) ~ 500 values
+```
+
+--
+
+```{r}
+T2 <- table(round(nhsub2$Height)); str(T2)  # table of rounded values (summary with some loss) ~ 60 values
+```
+
+---
+
+```{r}
+xyplot(as.numeric(T1) ~ as.numeric(names(T1)), type = "h")
+```
+
+---
+
+```{r}
+xyplot(as.numeric(T2) ~ as.numeric(names(T2)), type = "h")
+```
+
+---
+
+```{r}
+xyplot(as.numeric(T2) ~ as.numeric(names(T2)), type = "h",
+       panel = panel.barchart, horizontal = FALSE, origin = 0)
+```
+
+---
+
+```{r}
+T3 <- table(10 * round(nhsub2$Height / 10)); # round to 10th digit
+xyplot(as.numeric(T3) ~ as.numeric(names(T3)), type = "h",
+       panel = panel.barchart, box.width = 8, horizontal = FALSE, origin = 0)
+```
+
+---
+
+* Histograms basically generalize this kind of rounding
+
+* They are determined by a sequence of 'break points' defining bins (covering all the data)
+	
+* The data are summarized by the number (or relative frequency) of data points falling in each bin
+
+--
+
+* Data points may coincide with bin boundaries (break points)
+
+* We need to be careful to specify which bin such data points should be counted in
+
+--
+
+* Histogram bins all _usually_ have the same width (the break points are equally spaced)
+
+---
+
+* Counting the number of data points in each bin is not trivial
+
+* R has three related functions for this:
+
+	* `cut()` converts numeric data into categories defined by breakpoints
+	
+	* `findInterval()` is similar but more efficient with a different return value
+	
+	* `hist()` computes the bin _counts_ directly
+	
+---
+
+```{r}
+cut(nhsub2$Height, breaks = seq(125, 205, by = 10)) |> head(30)
+```
+
+--
+
+```{r}
+cut(nhsub2$Height, breaks = seq(125, 205, by = 10)) |> table()
+```
+
+---
+
+```{r}
+hist(nhsub2$Height, breaks = seq(125, 205, by = 10), plot = FALSE) |> str()
+```
+
+---
+
+```{r}
+histogram(~ Height, NHANES, breaks = seq(125, 205, by = 10), subset = Age >= 20, type = "count")
+```
+
+---
+
+```{r}
+histogram(~ Height, NHANES, breaks = seq(125, 205, by = 1), subset = Age >= 20, type = "percent")
+```
+
+---
+
+```{r}
+histogram(~ Height, NHANES, nint = 30, subset = Age >= 20) # specify number of bins
+```
+
+---
+
+```{r}
+histogram(~ Height | Gender, NHANES, nint = 30, subset = Age >= 20, layout = c(1, 2))
+```
+
+---
+
+layout: false
+
+# Histograms vs bar charts
+
+* In some ways similar, but also different
+
+* Barcharts are meant for discrete or categorical data (with pre-specified categories)
+
+* Histograms are meant for continuous data
+
+--
+
+* This is reflected in the lack of _gaps_ between bars in a histogram
+
+--
+
+* Relation with probability theory
+
+	* Bar charts estimates the population _probability mass function_ (categorical / discrete)
+	
+	* Histograms estimate the population _probability density function_ (continuous)
+	
+* We will discuss these theoretical connections later
+
+---
+
+# Counting bin frequencies
+
+* Easy with computers
+
+* Not so easy without one
+
+--
+
+* Example: height data from survey
+
+```{r}
+survey <- read.csv("https://deepayan.github.io/BSDS/2024-01-DE/data/bsds-survey.csv")
+height <- round(survey$height)
+height
+```
+
+---
+
+# Stem and leaf plot
+
+* A very crude way of counting
+
+```{r}
+stem(height)
+```
+
+---
+
+layout: true
+
+# Histograms for Normal data
+
+---
+
+```{r}
+c(histogram(~ rnorm(  10)), histogram(~ rnorm( 10)), histogram(~ rnorm(  10))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+c(histogram(~ rnorm(  50)), histogram(~ rnorm( 50)), histogram(~ rnorm(  50))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+c(histogram(~ rnorm( 100)), histogram(~ rnorm( 100)), histogram(~ rnorm( 100))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+c(histogram(~ rnorm( 500)), histogram(~ rnorm( 500)), histogram(~ rnorm( 500))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+---
+
+```{r}
+c(histogram(~ rnorm(5000)), histogram(~ rnorm(5000)), histogram(~ rnorm(5000))) |>
+    update(grid = TRUE, aspect = 1)
+```
+
+
+---
+
+layout: true
+
+# Histograms for NHANES data
+
+---
+
+```{r}
+histogram(~ Height | Race1 + Gender, NHANES, subset = Age >= 20)
+```
+
+---
+
+```{r}
+histogram(~ Weight | Race1 + Gender, NHANES, subset = Age >= 20)
+```
+
+---
+
+```{r}
+histogram(~ Weight^(1/3) | Race1 + Gender, NHANES, subset = Age >= 20)
+```
+
+
+---
 
 layout: false
 class: center, middle
