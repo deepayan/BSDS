@@ -1,0 +1,55 @@
+@media screen {
+    body
+    {
+	padding-top: 5rem;
+	font-family: 'Noto Serif';
+    }
+}
+
+@media print {
+    body
+    {
+	font-family: 'Noto Serif';
+    }
+}
+
+h1.title { text-align: left; }
+p.author { text-align: left; }
+
+img
+{
+    display: block;
+    !margin-left: auto;
+    !margin-right: auto;
+    width: 100%;
+}
+
+div.language-r
+{
+    font-family: 'Fira Code';
+    /* font-size: 90%; */
+    font-weight: normal;
+    border: solid 1px #bbbbbb;
+    border-left: solid 5px #bbbbbb;
+}
+
+pre.highlight
+{
+    padding: 0.5em;
+    margin: 0px;
+}
+
+
+h1, h2, h3
+{
+    font-family: 'Noto Serif';
+}
+h3 { font-style: italic; }
+
+
+.carousel-control-next-icon, .carousel-control-prev-icon
+{
+    color: black;
+    background-image: none;
+}
+
