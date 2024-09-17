@@ -9,7 +9,14 @@
 @media print {
     body
     {
+	width: 95%;
+	margin: auto;
 	font-family: 'Noto Serif';
+    }
+    .container-sm
+    {
+	max-width: 1200px;
+ 	width: 100%;
     }
 }
 
@@ -25,13 +32,13 @@ img
 }
 
 
-div.language-r
-{
-    font-family: 'Fira Code';
-    /* font-size: 90%; */
-    font-weight: normal;
-    border: solid 1px #bbbbbb;
-    border-left: solid 5px #bbbbbb;
+pre[class*=language-r]>code {
+    /* border-left: 10px solid #ad182d; too dark  */
+    border-left: 10px solid rgb(170, 190, 230);
+    /* border-left: 10px solid rgb(231, 141, 165); */
+    box-shadow: -1px 0 0 0 rgb(150, 170, 210), 0 0 0 1px #dfdfdf;
+    font-family: 'Fira Code', Courier;
+    font-size: 90%;
 }
 
 pre.highlight

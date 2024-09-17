@@ -11,11 +11,21 @@
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
 
-  <link rel="stylesheet" href="/BSDS/assets/styles/rouge.css">  <!-- syntax highlighting -->
-  <link rel="stylesheet" href="/BSDS/assets/styles/custom.css"> <!-- custom styles -->
+
+
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Serif" >
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Sans" >
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism-coy.min.css" integrity="sha512-LOT5F67SMZVdXMrvQe4S1ZHu5l6xk3CST2qqno9kY329OsJBBpybnq+fM9qG4ZSaNzPOjoGzHAeBamSSJyyuZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.css" integrity="sha512-cbQXwDFK7lj2Fqfkuxbo5iD1dSbLlJGXGpfTDqbggqjHJeyzx88I3rfwjS38WJag/ihH7lzuGlGHpDBymLirZQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/plugins/line-highlight/prism-line-highlight.min.css" integrity="sha512-nXlJLUeqPMp1Q3+Bd8Qds8tXeRVQscMscwysJm821C++9w6WtsFbJjPenZ8cQVMXyqSAismveQJc0C1splFDCA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/plugins/autolinker/prism-autolinker.min.css" integrity="sha512-4ZmAB2UXPu3Rgy5ZClpqnJ/zXXZBdulFXY1eWMLgIjp2HWgkHGIpr1b7kmCK+rdD5NYfivTp47UR+bQ4oTBllQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- <link rel="stylesheet" href="https://ccb-hms.github.io/phonto/assets/custom.css"> <\!-- custom CSS -\-> -->
+
+  <!-- <link rel="stylesheet" href="/assets/styles/rouge.css">  <\!-- syntax highlighting -\-> -->
+  <link rel="stylesheet" href="/assets/styles/custom.css"> <!-- custom styles -->
+
 
   {% if page.mathjax %}
   {% include mathjax.html %}
@@ -54,6 +64,19 @@
 	crossorigin="anonymous">
 </script>
 
+<!-- prism and necessary plugins -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.min.js"
+	integrity="sha512-/Swpp6aCQ0smuZ+zpklJqMClcUlvxhpLf9aAcM7JjJrj2waCU4dikm3biOtMVAflOOeniW9qzaNXNrbOAOWFCw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-clike.min.js"
+	integrity="sha512-/Rynaa6ehLZJO9fdk+EUsgiOdJqFSFUB4Qgy+gP4vU4U1DrmPJWypfXe1CgyaV7rRdZjGxdpLe9djxhx1ZHvqQ=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Needs to be modified to tag bindings -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-r.min.js"
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 <script type="text/javascript">
 
   // Javascript to set up hiding and toggling of code blocks. To
@@ -62,11 +85,9 @@
 $(document).ready(
     function() {
 	// console.log("ready");
-	$( "div.highlighter-rouge" ).addClass( "sourceCode" );
 	{% if page.code == "collapse" %}
 	$( "div.sourceCode" ).addClass( "collapse" );
 	{% endif %}
-	$("#topnav").autoHidingNavbar();
     }
 );
 </script>
