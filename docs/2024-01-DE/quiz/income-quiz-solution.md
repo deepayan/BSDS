@@ -115,7 +115,7 @@ $$
 where $X ~\sim \text{Bin}(10, \frac12)$. In other words,
 
 $$
-\log_2 M = 2X - 10 +  log_2 100
+\log_2 M = 2X - 10 +  \log_2 100
 $$
 
 This means that we can calculate the exact probabilities asked in
@@ -124,8 +124,8 @@ questions 2 and 3 in terms of Binomial probabilities using the
 of the Binomial distribution.
 
 $$
-P(M \geq a) = P(\log_2 M \geq log_2 a) 
-= P\left( X \geq \frac12 (log_2 a + 10 - log_2 100)  \right)
+P(M \geq a) = P(\log_2 M \geq \log_2 a) 
+= P\left( X \geq \frac12 (\log_2 a + 10 - \log_2 100)  \right)
 $$
 
 
