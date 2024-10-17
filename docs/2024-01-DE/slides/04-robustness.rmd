@@ -1,0 +1,729 @@
+---
+layout: remark
+title: Efficiency and Robustness of Estimators
+subtitle: Statistics I — Data Exploration
+author: Deepayan Sarkar
+mathjax: true
+---
+
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/de-robustness/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+			   ## engine.path = list(python = "/usr/bin/python3"),
+               fig.width = 12, fig.height = 5,
+               dev = "svglite", dev.args = list(pointsize = 12),
+               knitr.table.format = "html",
+			   fig.path='figures/robustness-')
+options(warnPartialMatchDollar = FALSE, width = 80)
+suppressWarnings(require(lattice))
+suppressWarnings(require(latticeExtra))
+```
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\set}[1]{\left\lbrace {#1} \right\rbrace}
+\newcommand{\nseq}[1]{ {#1}\sub{1}, {#1}\sub{2}, \dotsc, {#1}\sub{n} }
+$$
+</div>
+
+
+---
+
+layout: true
+
+# Motivation
+
+---
+
+* Summary statistics like sample mean and sample median are called _estimators_
+
+* They "estimate" corresponding quantities of the _population_ (known as _parameters_)
+
+--
+
+* Why are we interested in _population mean_ or _population median_?
+
+	* Because they minimize corresponding loss functions for the population
+	
+	* As a result, they can serve as measures of location for the population
+	
+	* Can be compared for sub-populations
+	
+---
+
+* We typically consider symmetric populations (otherwise we try to transform)
+
+* A population or distribution $X$ is symmetric about $a$ if 
+
+$$
+P(X \leq a - q) = P(X \geq a + q) \text{ for all } q \in \mathbb{R}
+$$
+
+--
+
+* Important property of symmetric distributions: _mean and median are the same_
+
+	* If $X$ is symmetric about $a$, then $a$ is both mean and median
+	
+	* This $a$ is therefore a natural measure of _location_
+
+--
+
+* We usually summarize such distributions by this location parameter + a scale parameter
+	
+* For now, we will only consider statistics that are estimators of
+  location or spread
+
+---
+
+layout: true
+
+# Desirable properties of estimators
+
+---
+
+* Consistency
+
+	* As sample size increases, sample statistic (estimator) should "converge" to parameter
+	
+	* This is basic requirement without which estimators are not useful
+	
+--
+
+* Efficiency
+
+	* Given two consistent estimators, the one that converges more quickly is more _efficient_
+
+--
+
+* Robustness
+
+	* Given two consistent estimators, the one that is less affected
+      by perturbations is more _robust_
+
+---
+
+* Consistency, Efficiency, and Robustness are _theoretical_ properties
+
+* We do not yet know enough probability theory to analyze them theoretically
+
+--
+
+* However, these are easy to study using simulation
+
+--
+
+* What do we need for a simulation study?
+
+	* A distribution or "model" representing our population
+
+	* Define parameters of interest
+	
+	* Estimators that we want to compare
+	
+	* Decide what types of perturbations we want to consider
+
+---
+
+layout: true
+
+# Model 1: The Uniform distribution
+
+---
+
+* Recall exercise: Consider a very large fixed number $M = 10^6 =
+  1000000$. Fix $n = 5001$.
+
+* Draw a _random sample_ $\nseq{X}$ from the discrete uniform
+  distribution on $\set{0, 1, 2, \dotsc, M}$
+
+* Define $\nseq{Y}$ as $Y\sub{i} = \frac{X\sub{i}}{M}$
+
+* Define 
+
+	* $M\sub{1} = \frac1n \sum\limits\sub{i=1}^n Y\sub{i}$ (the sample mean)
+
+	* $M\sub{2} = Y\sub{(2501)}$ (the sample median)
+
+---
+
+* Let us simulate this
+
+```{r}
+M <- 10^6; n <- 5001
+m1 <- replicate(10000, mean(sample(M, n, replace = TRUE) / M))
+m2 <- replicate(10000, median(sample(M, n, replace = TRUE) / M))
+```
+
+--
+
+```{r,fig.height=3}
+bwplot(which ~ data, make.groups(mean = m1, median = m2))
+```
+
+---
+
+* From now on, we will use a _continuous_ version of the Uniform distribution
+
+```{r}
+n <- 5001
+m1 <- replicate(10000, mean(runif(n)))
+m2 <- replicate(10000, median(runif(n)))
+```
+
+```{r,fig.height=3}
+bwplot(which ~ data, make.groups(mean = m1, median = m2))
+```
+
+---
+
+* Summary
+
+	* The theoretical location parameter (mean / median) is $0.5$
+
+	* Both mean and median from a sample of $n = 5001$ are generally close
+
+	* The mean seems to be _closer_ overall (suggesting higher _efficiency_)
+
+---
+
+* Distribution of mean and median
+
+```{r}
+histogram( ~ data | which, make.groups(mean = m1, median = m2), nint = 35)
+```
+
+
+---
+
+layout: true
+
+# Model: The Normal distribution $N(\mu, \sigma^2)$
+
+---
+
+* As mentioned earlier, the Normal distribution is a very commonly used model
+
+* It is continuous distribution that approximates many real life distributions 
+
+	* Including the distributions of $M\sub{1}$ and $M\sub{2}$ above
+
+--
+
+* It is a symmetric distribution
+
+* It is defined by two parameters: location $\mu$ and scale $\sigma$
+
+---
+
+* Can be simulated in R using `rnorm(n, mean = mu, sd = sigma)`
+
+```{r}
+histogram( ~ rnorm(10000, mean = 0.5, sd = 0.01), nint = 35)
+```
+
+
+
+
+---
+
+* Repeat the experiment above with Normal, and a smaller sample size
+
+```{r}
+n <- 50
+m1 <- replicate(10000, mean(rnorm(n, mean = 5, sd = 3)))
+m2 <- replicate(10000, median(rnorm(n, mean = 5, sd = 3)))
+```
+
+```{r,fig.height=3}
+bwplot(which ~ data, make.groups(mean = m1, median = m2))
+```
+
+
+---
+
+* Increase sample size (to check consistency)
+
+```{r}
+n <- 500
+m1 <- replicate(10000, mean(rnorm(n, mean = 5, sd = 3)))
+m2 <- replicate(10000, median(rnorm(n, mean = 5, sd = 3)))
+```
+
+```{r,fig.height=3}
+bwplot(which ~ data, make.groups(mean = m1, median = m2))
+```
+
+---
+
+* Summary
+
+	* The theoretical location parameter (mean / median) is $5$
+
+	* Both sample mean and sample median are close to this value, for both sample sizes
+	
+	* They are closer for larger sample size (suggesting both estimators are _consistent_)
+
+	* The sample mean again seems to be _closer_ (suggesting higher _efficiency_)
+
+
+---
+
+layout: false
+
+# Robust estimation of location
+
+* How do these behave when data is "contaminated"?
+
+* We know that
+
+    * Mean can be changed by an arbitrary amount by changing a single observation
+
+    * Median can be changed arbitrarily only by changing more than 50% observations
+
+    * This comes at the cost that median is less "efficient" for many distributions
+
+---
+
+layout: true
+
+# Other estimators
+
+---
+
+* Another estimator: _trimmed mean_ or _truncated mean_
+
+* Definition:
+
+	> The $\alpha$-trimmed mean of a vector of observations
+	> $\boldsymbol{X} = (\nseq{X})$ is the mean of the observations
+	> that remain after discarding a proportion $\alpha$ of the
+	> observations from both ends.
+
+--
+
+* Can be computed in R using the `mean()` function, with argument `trim` specifying $\alpha$
+
+```{r}
+mean(runif(30), trim = 0.1) # 10% trimming on both ends
+```
+
+---
+
+* Another estimator: _winsorized mean_
+
+* Definition:
+
+	> the mean after _replacing_ (not discarding) a proportion
+	> $\alpha$ of the most extreme observations from both ends by the
+	> most extreme of the remaining values
+	
+* The process of transforming a vector $\boldsymbol{X}$ in this way is known as _winsorizing_
+	
+--
+
+* No built-in function in R, but easy to implement
+
+```{r}
+winsorize <- function(x, trim = 0.25)
+{
+    q <- quantile(x, c(trim, 1-trim))
+    x[x < q[1]] <- q[1]
+    x[x > q[2]] <- q[2]
+    x
+}
+winsorized.mean <- function(x, trim = 0.25) mean(winsorize(x, trim = trim))
+```
+
+--
+
+```{r}
+winsorized.mean(runif(30), trim = 0.1) # 10% trimming on both ends
+```
+
+---
+
+* Both these estimators are clearly designed to protect against extreme outliers
+
+* How do they compare in terms of robustness and efficiency
+
+* The easiest way to understand this is through simulation.
+
+
+---
+
+layout: true
+
+# Relative efficiency
+
+---
+
+* Consider two estimators $T\sub{1}$ and $T\sub{2}$
+
+* Define the relative efficiency of $T\sub{1}$ w.r.t. $T_2$ (for a given underlying distribution) as
+
+$$
+RE(T\sub{1}; T_2) = \frac{\text{MSE}(T_2)}{\text{MSE}(T\sub{1})}
+$$
+
+--
+
+* $\text{MSE}(T)$ stands for Mean Squared Error, and can be estimated using average squared-error loss
+
+--
+
+* What are relative efficiencies of median w.r.t. mean? What about other estimators?
+
+* Trying to obtain MSE theoretically is often difficult
+  
+* But we could use simulation to get a rough idea
+
+---
+
+layout: true
+
+# Relative efficiency in the Normal population
+
+---
+
+* Extend previous example to study efficiency
+
+* Helper functions
+
+```{r}
+trimmed.mean <- function(x, trim = 0.25)
+{
+    mean(x, trim = trim)
+}
+simulate_estimator <- function(estimator, rfun, n, NREP = 10000)
+{
+    replicate(NREP, estimator(rfun(n)))
+}
+mse <- function(T, theta)
+{
+    mean((T - theta)^2)
+}
+```
+
+---
+
+* Simulate with $n = 10$
+
+```{r}
+rdist <- function(n) rnorm(n, mean = 5, sd = 3) # Normal(5, 3^2)
+```
+
+```{r}
+sim10 <- list(mean = simulate_estimator(mean, rdist, n = 10),
+              median = simulate_estimator(median, rdist, n = 10),
+              tmean = simulate_estimator(trimmed.mean, rdist, n = 10),
+              wmean = simulate_estimator(winsorized.mean, rdist, n = 10))
+```
+
+---
+
+```{r}
+do.call(make.groups, sim10) |> bwplot(which ~ data)
+```
+
+---
+
+* Relative Efficiency w.r.t. mean
+
+```{r}
+with(sim10, round(100 * mse(mean, 5) / mse(median, 5))) # median
+with(sim10, round(100 * mse(mean, 5) / mse(tmean, 5)))  # trimmed mean
+with(sim10, round(100 * mse(mean, 5) / mse(wmean, 5)))  # winsorized mean
+```
+
+---
+
+* Asymptotic relative efficiency $ARE(T\sub{1}; T_2)$ 
+
+	* Limiting value of relative efficiency as $n \to \infty$
+
+	* We can approximate this by choosing $n$ to be large (here $n = 5000$)
+
+```{r}
+rdist <- function(n) rnorm(n, mean = 5, sd = 3) # Normal(5, 3^2)
+```
+
+```{r}
+sim5000 <- list(mean = simulate_estimator(mean, rdist, n = 5000),
+                median = simulate_estimator(median, rdist, n = 5000),
+                tmean = simulate_estimator(trimmed.mean, rdist, n = 5000),
+                wmean = simulate_estimator(winsorized.mean, rdist, n = 5000))
+```
+
+---
+
+```{r}
+do.call(make.groups, sim5000) |> bwplot(which ~ data)
+```
+
+---
+
+* (Asymptotic) Relative Efficiency w.r.t. mean
+
+```{r}
+with(sim5000, round(100 * mse(mean, 5) / mse(median, 5))) # median
+with(sim5000, round(100 * mse(mean, 5) / mse(tmean, 5)))  # trimmed mean
+with(sim5000, round(100 * mse(mean, 5) / mse(wmean, 5)))  # winsorized mean
+```
+
+
+* For comparison, the exact $ARE$ of the median is $\frac{2}{\pi} = 63.6\%$ <!-- for pseudo-proof, note that $\Phi(median) \sim Beta(n/2, n/2)$ for $N(0,1)$  -->
+
+* This is when the data comes from a Normal distribution
+
+
+---
+
+layout: true
+
+# Relative efficiency for distributions with heavier tails
+
+---
+
+* Consider the $t$ distribution with parameter `df = 5`
+
+* Superficially similar no Normal (symmetric with single peak)
+
+* However, tails are heavier than Normal (extreme observations more likely)
+
+```{r}
+rdist <- function(n) 5 + 3 * rt(n, df = 5)
+```
+
+```{r,fig.height=3.5}
+histogram(~ rdist(10000), nint = 35)
+```
+
+	
+---
+
+```{r}
+simt5 <- list(mean = simulate_estimator(mean, rdist, n = 5000),
+              median = simulate_estimator(median, rdist, n = 5000),
+              tmean = simulate_estimator(trimmed.mean, rdist, n = 5000),
+              wmean = simulate_estimator(winsorized.mean, rdist, n = 5000))
+```
+
+```{r,fig.height=3}
+do.call(make.groups, simt5) |> bwplot(which ~ data)
+```
+
+---
+
+* (Asymptotic) Relative Efficiency w.r.t. mean
+
+```{r}
+with(simt5, round(100 * mse(mean, 5) / mse(median, 5))) # median
+with(simt5, round(100 * mse(mean, 5) / mse(tmean, 5)))  # trimmed mean
+with(simt5, round(100 * mse(mean, 5) / mse(wmean, 5)))  # winsorized mean
+```
+
+---
+
+layout: true
+
+# Relative efficiency for contaminated Normal
+
+---
+
+* Suppose data is a mixture of $N(170, 10^2)$ with probability
+  $1-\epsilon$ and $N(80, 30\sigma^2)$ with probability $\epsilon$
+
+```{r}
+rdist <- function(n)
+{
+    x1 <- rnorm(n, mean = 170, sd = 10)
+    x2 <- rnorm(n, mean = 80, sd = 30)
+    ifelse(runif(n) < 0.99, x1, x2) # 1% contamination
+}
+```
+
+
+```{r,fig.height=3.5}
+histogram(~ rdist(10000), nint = 35)
+```
+
+	
+---
+
+```{r}
+simmix <- list(mean = simulate_estimator(mean, rdist, n = 5000),
+               median = simulate_estimator(median, rdist, n = 5000),
+               tmean = simulate_estimator(trimmed.mean, rdist, n = 5000),
+               wmean = simulate_estimator(winsorized.mean, rdist, n = 5000))
+```
+
+```{r,fig.height=3}
+do.call(make.groups, simmix) |> bwplot(which ~ data)
+```
+
+---
+
+* (Asymptotic) Relative Efficiency w.r.t. mean
+
+```{r}
+with(simmix, round(100 * mse(mean, 170) / mse(median, 170))) # median
+with(simmix, round(100 * mse(mean, 170) / mse(tmean, 170)))  # trimmed mean
+with(simmix, round(100 * mse(mean, 170) / mse(wmean, 170)))  # winsorized mean
+```
+
+---
+
+* Exercise: Try variations of this
+
+	* Efficiency as function of trimming parameter $\alpha$
+	
+	* Efficiency as function of mixture proportion $\epsilon$
+	
+	* Efficiency as function of mixture location
+
+
+<!--
+
+Possible modifications: 
+
+- Compute MSE instead of var(), need to provide true value of estimate
+
+- Draw plot of variances as function of t-df, or epsilon above
+
+- Can we do this theoretically?
+
+	- Assume Uniform median U ~ Beta(n/2, n/2) is asymp normal with same mean / var
+	- Compute asymp dist of F^{-1}(U) using Delta method
+	- Compute MSE for the mixture model - is that feasible?
+	- Plot as function of contamination variance for different epsilon
+	- Is median better even for contamination variance lower than the actual variance?
+
+-->
+
+
+---
+
+layout: true
+
+# Sensitivity / influence function
+
+---
+
+* Natural question: How much does changing one observation change the estimate $T$?
+
+* This is measured by the _empirical influence function_ or _sensitivity curve_
+
+$$
+SC(x; x\sub{1}, \dotsc, x\sub{n-1}, T) = \frac{ T(x\sub{1}, \dotsc, x\sub{n-1}, x) - T(x\sub{1}, \dotsc, x\sub{n-1}) }{ 1/n } 
+$$
+
+* We are usually interested in limiting behaviour as $n \to \infty$
+
+<!-- 
+
+* The population analogue, independent of the sample $x\sub{1}, \dotsc,
+  x\sub{n-1}$, is known as the _influence function_
+
+$$
+IF(x; F, T) = \lim\sub{\epsilon \to 0} \frac{ T( (1-\epsilon) F + \epsilon \delta_x) - T(F) }{\epsilon}
+$$
+
+* Here $\delta_x$ is a point mass at $x$
+
+-->
+
+---
+
+* How does `mean(c(x, xnew))` change as function of `xnew`?
+
+* How do other estimates change?
+
+```{r}
+nn <- 50
+x <- rnorm(nn, mean = 0, sd = 1)
+fivenum(x)
+xx <- seq(-5, 5, 0.01)
+sensitivity <-
+    data.frame(xx = xx,
+               mean = nn * (sapply(xx, function(xnew) mean(c(x, xnew))) - mean(x)),
+               median = nn * (sapply(xx, function(xnew) median(c(x, xnew))) - median(x)),
+               tmean = nn * (sapply(xx, function(xnew) trimmed.mean(c(x, xnew))) - trimmed.mean(x)),
+               wmean = nn * (sapply(xx, function(xnew) winsorized.mean(c(x, xnew))) - winsorized.mean(x)))
+```
+
+---
+
+```{r}
+xyplot(mean + median + tmean + wmean ~ xx, sensitivity, type = "l", outer = TRUE,
+       xlab = "Additional observation", ylab = "Sensitivity", grid = TRUE) +
+    latticeExtra::layer(panel.rug(x = .GlobalEnv$x))
+```
+
+---
+
+layout: false
+
+# Important measure of Robustness: Breakdown Point
+
+* Defined as the proportion of the sample size that must be perturbed
+  to make the estimate unbounded
+
+* 50% is the best we can hope for
+
+* For location, 
+
+	* mean has 0% breakdown point (one out of $n$), 
+	
+	* median has 50%,
+	
+	* others depend on amount of trimming
+	
+	
+
+
+---
+
+# Estimators of scale
+
+* We can similarly consider estimators of scale $\sigma$
+
+* Common estimators:
+
+    * Sample standard deviation (`sd` in R)
+
+    * Mean absolute deviation from median
+
+    * Median absolute deviation (MAD) from median (`mad` in R)
+
+    * Inter-quartile range (`IQR` in R)
+
+* May need scaling for normal distribution:
+
+```{r}
+T1 <- sd
+T2 <- function(x, ...) mean(abs(x - mean(x))) / sqrt(2/pi)
+T3 <- function(x, ...) median(abs(x - median(x))) / sqrt(qchisq(0.5, df = 1))
+T4 <- function(x, ...) IQR(x) / diff(qnorm(c(0.25, 0.75)))
+```
+
+--
+
+* Exercise: Estimate relative efficiency for the models considered earlier
+
+
+---
+
+layout: false
+class: center, middle
+
+# Questions?
+
+
+
+
+
