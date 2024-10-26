@@ -1,0 +1,63 @@
+@media screen {
+    body
+    {
+	padding-top: 5rem;
+	font-family: 'Noto Serif';
+    }
+}
+
+@media print {
+    body
+    {
+	width: 95%;
+	margin: auto;
+	font-family: 'Noto Serif';
+    }
+    .container-sm
+    {
+	max-width: 1200px;
+ 	width: 100%;
+    }
+}
+
+h1.title { text-align: left; }
+p.author { text-align: left; }
+
+img
+{
+    display: block;
+    !margin-left: auto;
+    !margin-right: auto;
+    width: 100%;
+}
+
+
+pre[class*=language-r]>code {
+    /* border-left: 10px solid #ad182d; too dark  */
+    border-left: 10px solid rgb(170, 190, 230);
+    /* border-left: 10px solid rgb(231, 141, 165); */
+    box-shadow: -1px 0 0 0 rgb(150, 170, 210), 0 0 0 1px #dfdfdf;
+    font-family: 'Fira Code', Courier;
+    font-size: 90%;
+}
+
+pre.highlight
+{
+    padding: 0.5em;
+    margin: 0px;
+}
+
+
+h1, h2, h3
+{
+    font-family: 'Noto Serif';
+}
+h3 { font-style: italic; }
+
+
+.carousel-control-next-icon, .carousel-control-prev-icon
+{
+    color: black;
+    background-image: none;
+}
+

@@ -1,0 +1,43 @@
+
+<script>
+  // http://docs.mathjax.org/en/latest/web/start.html
+  // http://docs.mathjax.org/en/latest/web/configuration.html
+  MathJax = {
+      tex: {
+	  inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+	  displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ]
+      },
+      svg: {
+	  fontCache: 'global'
+      },
+
+      // Workaround to allow MathJax 3 to recognized jekyll-processed
+      // math chunks (which assumes MathJax 2). Would not be needed at
+      // all if we can figure out a way to disable math block
+      // (delimited by $$) processing altogether in github jekyll (we
+      // can't use \[...\] instead if we want pandoc to continue
+      // working). pandoc also does not seem to have an option to
+      // leave alone math processing.
+      options: {
+	  renderActions: {
+	      findScript: [10, function (doc) {
+		  for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+		      const display = !!node.type.match(/; *mode=display/);
+		      const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+		      const text = document.createTextNode('');
+		      node.parentNode.replaceChild(text, node);
+		      math.start = {node: text, delim: '', n: 0};
+		      math.end = {node: text, delim: '', n: 0};
+		      doc.math.push(math);
+		  }
+	      }, '']
+	  }
+      }
+
+  };
+</script>
+
+<script type="text/javascript" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
