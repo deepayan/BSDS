@@ -239,5 +239,23 @@ xyplot(BPSysAve ~ Age, data = nhSubF, grid = TRUE,
        type = c("p", "smooth"), abline = abNH.FLAD, col.line = "red")
 
 
+## Is R^2 == r^2
+
+R2 <- function(x, y) {
+  if (length(x) != length(y)) stop("Lengths and x and y do not match")
+  skip <- is.na(x) | is.na(y)
+  x <- x[!skip]
+  y <- y[!skip]
+  ab <- lsfit(x, y)
+  r <- cor(x, y)
+  T2 <- sum((y - mean(y))^2)
+  S2 <- sum((y - ab[1] - ab[2] * x)^2)
+  R2 <- 1 - S2 / T2
+  c(r2 = r^2, R2 = R2)
+}
+
+R2(runif(20), runif(20))
+R2(runif(20), rnorm(20))
+
 
 
