@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='864.00pt' height='360.00pt' viewBox='0 0 864.00 360.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw4NjQuMDB8MC4wMHwzNjAuMDA='>
+    <rect x='0.00' y='0.00' width='864.00' height='360.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw4NjQuMDB8MC4wMHwzNjAuMDA=)'>
+<rect x='0.00' y='0.00' width='864.00' height='360.00' style='stroke-width: 0.75; stroke: none;' />
+<text x='397.28' y='342.00' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";' textLength='24.67px' lengthAdjust='spacingAndGlyphs'>Freq</text>
+</g>
+<defs>
+  <clipPath id='cpNjEuMzN8NzMzLjIzfDM1LjAxfDMwMy41MA=='>
+    <rect x='61.33' y='35.01' width='671.90' height='268.49' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNjEuMzN8NzMzLjIzfDM1LjAxfDMwMy41MA==)'>
+</g>
+<g clip-path='url(#cpMC4wMHw4NjQuMDB8MC4wMHwzNjAuMDA=)'>
+<line x1='102.59' y1='35.01' x2='102.59' y2='29.34' style='stroke-width: 0.75;' />
+<line x1='299.97' y1='35.01' x2='299.97' y2='29.34' style='stroke-width: 0.75;' />
+<line x1='497.35' y1='35.01' x2='497.35' y2='29.34' style='stroke-width: 0.75;' />
+<line x1='694.74' y1='35.01' x2='694.74' y2='29.34' style='stroke-width: 0.75;' />
+<text x='55.66' y='233.71' text-anchor='end' style='font-size: 9.60px; font-family: "Arial";' textLength='31.99px' lengthAdjust='spacingAndGlyphs'>Female</text>
+<text x='55.66' y='111.67' text-anchor='end' style='font-size: 9.60px; font-family: "Arial";' textLength='20.79px' lengthAdjust='spacingAndGlyphs'>Male</text>
+<line x1='102.59' y1='303.50' x2='102.59' y2='309.17' style='stroke-width: 0.75;' />
+<line x1='299.97' y1='303.50' x2='299.97' y2='309.17' style='stroke-width: 0.75;' />
+<line x1='497.35' y1='303.50' x2='497.35' y2='309.17' style='stroke-width: 0.75;' />
+<line x1='694.74' y1='303.50' x2='694.74' y2='309.17' style='stroke-width: 0.75;' />
+<text x='102.59' y='321.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Arial";' textLength='5.34px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='299.97' y='321.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Arial";' textLength='16.01px' lengthAdjust='spacingAndGlyphs'>500</text>
+<text x='497.35' y='321.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Arial";' textLength='21.34px' lengthAdjust='spacingAndGlyphs'>1000</text>
+<text x='694.74' y='321.72' text-anchor='middle' style='font-size: 9.60px; font-family: "Arial";' textLength='21.34px' lengthAdjust='spacingAndGlyphs'>1500</text>
+</g>
+<g clip-path='url(#cpNjEuMzN8NzMzLjIzfDM1LjAxfDMwMy41MA==)'>
+<line x1='102.59' y1='303.50' x2='102.59' y2='35.01' style='stroke-width: 0.75; stroke: #E5E5E5;' />
+<rect x='102.59' y='230.27' width='219.89' height='40.68' style='stroke-width: 0.75; fill: #94C6FF;' />
+<rect x='102.59' y='189.59' width='504.51' height='40.68' style='stroke-width: 0.75; fill: #FFD6AD;' />
+<rect x='102.59' y='108.23' width='472.93' height='40.68' style='stroke-width: 0.75; fill: #94C6FF;' />
+<rect x='102.59' y='67.55' width='589.39' height='40.68' style='stroke-width: 0.75; fill: #FFD6AD;' />
+</g>
+<g clip-path='url(#cpMC4wMHw4NjQuMDB8MC4wMHwzNjAuMDA=)'>
+<rect x='61.33' y='35.01' width='671.90' height='268.49' style='stroke-width: 0.75;' />
+<rect x='750.57' y='157.76' width='107.43' height='22.98' style='stroke-width: 0.75; stroke: none;' />
+<text x='757.24' y='167.81' style='font-size: 12.00px; font-family: "Arial";' textLength='47.35px' lengthAdjust='spacingAndGlyphs'>Admitted</text>
+<text x='757.24' y='179.30' style='font-size: 12.00px; font-family: "Arial";' textLength='47.36px' lengthAdjust='spacingAndGlyphs'>Rejected</text>
+<rect x='817.95' y='157.76' width='33.37' height='11.49' style='stroke-width: 0.75; fill: #94C6FF;' />
+<rect x='817.95' y='169.25' width='33.37' height='11.49' style='stroke-width: 0.75; fill: #FFD6AD;' />
+</g>
+</svg>

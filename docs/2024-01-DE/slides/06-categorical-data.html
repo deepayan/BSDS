@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Categorical Data</title>
+    <link rel='stylesheet' href='assets/remark.css'>
+  </head>
+  <body>
+    <textarea id='source'>
+
+class: center, middle
+
+# Categorical Data
+
+## Statistics I — Data Exploration
+
+### Deepayan Sarkar
+
+<h1 onclick='document.documentElement.requestFullscreen();' style='cursor: pointer;'>
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrows-fullscreen' viewBox='0 0 16 16'>
+  <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'/>
+</svg>
+</h1>
+
+---
+
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\set}[1]{\left\lbrace {#1} \right\rbrace}
+\newcommand{\abs}[1]{\left\lvert {#1} \right\rvert}
+\newcommand{\nseq}[1]{ {#1}\sub{1}, {#1}\sub{2}, \dotsc, {#1}\sub{n} }
+$$
+</div>
+
+
+# Motivation
+
+* Suppose we have paired bivariate data $(X\sub{i}, Y\sub{i}), i = 1, 2, \dotsc, n$, where
+
+	* $Y$ is a "response" or "dependent" variable, and 
+	
+	* $X$ is a "predictor" or "independent" variable
+
+* So far, we have considered the case where $Y$ is numeric, $X$ is either categorical or numeric
+
+
+
+
+
+
+---
+
+layout: true
+
+# Example: Categorical $X$ 
+
+---
+
+* Distribution of $Y$
+
+
+```r
+library(NHANES)
+bwplot(BPSysAve ~ Race1 | Gender, data = NHANES, subset = Age >= 21)
+```
+
+![plot of chunk unnamed-chunk-1](figures/categorical-unnamed-chunk-1-1.svg)
+
+---
+
+* Summarize (conditional) distribution of $Y$ by median
+
+
+```r
+bwplot(BPSysAve ~ Race1 | Gender, data = NHANES, subset = Age >= 21,
+       panel = panel.average, fun = function(x) median(x, na.rm = TRUE), col = "black")
+```
+
+![plot of chunk unnamed-chunk-2](figures/categorical-unnamed-chunk-2-1.svg)
+
+
+---
+
+* Summarize (conditional) distribution of $Y$ by mean
+
+
+```r
+bwplot(BPSysAve ~ Race1 | Gender, data = NHANES, subset = Age >= 21,
+       panel = panel.average, fun = function(x) mean(x, na.rm = TRUE), col = "black")
+```
+
+![plot of chunk unnamed-chunk-3](figures/categorical-unnamed-chunk-3-1.svg)
+
+
+---
+
+layout: true
+
+# Example: Numeric $X$ 
+
+---
+
+* Distribution of $Y$
+
+
+```r
+xyplot(BPSysAve ~ log(Weight) | Gender, data = NHANES, subset = Age >= 21, grid = TRUE)
+```
+
+![plot of chunk unnamed-chunk-4](figures/categorical-unnamed-chunk-4-1.svg)
+
+---
+
+* Summarize (conditional) distribution of $Y$ by least squares line
+
+
+```r
+xyplot(BPSysAve ~ log(Weight) | Gender, data = NHANES, subset = Age >= 21, grid = TRUE, smooth = "lm")
+```
+
+![plot of chunk unnamed-chunk-5](figures/categorical-unnamed-chunk-5-1.svg)
+
+---
+
+layout: false
+
+# Categorical response
+
+* The other combinations we can consider:
+
+	* $Y$ categorical, $X$ categorical
+	
+	* $Y$ categorical, $X$ numeric
+
+--
+
+* In this course, we will only consider the first case
+
+* In fact, we will typically consider $Y$ to be binary (two categories)
+
+---
+
+# Contingency tables summarizing categorical data
+
+* Categorical data can be summarized by frequency of each combination
+
+* This process is known as _cross-tabulation_
+
+* The resulting summary is known as a _contingency table_
+
+---
+
+layout: true
+
+# Example: Race and Gender
+
+---
+
+
+```r
+head(NHANES[c("Race1", "Gender")], 20)
+```
+
+```
+     Race1 Gender
+1    White   male
+2    White   male
+3    White   male
+4    Other   male
+5    White female
+6    White   male
+7    White   male
+8    White female
+9    White female
+10   White female
+11   White   male
+12   White   male
+13   White   male
+14   White female
+15 Mexican female
+16   White   male
+17   Black female
+18   White   male
+19   White   male
+20   Other   male
+```
+
+---
+
+* Unique combinations
+
+
+```r
+unique(NHANES[c("Race1", "Gender")])
+```
+
+```
+      Race1 Gender
+1     White   male
+4     Other   male
+5     White female
+15  Mexican female
+17    Black female
+24 Hispanic   male
+31    Other female
+35  Mexican   male
+45    Black   male
+46 Hispanic female
+```
+
+---
+
+* Count of unique combinations
+
+
+```r
+xtabs(~ Race1 + Gender, NHANES)
+```
+
+```
+          Gender
+Race1      female male
+  Black       614  583
+  Hispanic    320  290
+  Mexican     452  563
+  White      3221 3151
+  Other       413  393
+```
+
+---
+
+* Count of unique combinations as data frame
+
+
+```r
+xtabs(~ Race1 + Gender, NHANES) |> array2DF()
+```
+
+```
+      Race1 Gender Value
+1     Black female   614
+2  Hispanic female   320
+3   Mexican female   452
+4     White female  3221
+5     Other female   413
+6     Black   male   583
+7  Hispanic   male   290
+8   Mexican   male   563
+9     White   male  3151
+10    Other   male   393
+```
+
+---
+
+layout: false
+
+# Representing contingency tables
+
+* The above examples show two standard methods to represent contingency tables
+
+* The data frame representation is more familiar to us
+
+* The "table"-like format is more standard in many situations
+
+--
+
+* The "table" representation is generalized to "arrays" in R
+
+* We can switch between the representations using `xtabs()` and `array2DF()`
+
+---
+
+layout: true
+
+# Example: `UCBAdmissions`
+
+---
+
+* Admission by gender in 6 departments in a US university
+
+--
+
+.scrollable400[
+
+
+```r
+UCBAdmissions
+```
+
+```
+, , Dept = A
+
+          Gender
+Admit      Male Female
+  Admitted  512     89
+  Rejected  313     19
+
+, , Dept = B
+
+          Gender
+Admit      Male Female
+  Admitted  353     17
+  Rejected  207      8
+
+, , Dept = C
+
+          Gender
+Admit      Male Female
+  Admitted  120    202
+  Rejected  205    391
+
+, , Dept = D
+
+          Gender
+Admit      Male Female
+  Admitted  138    131
+  Rejected  279    244
+
+, , Dept = E
+
+          Gender
+Admit      Male Female
+  Admitted   53     94
+  Rejected  138    299
+
+, , Dept = F
+
+          Gender
+Admit      Male Female
+  Admitted   22     24
+  Rejected  351    317
+```
+
+]
+
+---
+
+
+```r
+UCBAdmissions[1, , ]
+```
+
+```
+        Dept
+Gender     A   B   C   D   E   F
+  Male   512 353 120 138  53  22
+  Female  89  17 202 131  94  24
+```
+
+
+```r
+UCBAdmissions[, 1, ]
+```
+
+```
+          Dept
+Admit        A   B   C   D   E   F
+  Admitted 512 353 120 138  53  22
+  Rejected 313 207 205 279 138 351
+```
+
+
+```r
+UCBAdmissions[, , 1]
+```
+
+```
+          Gender
+Admit      Male Female
+  Admitted  512     89
+  Rejected  313     19
+```
+
+---
+
+.scrollable500[
+
+
+```r
+UCBAdmissionsDF <- array2DF(UCBAdmissions) # convert to data frame representation
+UCBAdmissionsDF
+```
+
+```
+      Admit Gender Dept Value
+1  Admitted   Male    A   512
+2  Rejected   Male    A   313
+3  Admitted Female    A    89
+4  Rejected Female    A    19
+5  Admitted   Male    B   353
+6  Rejected   Male    B   207
+7  Admitted Female    B    17
+8  Rejected Female    B     8
+9  Admitted   Male    C   120
+10 Rejected   Male    C   205
+11 Admitted Female    C   202
+12 Rejected Female    C   391
+13 Admitted   Male    D   138
+14 Rejected   Male    D   279
+15 Admitted Female    D   131
+16 Rejected Female    D   244
+17 Admitted   Male    E    53
+18 Rejected   Male    E   138
+19 Admitted Female    E    94
+20 Rejected Female    E   299
+21 Admitted   Male    F    22
+22 Rejected   Male    F   351
+23 Admitted Female    F    24
+24 Rejected Female    F   317
+```
+
+]
+
+---
+
+* Admission by gender
+
+
+```r
+(admitByGender <- xtabs(Value ~ Gender + Admit, data = UCBAdmissionsDF))
+```
+
+```
+        Admit
+Gender   Admitted Rejected
+  Female      557     1278
+  Male       1198     1493
+```
+
+```r
+apply(UCBAdmissions, c(1, 2), sum) # alternative using apply() function
+```
+
+```
+          Gender
+Admit      Male Female
+  Admitted 1198    557
+  Rejected 1493   1278
+```
+
+---
+
+* Visualization using bar chart
+
+
+```r
+barchart(admitByGender, auto.key = TRUE, stack = FALSE)
+```
+
+![plot of chunk unnamed-chunk-16](figures/categorical-unnamed-chunk-16-1.svg)
+
+---
+
+* Visualization using mosaic plot
+
+
+```r
+library(vcd)
+mosaic(admitByGender)
+```
+
+![plot of chunk unnamed-chunk-17](figures/categorical-unnamed-chunk-17-1.svg)
+
+---
+
+* Visualization of three-way table using bar chart
+
+
+```r
+barchart(Gender ~ Value | Dept, data = UCBAdmissionsDF, groups = Admit,
+         origin = 0, auto.key = TRUE, stack = FALSE, as.table = TRUE)
+```
+
+![plot of chunk unnamed-chunk-18](figures/categorical-unnamed-chunk-18-1.svg)
+
+---
+
+* Visualization of three-way table using mosaic plot
+
+
+```r
+mosaic(xtabs(Value ~ Gender + Dept + Admit, UCBAdmissionsDF)) # change order
+```
+
+![plot of chunk unnamed-chunk-19](figures/categorical-unnamed-chunk-19-1.svg)
+
+---
+
+* This dataset is a well-known example that illustrates Simpson's Paradox
+
+* Ignoring one variable can lead to _wrong_ conclusions about
+  relationship between two other variables
+
+---
+
+layout: false
+
+# Summarizing conditional distribution of $Y$
+
+* For numeric $Y$, we can summarize the distribution by center (mean / median)
+
+* For categorical $Y$, the natural summary is proportions in each category
+
+--
+
+* For binary response, this can be sample proportion of any one category
+
+--
+
+* However, it is also common to measure it by the "odds" of one of the categories
+
+---
+
+# Odds
+
+* Let the probability of an event $A$ be $p = P(A)$
+
+* Think of $A$ as the event of "success" ("Admitted" in the example above)
+
+--
+
+* The "odds" are defined as the ratio of success probability and failure probability
+
+$$
+\text{odds of } A = \frac{P(A)}{P(A^C)} = \frac{p}{1-p}
+$$
+
+--
+
+* Examples
+
+	* For $p = 0.5$, the odds are 1 ("50-50 odds")
+
+	* For $p = 0.9$, the odds are $0.9 / 0.1 = 9$ ("9 to 1 odds")
+	
+	* For $p = 0.2$, the odds are $0.2 / 0.8 = 0.25$ ("odds are 4 to 1 against")
+
+---
+
+# Odds as a transformation
+
+* The idea of odds is closer to how we usually think of probability
+
+* Mathematically, we can think of $p \mapsto \frac{p}{1-p}$ as a transformation
+
+* This transformation converts the bounded parameter $p$ to an unbounded parameter
+
+--
+
+* However, the odds are still bounded below by $0$
+
+* It is "asymmetric" in the sense that 
+
+	* for unfavourable odds, $p < 0.5 \implies \text{odds} \in [0, 1)$
+
+	* for favourable odds, $p > 0.5 \implies \text{odds} \in (1, \infty)$
+
+---
+
+# Log odds
+
+* We often symmetrize this by considering the log-odds $\log \frac{p}{1-p}$
+
+* The value of log-odds can be any real number
+
+--
+
+* The log-odds transformation is often useful for proportions
+
+---
+
+layout: true
+
+# Example: UN data
+
+---
+
+
+```r
+data(UN, package = "carData")
+xyplot(pctUrban ~ log(ppgdp), data = UN, grid = TRUE,
+       type = c("p", "smooth"), col.line = "red") + layer(panel.lmline(x, y))
+```
+
+![plot of chunk unnamed-chunk-20](figures/categorical-unnamed-chunk-20-1.svg)
+
+---
+
+
+```r
+logodds <- function(p) log(p / (1-p))
+xyplot(logodds(pctUrban/100) ~ log(ppgdp), data = UN, grid = TRUE, subset = pctUrban < 100,
+       type = c("p", "smooth"), col.line = "red") + layer(panel.lmline(x, y))
+```
+
+![plot of chunk unnamed-chunk-21](figures/categorical-unnamed-chunk-21-1.svg)
+
+---
+
+layout: false
+
+# Odds ratio
+
+* Suppose we want to compare success probability in two groups
+
+* For example, probability of admission for males vs females
+
+--
+
+* Odds ratio: Compute odds for both groups, take their ratio
+
+--
+
+* Interpretation: If $B$ represents predictor (e.g., gender), odds ratio is
+
+$$
+\frac{  {P(A \mid B)} / {P(A^C \mid B)} }{ {P(A \mid B^C)} / {P(A^C \mid B^C)}  }
+$$
+
+--
+
+* Clearly, log of odds ratio is the difference between log odds (zero means no difference)
+
+---
+
+layout: true
+
+# Example: `UCBAdmissions` revisited
+
+---
+
+* Odds ratio for all departments combined
+
+
+```r
+oddsratio <- function(x) { # x = 2 x 2 matrix, column 1 = success, column 2 = failure
+    (x[1,1] / x[1,2]) / (x[2,1] / x[2,2])
+}
+admitByGender
+```
+
+```
+        Admit
+Gender   Admitted Rejected
+  Female      557     1278
+  Male       1198     1493
+```
+
+```r
+oddsratio(admitByGender)
+```
+
+```
+[1] 0.5431594
+```
+
+```r
+log(oddsratio(admitByGender))
+```
+
+```
+[1] -0.6103524
+```
+
+---
+
+* Odds ratio by department
+
+
+```r
+UCBAdmissions[,, "A"]
+```
+
+```
+          Gender
+Admit      Male Female
+  Admitted  512     89
+  Rejected  313     19
+```
+
+* Transpose and reorder to get in desired format
+
+
+```r
+t(UCBAdmissions[, c(2, 1), "A"])
+```
+
+```
+        Admit
+Gender   Admitted Rejected
+  Female       89       19
+  Male        512      313
+```
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "A"])))
+```
+
+```
+[1] 1.052076
+```
+
+---
+
+.scrollable500[
+
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "A"])))
+```
+
+```
+[1] 1.052076
+```
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "B"])))
+```
+
+```
+[1] 0.2200225
+```
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "C"])))
+```
+
+```
+[1] -0.1249216
+```
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "D"])))
+```
+
+```
+[1] 0.08198719
+```
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "E"])))
+```
+
+```
+[1] -0.200187
+```
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "F"])))
+```
+
+```
+[1] 0.1888958
+```
+
+]
+
+---
+
+layout: true
+
+# Example: Hypertension vs Age
+
+---
+
+
+```r
+nhsub <- subset(NHANES, Age >= 21 & !is.na(BPSysAve) & Race1 == "White" & Gender == "female")
+nhsub$HyperTension <- ifelse(nhsub$BPSysAve > 120, "Yes", "No")
+HypTable <- xtabs(~ Age + HyperTension, nhsub)
+head(HypTable, 20)
+```
+
+```
+    HyperTension
+Age  No Yes
+  21 18   4
+  22 20   1
+  23 42   7
+  24 31  15
+  25 37   2
+  26 35   7
+  27 36   4
+  28 28   5
+  29 29   6
+  30 43   3
+  31 28  11
+  32 26   4
+  33 35   6
+  34 25   4
+  35 21   3
+  36 28   4
+  37 30  11
+  38 46   6
+  39 38   8
+  40 29   6
+```
+
+---
+
+
+```r
+HypProp <- HypTable[, "Yes"] / rowSums(HypTable)
+HypOdds <- HypTable[, "Yes"] / HypTable[, "No"]
+HypLogOdds <- log(HypOdds)
+Age <- as.numeric(rownames(HypTable))
+```
+
+
+```r
+data.frame(Age, HypProp, HypOdds, HypLogOdds) |> head(15)
+```
+
+```
+   Age    HypProp    HypOdds HypLogOdds
+21  21 0.18181818 0.22222222 -1.5040774
+22  22 0.04761905 0.05000000 -2.9957323
+23  23 0.14285714 0.16666667 -1.7917595
+24  24 0.32608696 0.48387097 -0.7259370
+25  25 0.05128205 0.05405405 -2.9177707
+26  26 0.16666667 0.20000000 -1.6094379
+27  27 0.10000000 0.11111111 -2.1972246
+28  28 0.15151515 0.17857143 -1.7227666
+29  29 0.17142857 0.20689655 -1.5755364
+30  30 0.06521739 0.06976744 -2.6625878
+31  31 0.28205128 0.39285714 -0.9343092
+32  32 0.13333333 0.15384615 -1.8718022
+33  33 0.14634146 0.17142857 -1.7635886
+34  34 0.13793103 0.16000000 -1.8325815
+35  35 0.12500000 0.14285714 -1.9459101
+```
+
+---
+
+
+```r
+xyplot(HypProp ~ Age, grid = TRUE)
+```
+
+![plot of chunk unnamed-chunk-29](figures/categorical-unnamed-chunk-29-1.svg)
+
+---
+
+
+```r
+xyplot(HypOdds ~ Age, grid = TRUE)
+```
+
+![plot of chunk unnamed-chunk-30](figures/categorical-unnamed-chunk-30-1.svg)
+
+---
+
+
+```r
+xyplot(HypLogOdds ~ Age, grid = TRUE)
+```
+
+![plot of chunk unnamed-chunk-31](figures/categorical-unnamed-chunk-31-1.svg)
+
+---
+
+layout: true
+
+# Example: `Titanic` data
+
+---
+
+.scrollable500[
+
+
+```r
+Titanic
+```
+
+```
+, , Age = Child, Survived = No
+
+      Sex
+Class  Male Female
+  1st     0      0
+  2nd     0      0
+  3rd    35     17
+  Crew    0      0
+
+, , Age = Adult, Survived = No
+
+      Sex
+Class  Male Female
+  1st   118      4
+  2nd   154     13
+  3rd   387     89
+  Crew  670      3
+
+, , Age = Child, Survived = Yes
+
+      Sex
+Class  Male Female
+  1st     5      1
+  2nd    11     13
+  3rd    13     14
+  Crew    0      0
+
+, , Age = Adult, Survived = Yes
+
+      Sex
+Class  Male Female
+  1st    57    140
+  2nd    14     80
+  3rd    75     76
+  Crew  192     20
+```
+
+]
+
+---
+
+.scrollable500[
+
+
+```r
+array2DF(Titanic)
+```
+
+```
+   Class    Sex   Age Survived Value
+1    1st   Male Child       No     0
+2    2nd   Male Child       No     0
+3    3rd   Male Child       No    35
+4   Crew   Male Child       No     0
+5    1st Female Child       No     0
+6    2nd Female Child       No     0
+7    3rd Female Child       No    17
+8   Crew Female Child       No     0
+9    1st   Male Adult       No   118
+10   2nd   Male Adult       No   154
+11   3rd   Male Adult       No   387
+12  Crew   Male Adult       No   670
+13   1st Female Adult       No     4
+14   2nd Female Adult       No    13
+15   3rd Female Adult       No    89
+16  Crew Female Adult       No     3
+17   1st   Male Child      Yes     5
+18   2nd   Male Child      Yes    11
+19   3rd   Male Child      Yes    13
+20  Crew   Male Child      Yes     0
+21   1st Female Child      Yes     1
+22   2nd Female Child      Yes    13
+23   3rd Female Child      Yes    14
+24  Crew Female Child      Yes     0
+25   1st   Male Adult      Yes    57
+26   2nd   Male Adult      Yes    14
+27   3rd   Male Adult      Yes    75
+28  Crew   Male Adult      Yes   192
+29   1st Female Adult      Yes   140
+30   2nd Female Adult      Yes    80
+31   3rd Female Adult      Yes    76
+32  Crew Female Adult      Yes    20
+```
+
+]
+
+---
+
+* Data on survival status of Titanic passengers by Age / Sex / Class 
+
+* Exercise: Compute and compare odds of survival for various passenger subgroups
+
+---
+
+layout: false
+class: center, middle
+
+# Questions?
+
+
+
+
+
+
+
+
+    </textarea>
+  </body>
+
+  <script 
+	  src='assets/remark-latest.min.js'
+	  type='text/javascript'></script>
+
+  <script type='text/javascript'>
+    var slideshow = remark.create(
+	{
+	    navigation: {scroll: false,},
+	    ratio: '16:9',
+	    // ratio: '4:3',
+	    countIncrementalSlides: false
+	});
+    
+    // Setup MathJax; unused if mathjax == false
+    MathJax = {
+	tex: {
+	    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+	    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ]
+	},
+	svg: {
+	    fontCache: 'global'
+	},
+    };
+
+  </script>
+
+  <script type='text/javascript' async
+	  src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'>
+  </script>
+
+</html>
+
