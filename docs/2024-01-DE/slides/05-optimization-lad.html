@@ -218,7 +218,7 @@ layout: true
 	
 	* Why? Because we don't want to move away from a minima
 	
---
+---
 
 * Gradient descent algorithm:
 
@@ -374,6 +374,46 @@ levelplot(loss ~ a + b, data = g) + xyplot(par2 ~ par1, res2_ab, type = "b", col
 * Each has its own advantages and disadvantages
 
 * You will learn more next semester
+
+---
+
+layout: true
+
+# Specialized alternative: IRLS
+
+---
+
+* This particular problem has a nice "intuitive" solution
+
+* Rewrite the loss function as follows:
+
+$$
+\lambda(a, b) = \sum\limits\sub{i=1}^n \abs{ Y\sub{i} - a - b X\sub{i}} = \sum\limits\sub{i=1}^n \frac{1}{\abs{Y\sub{i} - a - b X\sub{i}}} \left( Y\sub{i} - a - b X\sub{i} \right)^2
+$$
+
+--
+
+* This suggests the following iterative algorithm:
+
+	* Start with initial / current values $\hat{a}\sub{n}, \hat{b}\sub{n}$
+	
+	* Calculate $w^{(n)}\sub{i} = 1 / \abs{Y\sub{i} - \hat{a}\sub{n} - \hat{b}\sub{n} X\sub{i}}$
+	
+	* Find $\hat{a}\sub{n+1}, \hat{b}\sub{n+1}$ that minimizes $\lambda\sub{n}(a, b) = \sum\limits\sub{i=1}^n w^{(n)}\sub{i} \left( Y\sub{i} - a - b X\sub{i} \right)^2$
+
+---
+
+* The last step can be solved using calculus (requires a little work, but similar to OLS)
+
+* Known as _Weighted Least Squares_ (WLS)
+
+--
+
+* The resulting iterative procedure is known as  _Iteratively Reweighted Least Squares_ (IRLS)
+
+--
+
+* Exercise: Implement this and study behaviour
 
 ---
 
