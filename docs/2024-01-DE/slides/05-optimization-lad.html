@@ -60,16 +60,16 @@ $$
 
 ```r
 lad_loss_function <- function(x, y) {
-  if (length(x) != length(y)) stop("Lengths and x and y do not match")
-  skip <- is.na(x) | is.na(y)
-  x <- x[!skip]
-  y <- y[!skip]
-  lambda <- function(par) {
-    if (length(par) != 2) stop("par must have exactly two elements")
-    e <- abs(y - par[1] - par[2] * x)
-    sum(e)
-  }
-  lambda
+    if (length(x) != length(y)) stop("Lengths and x and y do not match")
+    skip <- is.na(x) | is.na(y)
+    x <- x[!skip]
+    y <- y[!skip]
+    lambda <- function(par) {
+        if (length(par) != 2) stop("par must have exactly two elements")
+        e <- abs(y - par[1] - par[2] * x)
+        sum(e)
+    }
+    lambda
 }
 data(Davis, package = "carData")
 DavisLoss <- with(Davis, lad_loss_function(x = height, y = weight))
@@ -414,6 +414,36 @@ $$
 --
 
 * Exercise: Implement this and study behaviour
+
+---
+
+layout: true
+
+# IRLS for Davis data
+
+---
+
+
+
+
+```r
+irls_cd <- with(Davis, irls(height - 170, weight, par = c(0, 0), niter = 10))
+levelplot(loss ~ c + d, data = g2) + xyplot(par2 ~ par1, irls_cd, type = "b", col = "red")
+```
+
+![plot of chunk unnamed-chunk-20](figures/optlad-unnamed-chunk-20-1.svg)
+
+---
+
+
+```r
+irls_ab <- with(Davis, irls(height, weight, par = c(0, 0), niter = 10))
+levelplot(loss ~ a + b, data = g) + xyplot(par2 ~ par1, irls_ab, type = "b", col = "red")
+```
+
+![plot of chunk unnamed-chunk-21](figures/optlad-unnamed-chunk-21-1.svg)
+
+
 
 ---
 
