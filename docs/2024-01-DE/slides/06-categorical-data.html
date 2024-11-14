@@ -971,6 +971,2192 @@ array2DF(Titanic)
 
 ---
 
+layout: true
+
+# Are two attributes independent?
+
+---
+
+* Natural next question: Are two attributes _independent_? (in the population)
+
+* We can consider the admissions data as an example
+
+
+```r
+t(UCBAdmissions[, c(2, 1), "C"])
+```
+
+```
+        Admit
+Gender   Admitted Rejected
+  Female      202      391
+  Male        120      205
+```
+
+--
+
+* Question (about population)
+
+	* Assume that this represents a random sample from all potential applicants
+
+	* Is that data consistent with what we would expect if there is no gender bias?
+	
+---
+
+* Alternate formulation: We can calculate the log odds ratio
+
+
+```r
+log(oddsratio(t(UCBAdmissions[, c(2, 1), "C"])))
+```
+
+```
+[1] -0.1249216
+```
+
+* Is this value sufficiently different from zero?
+
+--
+
+* To answer this question, we need to know what the odds ratio _could_ have been under independence
+
+--
+
+* Answering such questions is an important reason for studying Statistics formally
+
+* This sort of insight is more valuable than simple data summarization and visualization
+
+--
+
+* This area of Statistics is known as _inference_ (what we have been doing is _descriptive statistics_)
+
+---
+
+* How can we approach this problem?
+
+
+```r
+X <- t(UCBAdmissions[, c(2, 1), "C"])
+X
+```
+
+```
+        Admit
+Gender   Admitted Rejected
+  Female      202      391
+  Male        120      205
+```
+
+```r
+log(oddsratio(X))
+```
+
+```
+[1] -0.1249216
+```
+
+* Intuitively, bias against female candidates $\implies$ large negative value for log odds ratio
+	
+* But how large should the value be to decide that there is bias?
+
+--
+
+* We will study such questions using parametric models in the next semester
+
+* Here, we will consider a simple intuitive approach
+
+---
+
+* We want to study the "distribution" of log odds ratio _if there was no bias_
+
+* Of course, we do not know whether there was any bias
+
+--
+
+* Imagine doing a hypothetical experiment 
+
+	* Suppose gender of candidate is hidden from admission committee
+	
+	* This will guarantee that there was no gender bias
+
+--
+
+* If the process was indeed gender-neutral, then the outcomes would not have changed
+
+--
+
+* Even if we added fake random values for gender, the outcomes would not have changed
+
+--
+
+* This is something we can do easily: 
+
+	* Take all candidates, keep admission status unchanged, but assign gender randomly
+	
+	* How many females vs males? Easiest to keep the totals unchanged
+	
+	* This is equivalent to randomly permuting the gender variable
+
+---
+
+layout: true
+
+# Permutation test for independence
+
+---
+
+* To do this, we need data in expanded form
+
+
+```r
+X
+```
+
+```
+        Admit
+Gender   Admitted Rejected
+  Female      202      391
+  Male        120      205
+```
+
+```r
+d <- array2DF(X)
+d
+```
+
+```
+  Gender    Admit Value
+1 Female Admitted   202
+2   Male Admitted   120
+3 Female Rejected   391
+4   Male Rejected   205
+```
+
+---
+
+.scrollable500[
+
+
+```r
+dlong <- d[rep(1:4, d$Value) , c("Gender", "Admit")]
+dlong
+```
+
+```
+      Gender    Admit
+1     Female Admitted
+1.1   Female Admitted
+1.2   Female Admitted
+1.3   Female Admitted
+1.4   Female Admitted
+1.5   Female Admitted
+1.6   Female Admitted
+1.7   Female Admitted
+1.8   Female Admitted
+1.9   Female Admitted
+1.10  Female Admitted
+1.11  Female Admitted
+1.12  Female Admitted
+1.13  Female Admitted
+1.14  Female Admitted
+1.15  Female Admitted
+1.16  Female Admitted
+1.17  Female Admitted
+1.18  Female Admitted
+1.19  Female Admitted
+1.20  Female Admitted
+1.21  Female Admitted
+1.22  Female Admitted
+1.23  Female Admitted
+1.24  Female Admitted
+1.25  Female Admitted
+1.26  Female Admitted
+1.27  Female Admitted
+1.28  Female Admitted
+1.29  Female Admitted
+1.30  Female Admitted
+1.31  Female Admitted
+1.32  Female Admitted
+1.33  Female Admitted
+1.34  Female Admitted
+1.35  Female Admitted
+1.36  Female Admitted
+1.37  Female Admitted
+1.38  Female Admitted
+1.39  Female Admitted
+1.40  Female Admitted
+1.41  Female Admitted
+1.42  Female Admitted
+1.43  Female Admitted
+1.44  Female Admitted
+1.45  Female Admitted
+1.46  Female Admitted
+1.47  Female Admitted
+1.48  Female Admitted
+1.49  Female Admitted
+1.50  Female Admitted
+1.51  Female Admitted
+1.52  Female Admitted
+1.53  Female Admitted
+1.54  Female Admitted
+1.55  Female Admitted
+1.56  Female Admitted
+1.57  Female Admitted
+1.58  Female Admitted
+1.59  Female Admitted
+1.60  Female Admitted
+1.61  Female Admitted
+1.62  Female Admitted
+1.63  Female Admitted
+1.64  Female Admitted
+1.65  Female Admitted
+1.66  Female Admitted
+1.67  Female Admitted
+1.68  Female Admitted
+1.69  Female Admitted
+1.70  Female Admitted
+1.71  Female Admitted
+1.72  Female Admitted
+1.73  Female Admitted
+1.74  Female Admitted
+1.75  Female Admitted
+1.76  Female Admitted
+1.77  Female Admitted
+1.78  Female Admitted
+1.79  Female Admitted
+1.80  Female Admitted
+1.81  Female Admitted
+1.82  Female Admitted
+1.83  Female Admitted
+1.84  Female Admitted
+1.85  Female Admitted
+1.86  Female Admitted
+1.87  Female Admitted
+1.88  Female Admitted
+1.89  Female Admitted
+1.90  Female Admitted
+1.91  Female Admitted
+1.92  Female Admitted
+1.93  Female Admitted
+1.94  Female Admitted
+1.95  Female Admitted
+1.96  Female Admitted
+1.97  Female Admitted
+1.98  Female Admitted
+1.99  Female Admitted
+1.100 Female Admitted
+1.101 Female Admitted
+1.102 Female Admitted
+1.103 Female Admitted
+1.104 Female Admitted
+1.105 Female Admitted
+1.106 Female Admitted
+1.107 Female Admitted
+1.108 Female Admitted
+1.109 Female Admitted
+1.110 Female Admitted
+1.111 Female Admitted
+1.112 Female Admitted
+1.113 Female Admitted
+1.114 Female Admitted
+1.115 Female Admitted
+1.116 Female Admitted
+1.117 Female Admitted
+1.118 Female Admitted
+1.119 Female Admitted
+1.120 Female Admitted
+1.121 Female Admitted
+1.122 Female Admitted
+1.123 Female Admitted
+1.124 Female Admitted
+1.125 Female Admitted
+1.126 Female Admitted
+1.127 Female Admitted
+1.128 Female Admitted
+1.129 Female Admitted
+1.130 Female Admitted
+1.131 Female Admitted
+1.132 Female Admitted
+1.133 Female Admitted
+1.134 Female Admitted
+1.135 Female Admitted
+1.136 Female Admitted
+1.137 Female Admitted
+1.138 Female Admitted
+1.139 Female Admitted
+1.140 Female Admitted
+1.141 Female Admitted
+1.142 Female Admitted
+1.143 Female Admitted
+1.144 Female Admitted
+1.145 Female Admitted
+1.146 Female Admitted
+1.147 Female Admitted
+1.148 Female Admitted
+1.149 Female Admitted
+1.150 Female Admitted
+1.151 Female Admitted
+1.152 Female Admitted
+1.153 Female Admitted
+1.154 Female Admitted
+1.155 Female Admitted
+1.156 Female Admitted
+1.157 Female Admitted
+1.158 Female Admitted
+1.159 Female Admitted
+1.160 Female Admitted
+1.161 Female Admitted
+1.162 Female Admitted
+1.163 Female Admitted
+1.164 Female Admitted
+1.165 Female Admitted
+1.166 Female Admitted
+1.167 Female Admitted
+1.168 Female Admitted
+1.169 Female Admitted
+1.170 Female Admitted
+1.171 Female Admitted
+1.172 Female Admitted
+1.173 Female Admitted
+1.174 Female Admitted
+1.175 Female Admitted
+1.176 Female Admitted
+1.177 Female Admitted
+1.178 Female Admitted
+1.179 Female Admitted
+1.180 Female Admitted
+1.181 Female Admitted
+1.182 Female Admitted
+1.183 Female Admitted
+1.184 Female Admitted
+1.185 Female Admitted
+1.186 Female Admitted
+1.187 Female Admitted
+1.188 Female Admitted
+1.189 Female Admitted
+1.190 Female Admitted
+1.191 Female Admitted
+1.192 Female Admitted
+1.193 Female Admitted
+1.194 Female Admitted
+1.195 Female Admitted
+1.196 Female Admitted
+1.197 Female Admitted
+1.198 Female Admitted
+1.199 Female Admitted
+1.200 Female Admitted
+1.201 Female Admitted
+2       Male Admitted
+2.1     Male Admitted
+2.2     Male Admitted
+2.3     Male Admitted
+2.4     Male Admitted
+2.5     Male Admitted
+2.6     Male Admitted
+2.7     Male Admitted
+2.8     Male Admitted
+2.9     Male Admitted
+2.10    Male Admitted
+2.11    Male Admitted
+2.12    Male Admitted
+2.13    Male Admitted
+2.14    Male Admitted
+2.15    Male Admitted
+2.16    Male Admitted
+2.17    Male Admitted
+2.18    Male Admitted
+2.19    Male Admitted
+2.20    Male Admitted
+2.21    Male Admitted
+2.22    Male Admitted
+2.23    Male Admitted
+2.24    Male Admitted
+2.25    Male Admitted
+2.26    Male Admitted
+2.27    Male Admitted
+2.28    Male Admitted
+2.29    Male Admitted
+2.30    Male Admitted
+2.31    Male Admitted
+2.32    Male Admitted
+2.33    Male Admitted
+2.34    Male Admitted
+2.35    Male Admitted
+2.36    Male Admitted
+2.37    Male Admitted
+2.38    Male Admitted
+2.39    Male Admitted
+2.40    Male Admitted
+2.41    Male Admitted
+2.42    Male Admitted
+2.43    Male Admitted
+2.44    Male Admitted
+2.45    Male Admitted
+2.46    Male Admitted
+2.47    Male Admitted
+2.48    Male Admitted
+2.49    Male Admitted
+2.50    Male Admitted
+2.51    Male Admitted
+2.52    Male Admitted
+2.53    Male Admitted
+2.54    Male Admitted
+2.55    Male Admitted
+2.56    Male Admitted
+2.57    Male Admitted
+2.58    Male Admitted
+2.59    Male Admitted
+2.60    Male Admitted
+2.61    Male Admitted
+2.62    Male Admitted
+2.63    Male Admitted
+2.64    Male Admitted
+2.65    Male Admitted
+2.66    Male Admitted
+2.67    Male Admitted
+2.68    Male Admitted
+2.69    Male Admitted
+2.70    Male Admitted
+2.71    Male Admitted
+2.72    Male Admitted
+2.73    Male Admitted
+2.74    Male Admitted
+2.75    Male Admitted
+2.76    Male Admitted
+2.77    Male Admitted
+2.78    Male Admitted
+2.79    Male Admitted
+2.80    Male Admitted
+2.81    Male Admitted
+2.82    Male Admitted
+2.83    Male Admitted
+2.84    Male Admitted
+2.85    Male Admitted
+2.86    Male Admitted
+2.87    Male Admitted
+2.88    Male Admitted
+2.89    Male Admitted
+2.90    Male Admitted
+2.91    Male Admitted
+2.92    Male Admitted
+2.93    Male Admitted
+2.94    Male Admitted
+2.95    Male Admitted
+2.96    Male Admitted
+2.97    Male Admitted
+2.98    Male Admitted
+2.99    Male Admitted
+2.100   Male Admitted
+2.101   Male Admitted
+2.102   Male Admitted
+2.103   Male Admitted
+2.104   Male Admitted
+2.105   Male Admitted
+2.106   Male Admitted
+2.107   Male Admitted
+2.108   Male Admitted
+2.109   Male Admitted
+2.110   Male Admitted
+2.111   Male Admitted
+2.112   Male Admitted
+2.113   Male Admitted
+2.114   Male Admitted
+2.115   Male Admitted
+2.116   Male Admitted
+2.117   Male Admitted
+2.118   Male Admitted
+2.119   Male Admitted
+3     Female Rejected
+3.1   Female Rejected
+3.2   Female Rejected
+3.3   Female Rejected
+3.4   Female Rejected
+3.5   Female Rejected
+3.6   Female Rejected
+3.7   Female Rejected
+3.8   Female Rejected
+3.9   Female Rejected
+3.10  Female Rejected
+3.11  Female Rejected
+3.12  Female Rejected
+3.13  Female Rejected
+3.14  Female Rejected
+3.15  Female Rejected
+3.16  Female Rejected
+3.17  Female Rejected
+3.18  Female Rejected
+3.19  Female Rejected
+3.20  Female Rejected
+3.21  Female Rejected
+3.22  Female Rejected
+3.23  Female Rejected
+3.24  Female Rejected
+3.25  Female Rejected
+3.26  Female Rejected
+3.27  Female Rejected
+3.28  Female Rejected
+3.29  Female Rejected
+3.30  Female Rejected
+3.31  Female Rejected
+3.32  Female Rejected
+3.33  Female Rejected
+3.34  Female Rejected
+3.35  Female Rejected
+3.36  Female Rejected
+3.37  Female Rejected
+3.38  Female Rejected
+3.39  Female Rejected
+3.40  Female Rejected
+3.41  Female Rejected
+3.42  Female Rejected
+3.43  Female Rejected
+3.44  Female Rejected
+3.45  Female Rejected
+3.46  Female Rejected
+3.47  Female Rejected
+3.48  Female Rejected
+3.49  Female Rejected
+3.50  Female Rejected
+3.51  Female Rejected
+3.52  Female Rejected
+3.53  Female Rejected
+3.54  Female Rejected
+3.55  Female Rejected
+3.56  Female Rejected
+3.57  Female Rejected
+3.58  Female Rejected
+3.59  Female Rejected
+3.60  Female Rejected
+3.61  Female Rejected
+3.62  Female Rejected
+3.63  Female Rejected
+3.64  Female Rejected
+3.65  Female Rejected
+3.66  Female Rejected
+3.67  Female Rejected
+3.68  Female Rejected
+3.69  Female Rejected
+3.70  Female Rejected
+3.71  Female Rejected
+3.72  Female Rejected
+3.73  Female Rejected
+3.74  Female Rejected
+3.75  Female Rejected
+3.76  Female Rejected
+3.77  Female Rejected
+3.78  Female Rejected
+3.79  Female Rejected
+3.80  Female Rejected
+3.81  Female Rejected
+3.82  Female Rejected
+3.83  Female Rejected
+3.84  Female Rejected
+3.85  Female Rejected
+3.86  Female Rejected
+3.87  Female Rejected
+3.88  Female Rejected
+3.89  Female Rejected
+3.90  Female Rejected
+3.91  Female Rejected
+3.92  Female Rejected
+3.93  Female Rejected
+3.94  Female Rejected
+3.95  Female Rejected
+3.96  Female Rejected
+3.97  Female Rejected
+3.98  Female Rejected
+3.99  Female Rejected
+3.100 Female Rejected
+3.101 Female Rejected
+3.102 Female Rejected
+3.103 Female Rejected
+3.104 Female Rejected
+3.105 Female Rejected
+3.106 Female Rejected
+3.107 Female Rejected
+3.108 Female Rejected
+3.109 Female Rejected
+3.110 Female Rejected
+3.111 Female Rejected
+3.112 Female Rejected
+3.113 Female Rejected
+3.114 Female Rejected
+3.115 Female Rejected
+3.116 Female Rejected
+3.117 Female Rejected
+3.118 Female Rejected
+3.119 Female Rejected
+3.120 Female Rejected
+3.121 Female Rejected
+3.122 Female Rejected
+3.123 Female Rejected
+3.124 Female Rejected
+3.125 Female Rejected
+3.126 Female Rejected
+3.127 Female Rejected
+3.128 Female Rejected
+3.129 Female Rejected
+3.130 Female Rejected
+3.131 Female Rejected
+3.132 Female Rejected
+3.133 Female Rejected
+3.134 Female Rejected
+3.135 Female Rejected
+3.136 Female Rejected
+3.137 Female Rejected
+3.138 Female Rejected
+3.139 Female Rejected
+3.140 Female Rejected
+3.141 Female Rejected
+3.142 Female Rejected
+3.143 Female Rejected
+3.144 Female Rejected
+3.145 Female Rejected
+3.146 Female Rejected
+3.147 Female Rejected
+3.148 Female Rejected
+3.149 Female Rejected
+3.150 Female Rejected
+3.151 Female Rejected
+3.152 Female Rejected
+3.153 Female Rejected
+3.154 Female Rejected
+3.155 Female Rejected
+3.156 Female Rejected
+3.157 Female Rejected
+3.158 Female Rejected
+3.159 Female Rejected
+3.160 Female Rejected
+3.161 Female Rejected
+3.162 Female Rejected
+3.163 Female Rejected
+3.164 Female Rejected
+3.165 Female Rejected
+3.166 Female Rejected
+3.167 Female Rejected
+3.168 Female Rejected
+3.169 Female Rejected
+3.170 Female Rejected
+3.171 Female Rejected
+3.172 Female Rejected
+3.173 Female Rejected
+3.174 Female Rejected
+3.175 Female Rejected
+3.176 Female Rejected
+3.177 Female Rejected
+3.178 Female Rejected
+3.179 Female Rejected
+3.180 Female Rejected
+3.181 Female Rejected
+3.182 Female Rejected
+3.183 Female Rejected
+3.184 Female Rejected
+3.185 Female Rejected
+3.186 Female Rejected
+3.187 Female Rejected
+3.188 Female Rejected
+3.189 Female Rejected
+3.190 Female Rejected
+3.191 Female Rejected
+3.192 Female Rejected
+3.193 Female Rejected
+3.194 Female Rejected
+3.195 Female Rejected
+3.196 Female Rejected
+3.197 Female Rejected
+3.198 Female Rejected
+3.199 Female Rejected
+3.200 Female Rejected
+3.201 Female Rejected
+3.202 Female Rejected
+3.203 Female Rejected
+3.204 Female Rejected
+3.205 Female Rejected
+3.206 Female Rejected
+3.207 Female Rejected
+3.208 Female Rejected
+3.209 Female Rejected
+3.210 Female Rejected
+3.211 Female Rejected
+3.212 Female Rejected
+3.213 Female Rejected
+3.214 Female Rejected
+3.215 Female Rejected
+3.216 Female Rejected
+3.217 Female Rejected
+3.218 Female Rejected
+3.219 Female Rejected
+3.220 Female Rejected
+3.221 Female Rejected
+3.222 Female Rejected
+3.223 Female Rejected
+3.224 Female Rejected
+3.225 Female Rejected
+3.226 Female Rejected
+3.227 Female Rejected
+3.228 Female Rejected
+3.229 Female Rejected
+3.230 Female Rejected
+3.231 Female Rejected
+3.232 Female Rejected
+3.233 Female Rejected
+3.234 Female Rejected
+3.235 Female Rejected
+3.236 Female Rejected
+3.237 Female Rejected
+3.238 Female Rejected
+3.239 Female Rejected
+3.240 Female Rejected
+3.241 Female Rejected
+3.242 Female Rejected
+3.243 Female Rejected
+3.244 Female Rejected
+3.245 Female Rejected
+3.246 Female Rejected
+3.247 Female Rejected
+3.248 Female Rejected
+3.249 Female Rejected
+3.250 Female Rejected
+3.251 Female Rejected
+3.252 Female Rejected
+3.253 Female Rejected
+3.254 Female Rejected
+3.255 Female Rejected
+3.256 Female Rejected
+3.257 Female Rejected
+3.258 Female Rejected
+3.259 Female Rejected
+3.260 Female Rejected
+3.261 Female Rejected
+3.262 Female Rejected
+3.263 Female Rejected
+3.264 Female Rejected
+3.265 Female Rejected
+3.266 Female Rejected
+3.267 Female Rejected
+3.268 Female Rejected
+3.269 Female Rejected
+3.270 Female Rejected
+3.271 Female Rejected
+3.272 Female Rejected
+3.273 Female Rejected
+3.274 Female Rejected
+3.275 Female Rejected
+3.276 Female Rejected
+3.277 Female Rejected
+3.278 Female Rejected
+3.279 Female Rejected
+3.280 Female Rejected
+3.281 Female Rejected
+3.282 Female Rejected
+3.283 Female Rejected
+3.284 Female Rejected
+3.285 Female Rejected
+3.286 Female Rejected
+3.287 Female Rejected
+3.288 Female Rejected
+3.289 Female Rejected
+3.290 Female Rejected
+3.291 Female Rejected
+3.292 Female Rejected
+3.293 Female Rejected
+3.294 Female Rejected
+3.295 Female Rejected
+3.296 Female Rejected
+3.297 Female Rejected
+3.298 Female Rejected
+3.299 Female Rejected
+3.300 Female Rejected
+3.301 Female Rejected
+3.302 Female Rejected
+3.303 Female Rejected
+3.304 Female Rejected
+3.305 Female Rejected
+3.306 Female Rejected
+3.307 Female Rejected
+3.308 Female Rejected
+3.309 Female Rejected
+3.310 Female Rejected
+3.311 Female Rejected
+3.312 Female Rejected
+3.313 Female Rejected
+3.314 Female Rejected
+3.315 Female Rejected
+3.316 Female Rejected
+3.317 Female Rejected
+3.318 Female Rejected
+3.319 Female Rejected
+3.320 Female Rejected
+3.321 Female Rejected
+3.322 Female Rejected
+3.323 Female Rejected
+3.324 Female Rejected
+3.325 Female Rejected
+3.326 Female Rejected
+3.327 Female Rejected
+3.328 Female Rejected
+3.329 Female Rejected
+3.330 Female Rejected
+3.331 Female Rejected
+3.332 Female Rejected
+3.333 Female Rejected
+3.334 Female Rejected
+3.335 Female Rejected
+3.336 Female Rejected
+3.337 Female Rejected
+3.338 Female Rejected
+3.339 Female Rejected
+3.340 Female Rejected
+3.341 Female Rejected
+3.342 Female Rejected
+3.343 Female Rejected
+3.344 Female Rejected
+3.345 Female Rejected
+3.346 Female Rejected
+3.347 Female Rejected
+3.348 Female Rejected
+3.349 Female Rejected
+3.350 Female Rejected
+3.351 Female Rejected
+3.352 Female Rejected
+3.353 Female Rejected
+3.354 Female Rejected
+3.355 Female Rejected
+3.356 Female Rejected
+3.357 Female Rejected
+3.358 Female Rejected
+3.359 Female Rejected
+3.360 Female Rejected
+3.361 Female Rejected
+3.362 Female Rejected
+3.363 Female Rejected
+3.364 Female Rejected
+3.365 Female Rejected
+3.366 Female Rejected
+3.367 Female Rejected
+3.368 Female Rejected
+3.369 Female Rejected
+3.370 Female Rejected
+3.371 Female Rejected
+3.372 Female Rejected
+3.373 Female Rejected
+3.374 Female Rejected
+3.375 Female Rejected
+3.376 Female Rejected
+3.377 Female Rejected
+3.378 Female Rejected
+3.379 Female Rejected
+3.380 Female Rejected
+3.381 Female Rejected
+3.382 Female Rejected
+3.383 Female Rejected
+3.384 Female Rejected
+3.385 Female Rejected
+3.386 Female Rejected
+3.387 Female Rejected
+3.388 Female Rejected
+3.389 Female Rejected
+3.390 Female Rejected
+4       Male Rejected
+4.1     Male Rejected
+4.2     Male Rejected
+4.3     Male Rejected
+4.4     Male Rejected
+4.5     Male Rejected
+4.6     Male Rejected
+4.7     Male Rejected
+4.8     Male Rejected
+4.9     Male Rejected
+4.10    Male Rejected
+4.11    Male Rejected
+4.12    Male Rejected
+4.13    Male Rejected
+4.14    Male Rejected
+4.15    Male Rejected
+4.16    Male Rejected
+4.17    Male Rejected
+4.18    Male Rejected
+4.19    Male Rejected
+4.20    Male Rejected
+4.21    Male Rejected
+4.22    Male Rejected
+4.23    Male Rejected
+4.24    Male Rejected
+4.25    Male Rejected
+4.26    Male Rejected
+4.27    Male Rejected
+4.28    Male Rejected
+4.29    Male Rejected
+4.30    Male Rejected
+4.31    Male Rejected
+4.32    Male Rejected
+4.33    Male Rejected
+4.34    Male Rejected
+4.35    Male Rejected
+4.36    Male Rejected
+4.37    Male Rejected
+4.38    Male Rejected
+4.39    Male Rejected
+4.40    Male Rejected
+4.41    Male Rejected
+4.42    Male Rejected
+4.43    Male Rejected
+4.44    Male Rejected
+4.45    Male Rejected
+4.46    Male Rejected
+4.47    Male Rejected
+4.48    Male Rejected
+4.49    Male Rejected
+4.50    Male Rejected
+4.51    Male Rejected
+4.52    Male Rejected
+4.53    Male Rejected
+4.54    Male Rejected
+4.55    Male Rejected
+4.56    Male Rejected
+4.57    Male Rejected
+4.58    Male Rejected
+4.59    Male Rejected
+4.60    Male Rejected
+4.61    Male Rejected
+4.62    Male Rejected
+4.63    Male Rejected
+4.64    Male Rejected
+4.65    Male Rejected
+4.66    Male Rejected
+4.67    Male Rejected
+4.68    Male Rejected
+4.69    Male Rejected
+4.70    Male Rejected
+4.71    Male Rejected
+4.72    Male Rejected
+4.73    Male Rejected
+4.74    Male Rejected
+4.75    Male Rejected
+4.76    Male Rejected
+4.77    Male Rejected
+4.78    Male Rejected
+4.79    Male Rejected
+4.80    Male Rejected
+4.81    Male Rejected
+4.82    Male Rejected
+4.83    Male Rejected
+4.84    Male Rejected
+4.85    Male Rejected
+4.86    Male Rejected
+4.87    Male Rejected
+4.88    Male Rejected
+4.89    Male Rejected
+4.90    Male Rejected
+4.91    Male Rejected
+4.92    Male Rejected
+4.93    Male Rejected
+4.94    Male Rejected
+4.95    Male Rejected
+4.96    Male Rejected
+4.97    Male Rejected
+4.98    Male Rejected
+4.99    Male Rejected
+4.100   Male Rejected
+4.101   Male Rejected
+4.102   Male Rejected
+4.103   Male Rejected
+4.104   Male Rejected
+4.105   Male Rejected
+4.106   Male Rejected
+4.107   Male Rejected
+4.108   Male Rejected
+4.109   Male Rejected
+4.110   Male Rejected
+4.111   Male Rejected
+4.112   Male Rejected
+4.113   Male Rejected
+4.114   Male Rejected
+4.115   Male Rejected
+4.116   Male Rejected
+4.117   Male Rejected
+4.118   Male Rejected
+4.119   Male Rejected
+4.120   Male Rejected
+4.121   Male Rejected
+4.122   Male Rejected
+4.123   Male Rejected
+4.124   Male Rejected
+4.125   Male Rejected
+4.126   Male Rejected
+4.127   Male Rejected
+4.128   Male Rejected
+4.129   Male Rejected
+4.130   Male Rejected
+4.131   Male Rejected
+4.132   Male Rejected
+4.133   Male Rejected
+4.134   Male Rejected
+4.135   Male Rejected
+4.136   Male Rejected
+4.137   Male Rejected
+4.138   Male Rejected
+4.139   Male Rejected
+4.140   Male Rejected
+4.141   Male Rejected
+4.142   Male Rejected
+4.143   Male Rejected
+4.144   Male Rejected
+4.145   Male Rejected
+4.146   Male Rejected
+4.147   Male Rejected
+4.148   Male Rejected
+4.149   Male Rejected
+4.150   Male Rejected
+4.151   Male Rejected
+4.152   Male Rejected
+4.153   Male Rejected
+4.154   Male Rejected
+4.155   Male Rejected
+4.156   Male Rejected
+4.157   Male Rejected
+4.158   Male Rejected
+4.159   Male Rejected
+4.160   Male Rejected
+4.161   Male Rejected
+4.162   Male Rejected
+4.163   Male Rejected
+4.164   Male Rejected
+4.165   Male Rejected
+4.166   Male Rejected
+4.167   Male Rejected
+4.168   Male Rejected
+4.169   Male Rejected
+4.170   Male Rejected
+4.171   Male Rejected
+4.172   Male Rejected
+4.173   Male Rejected
+4.174   Male Rejected
+4.175   Male Rejected
+4.176   Male Rejected
+4.177   Male Rejected
+4.178   Male Rejected
+4.179   Male Rejected
+4.180   Male Rejected
+4.181   Male Rejected
+4.182   Male Rejected
+4.183   Male Rejected
+4.184   Male Rejected
+4.185   Male Rejected
+4.186   Male Rejected
+4.187   Male Rejected
+4.188   Male Rejected
+4.189   Male Rejected
+4.190   Male Rejected
+4.191   Male Rejected
+4.192   Male Rejected
+4.193   Male Rejected
+4.194   Male Rejected
+4.195   Male Rejected
+4.196   Male Rejected
+4.197   Male Rejected
+4.198   Male Rejected
+4.199   Male Rejected
+4.200   Male Rejected
+4.201   Male Rejected
+4.202   Male Rejected
+4.203   Male Rejected
+4.204   Male Rejected
+```
+
+]
+
+
+---
+
+.scrollable500[
+
+
+```r
+dlong$GenderRandomized <- sample(dlong$Gender)
+dlong
+```
+
+```
+      Gender    Admit GenderRandomized
+1     Female Admitted             Male
+1.1   Female Admitted           Female
+1.2   Female Admitted           Female
+1.3   Female Admitted             Male
+1.4   Female Admitted           Female
+1.5   Female Admitted           Female
+1.6   Female Admitted             Male
+1.7   Female Admitted           Female
+1.8   Female Admitted           Female
+1.9   Female Admitted             Male
+1.10  Female Admitted             Male
+1.11  Female Admitted             Male
+1.12  Female Admitted           Female
+1.13  Female Admitted           Female
+1.14  Female Admitted             Male
+1.15  Female Admitted           Female
+1.16  Female Admitted           Female
+1.17  Female Admitted             Male
+1.18  Female Admitted             Male
+1.19  Female Admitted           Female
+1.20  Female Admitted           Female
+1.21  Female Admitted             Male
+1.22  Female Admitted             Male
+1.23  Female Admitted             Male
+1.24  Female Admitted           Female
+1.25  Female Admitted             Male
+1.26  Female Admitted           Female
+1.27  Female Admitted             Male
+1.28  Female Admitted           Female
+1.29  Female Admitted           Female
+1.30  Female Admitted           Female
+1.31  Female Admitted             Male
+1.32  Female Admitted           Female
+1.33  Female Admitted           Female
+1.34  Female Admitted             Male
+1.35  Female Admitted           Female
+1.36  Female Admitted           Female
+1.37  Female Admitted           Female
+1.38  Female Admitted             Male
+1.39  Female Admitted             Male
+1.40  Female Admitted             Male
+1.41  Female Admitted           Female
+1.42  Female Admitted             Male
+1.43  Female Admitted           Female
+1.44  Female Admitted           Female
+1.45  Female Admitted             Male
+1.46  Female Admitted           Female
+1.47  Female Admitted           Female
+1.48  Female Admitted           Female
+1.49  Female Admitted           Female
+1.50  Female Admitted           Female
+1.51  Female Admitted             Male
+1.52  Female Admitted           Female
+1.53  Female Admitted           Female
+1.54  Female Admitted           Female
+1.55  Female Admitted           Female
+1.56  Female Admitted             Male
+1.57  Female Admitted           Female
+1.58  Female Admitted           Female
+1.59  Female Admitted             Male
+1.60  Female Admitted           Female
+1.61  Female Admitted           Female
+1.62  Female Admitted           Female
+1.63  Female Admitted           Female
+1.64  Female Admitted           Female
+1.65  Female Admitted           Female
+1.66  Female Admitted             Male
+1.67  Female Admitted           Female
+1.68  Female Admitted           Female
+1.69  Female Admitted           Female
+1.70  Female Admitted           Female
+1.71  Female Admitted           Female
+1.72  Female Admitted             Male
+1.73  Female Admitted           Female
+1.74  Female Admitted             Male
+1.75  Female Admitted           Female
+1.76  Female Admitted             Male
+1.77  Female Admitted           Female
+1.78  Female Admitted           Female
+1.79  Female Admitted           Female
+1.80  Female Admitted           Female
+1.81  Female Admitted           Female
+1.82  Female Admitted             Male
+1.83  Female Admitted           Female
+1.84  Female Admitted           Female
+1.85  Female Admitted             Male
+1.86  Female Admitted           Female
+1.87  Female Admitted             Male
+1.88  Female Admitted           Female
+1.89  Female Admitted           Female
+1.90  Female Admitted           Female
+1.91  Female Admitted           Female
+1.92  Female Admitted           Female
+1.93  Female Admitted             Male
+1.94  Female Admitted           Female
+1.95  Female Admitted           Female
+1.96  Female Admitted           Female
+1.97  Female Admitted             Male
+1.98  Female Admitted           Female
+1.99  Female Admitted           Female
+1.100 Female Admitted           Female
+1.101 Female Admitted           Female
+1.102 Female Admitted             Male
+1.103 Female Admitted           Female
+1.104 Female Admitted           Female
+1.105 Female Admitted             Male
+1.106 Female Admitted           Female
+1.107 Female Admitted             Male
+1.108 Female Admitted             Male
+1.109 Female Admitted             Male
+1.110 Female Admitted           Female
+1.111 Female Admitted           Female
+1.112 Female Admitted           Female
+1.113 Female Admitted             Male
+1.114 Female Admitted           Female
+1.115 Female Admitted           Female
+1.116 Female Admitted           Female
+1.117 Female Admitted             Male
+1.118 Female Admitted           Female
+1.119 Female Admitted           Female
+1.120 Female Admitted           Female
+1.121 Female Admitted             Male
+1.122 Female Admitted           Female
+1.123 Female Admitted           Female
+1.124 Female Admitted           Female
+1.125 Female Admitted           Female
+1.126 Female Admitted             Male
+1.127 Female Admitted             Male
+1.128 Female Admitted             Male
+1.129 Female Admitted             Male
+1.130 Female Admitted           Female
+1.131 Female Admitted             Male
+1.132 Female Admitted           Female
+1.133 Female Admitted           Female
+1.134 Female Admitted           Female
+1.135 Female Admitted             Male
+1.136 Female Admitted             Male
+1.137 Female Admitted             Male
+1.138 Female Admitted             Male
+1.139 Female Admitted           Female
+1.140 Female Admitted           Female
+1.141 Female Admitted           Female
+1.142 Female Admitted           Female
+1.143 Female Admitted             Male
+1.144 Female Admitted             Male
+1.145 Female Admitted           Female
+1.146 Female Admitted           Female
+1.147 Female Admitted             Male
+1.148 Female Admitted           Female
+1.149 Female Admitted           Female
+1.150 Female Admitted             Male
+1.151 Female Admitted           Female
+1.152 Female Admitted           Female
+1.153 Female Admitted           Female
+1.154 Female Admitted           Female
+1.155 Female Admitted           Female
+1.156 Female Admitted             Male
+1.157 Female Admitted             Male
+1.158 Female Admitted           Female
+1.159 Female Admitted             Male
+1.160 Female Admitted           Female
+1.161 Female Admitted           Female
+1.162 Female Admitted             Male
+1.163 Female Admitted           Female
+1.164 Female Admitted           Female
+1.165 Female Admitted           Female
+1.166 Female Admitted           Female
+1.167 Female Admitted           Female
+1.168 Female Admitted             Male
+1.169 Female Admitted           Female
+1.170 Female Admitted             Male
+1.171 Female Admitted             Male
+1.172 Female Admitted             Male
+1.173 Female Admitted           Female
+1.174 Female Admitted           Female
+1.175 Female Admitted           Female
+1.176 Female Admitted             Male
+1.177 Female Admitted           Female
+1.178 Female Admitted           Female
+1.179 Female Admitted             Male
+1.180 Female Admitted           Female
+1.181 Female Admitted             Male
+1.182 Female Admitted           Female
+1.183 Female Admitted             Male
+1.184 Female Admitted           Female
+1.185 Female Admitted             Male
+1.186 Female Admitted           Female
+1.187 Female Admitted           Female
+1.188 Female Admitted           Female
+1.189 Female Admitted           Female
+1.190 Female Admitted           Female
+1.191 Female Admitted           Female
+1.192 Female Admitted           Female
+1.193 Female Admitted           Female
+1.194 Female Admitted           Female
+1.195 Female Admitted             Male
+1.196 Female Admitted             Male
+1.197 Female Admitted           Female
+1.198 Female Admitted           Female
+1.199 Female Admitted           Female
+1.200 Female Admitted           Female
+1.201 Female Admitted           Female
+2       Male Admitted           Female
+2.1     Male Admitted             Male
+2.2     Male Admitted           Female
+2.3     Male Admitted           Female
+2.4     Male Admitted             Male
+2.5     Male Admitted             Male
+2.6     Male Admitted           Female
+2.7     Male Admitted             Male
+2.8     Male Admitted           Female
+2.9     Male Admitted           Female
+2.10    Male Admitted             Male
+2.11    Male Admitted           Female
+2.12    Male Admitted           Female
+2.13    Male Admitted             Male
+2.14    Male Admitted             Male
+2.15    Male Admitted             Male
+2.16    Male Admitted           Female
+2.17    Male Admitted           Female
+2.18    Male Admitted           Female
+2.19    Male Admitted           Female
+2.20    Male Admitted           Female
+2.21    Male Admitted           Female
+2.22    Male Admitted             Male
+2.23    Male Admitted             Male
+2.24    Male Admitted             Male
+2.25    Male Admitted           Female
+2.26    Male Admitted           Female
+2.27    Male Admitted           Female
+2.28    Male Admitted           Female
+2.29    Male Admitted             Male
+2.30    Male Admitted           Female
+2.31    Male Admitted             Male
+2.32    Male Admitted           Female
+2.33    Male Admitted           Female
+2.34    Male Admitted           Female
+2.35    Male Admitted           Female
+2.36    Male Admitted           Female
+2.37    Male Admitted           Female
+2.38    Male Admitted             Male
+2.39    Male Admitted           Female
+2.40    Male Admitted             Male
+2.41    Male Admitted           Female
+2.42    Male Admitted           Female
+2.43    Male Admitted             Male
+2.44    Male Admitted             Male
+2.45    Male Admitted           Female
+2.46    Male Admitted             Male
+2.47    Male Admitted             Male
+2.48    Male Admitted           Female
+2.49    Male Admitted             Male
+2.50    Male Admitted             Male
+2.51    Male Admitted           Female
+2.52    Male Admitted             Male
+2.53    Male Admitted           Female
+2.54    Male Admitted             Male
+2.55    Male Admitted           Female
+2.56    Male Admitted             Male
+2.57    Male Admitted           Female
+2.58    Male Admitted           Female
+2.59    Male Admitted             Male
+2.60    Male Admitted           Female
+2.61    Male Admitted             Male
+2.62    Male Admitted           Female
+2.63    Male Admitted           Female
+2.64    Male Admitted           Female
+2.65    Male Admitted             Male
+2.66    Male Admitted             Male
+2.67    Male Admitted           Female
+2.68    Male Admitted           Female
+2.69    Male Admitted           Female
+2.70    Male Admitted           Female
+2.71    Male Admitted             Male
+2.72    Male Admitted           Female
+2.73    Male Admitted           Female
+2.74    Male Admitted             Male
+2.75    Male Admitted             Male
+2.76    Male Admitted             Male
+2.77    Male Admitted           Female
+2.78    Male Admitted             Male
+2.79    Male Admitted             Male
+2.80    Male Admitted           Female
+2.81    Male Admitted             Male
+2.82    Male Admitted           Female
+2.83    Male Admitted           Female
+2.84    Male Admitted           Female
+2.85    Male Admitted           Female
+2.86    Male Admitted             Male
+2.87    Male Admitted           Female
+2.88    Male Admitted           Female
+2.89    Male Admitted           Female
+2.90    Male Admitted             Male
+2.91    Male Admitted           Female
+2.92    Male Admitted             Male
+2.93    Male Admitted             Male
+2.94    Male Admitted           Female
+2.95    Male Admitted           Female
+2.96    Male Admitted           Female
+2.97    Male Admitted           Female
+2.98    Male Admitted           Female
+2.99    Male Admitted           Female
+2.100   Male Admitted             Male
+2.101   Male Admitted           Female
+2.102   Male Admitted             Male
+2.103   Male Admitted           Female
+2.104   Male Admitted           Female
+2.105   Male Admitted             Male
+2.106   Male Admitted             Male
+2.107   Male Admitted           Female
+2.108   Male Admitted           Female
+2.109   Male Admitted           Female
+2.110   Male Admitted             Male
+2.111   Male Admitted           Female
+2.112   Male Admitted           Female
+2.113   Male Admitted             Male
+2.114   Male Admitted             Male
+2.115   Male Admitted           Female
+2.116   Male Admitted           Female
+2.117   Male Admitted             Male
+2.118   Male Admitted           Female
+2.119   Male Admitted             Male
+3     Female Rejected             Male
+3.1   Female Rejected           Female
+3.2   Female Rejected             Male
+3.3   Female Rejected             Male
+3.4   Female Rejected           Female
+3.5   Female Rejected           Female
+3.6   Female Rejected           Female
+3.7   Female Rejected             Male
+3.8   Female Rejected           Female
+3.9   Female Rejected           Female
+3.10  Female Rejected           Female
+3.11  Female Rejected             Male
+3.12  Female Rejected             Male
+3.13  Female Rejected             Male
+3.14  Female Rejected           Female
+3.15  Female Rejected             Male
+3.16  Female Rejected           Female
+3.17  Female Rejected           Female
+3.18  Female Rejected           Female
+3.19  Female Rejected             Male
+3.20  Female Rejected           Female
+3.21  Female Rejected           Female
+3.22  Female Rejected           Female
+3.23  Female Rejected             Male
+3.24  Female Rejected             Male
+3.25  Female Rejected             Male
+3.26  Female Rejected           Female
+3.27  Female Rejected             Male
+3.28  Female Rejected             Male
+3.29  Female Rejected           Female
+3.30  Female Rejected           Female
+3.31  Female Rejected             Male
+3.32  Female Rejected             Male
+3.33  Female Rejected           Female
+3.34  Female Rejected           Female
+3.35  Female Rejected           Female
+3.36  Female Rejected           Female
+3.37  Female Rejected           Female
+3.38  Female Rejected           Female
+3.39  Female Rejected             Male
+3.40  Female Rejected           Female
+3.41  Female Rejected           Female
+3.42  Female Rejected             Male
+3.43  Female Rejected             Male
+3.44  Female Rejected           Female
+3.45  Female Rejected             Male
+3.46  Female Rejected           Female
+3.47  Female Rejected             Male
+3.48  Female Rejected           Female
+3.49  Female Rejected           Female
+3.50  Female Rejected           Female
+3.51  Female Rejected           Female
+3.52  Female Rejected           Female
+3.53  Female Rejected           Female
+3.54  Female Rejected             Male
+3.55  Female Rejected           Female
+3.56  Female Rejected           Female
+3.57  Female Rejected             Male
+3.58  Female Rejected             Male
+3.59  Female Rejected             Male
+3.60  Female Rejected           Female
+3.61  Female Rejected           Female
+3.62  Female Rejected           Female
+3.63  Female Rejected           Female
+3.64  Female Rejected             Male
+3.65  Female Rejected           Female
+3.66  Female Rejected           Female
+3.67  Female Rejected           Female
+3.68  Female Rejected           Female
+3.69  Female Rejected           Female
+3.70  Female Rejected           Female
+3.71  Female Rejected           Female
+3.72  Female Rejected             Male
+3.73  Female Rejected           Female
+3.74  Female Rejected           Female
+3.75  Female Rejected           Female
+3.76  Female Rejected           Female
+3.77  Female Rejected           Female
+3.78  Female Rejected             Male
+3.79  Female Rejected           Female
+3.80  Female Rejected             Male
+3.81  Female Rejected           Female
+3.82  Female Rejected           Female
+3.83  Female Rejected           Female
+3.84  Female Rejected             Male
+3.85  Female Rejected           Female
+3.86  Female Rejected           Female
+3.87  Female Rejected             Male
+3.88  Female Rejected           Female
+3.89  Female Rejected           Female
+3.90  Female Rejected           Female
+3.91  Female Rejected             Male
+3.92  Female Rejected           Female
+3.93  Female Rejected             Male
+3.94  Female Rejected             Male
+3.95  Female Rejected           Female
+3.96  Female Rejected           Female
+3.97  Female Rejected             Male
+3.98  Female Rejected             Male
+3.99  Female Rejected             Male
+3.100 Female Rejected           Female
+3.101 Female Rejected             Male
+3.102 Female Rejected             Male
+3.103 Female Rejected             Male
+3.104 Female Rejected           Female
+3.105 Female Rejected           Female
+3.106 Female Rejected           Female
+3.107 Female Rejected           Female
+3.108 Female Rejected             Male
+3.109 Female Rejected           Female
+3.110 Female Rejected           Female
+3.111 Female Rejected           Female
+3.112 Female Rejected           Female
+3.113 Female Rejected           Female
+3.114 Female Rejected           Female
+3.115 Female Rejected             Male
+3.116 Female Rejected           Female
+3.117 Female Rejected             Male
+3.118 Female Rejected             Male
+3.119 Female Rejected             Male
+3.120 Female Rejected             Male
+3.121 Female Rejected           Female
+3.122 Female Rejected             Male
+3.123 Female Rejected             Male
+3.124 Female Rejected           Female
+3.125 Female Rejected             Male
+3.126 Female Rejected           Female
+3.127 Female Rejected           Female
+3.128 Female Rejected             Male
+3.129 Female Rejected           Female
+3.130 Female Rejected           Female
+3.131 Female Rejected             Male
+3.132 Female Rejected           Female
+3.133 Female Rejected             Male
+3.134 Female Rejected             Male
+3.135 Female Rejected           Female
+3.136 Female Rejected             Male
+3.137 Female Rejected             Male
+3.138 Female Rejected             Male
+3.139 Female Rejected           Female
+3.140 Female Rejected           Female
+3.141 Female Rejected             Male
+3.142 Female Rejected           Female
+3.143 Female Rejected           Female
+3.144 Female Rejected             Male
+3.145 Female Rejected             Male
+3.146 Female Rejected             Male
+3.147 Female Rejected           Female
+3.148 Female Rejected           Female
+3.149 Female Rejected           Female
+3.150 Female Rejected           Female
+3.151 Female Rejected             Male
+3.152 Female Rejected           Female
+3.153 Female Rejected           Female
+3.154 Female Rejected             Male
+3.155 Female Rejected           Female
+3.156 Female Rejected             Male
+3.157 Female Rejected           Female
+3.158 Female Rejected             Male
+3.159 Female Rejected           Female
+3.160 Female Rejected           Female
+3.161 Female Rejected             Male
+3.162 Female Rejected           Female
+3.163 Female Rejected           Female
+3.164 Female Rejected             Male
+3.165 Female Rejected             Male
+3.166 Female Rejected           Female
+3.167 Female Rejected           Female
+3.168 Female Rejected             Male
+3.169 Female Rejected           Female
+3.170 Female Rejected           Female
+3.171 Female Rejected             Male
+3.172 Female Rejected             Male
+3.173 Female Rejected           Female
+3.174 Female Rejected           Female
+3.175 Female Rejected           Female
+3.176 Female Rejected             Male
+3.177 Female Rejected           Female
+3.178 Female Rejected             Male
+3.179 Female Rejected             Male
+3.180 Female Rejected             Male
+3.181 Female Rejected           Female
+3.182 Female Rejected           Female
+3.183 Female Rejected             Male
+3.184 Female Rejected           Female
+3.185 Female Rejected             Male
+3.186 Female Rejected           Female
+3.187 Female Rejected           Female
+3.188 Female Rejected           Female
+3.189 Female Rejected           Female
+3.190 Female Rejected           Female
+3.191 Female Rejected             Male
+3.192 Female Rejected             Male
+3.193 Female Rejected           Female
+3.194 Female Rejected           Female
+3.195 Female Rejected           Female
+3.196 Female Rejected           Female
+3.197 Female Rejected           Female
+3.198 Female Rejected           Female
+3.199 Female Rejected             Male
+3.200 Female Rejected           Female
+3.201 Female Rejected           Female
+3.202 Female Rejected             Male
+3.203 Female Rejected           Female
+3.204 Female Rejected             Male
+3.205 Female Rejected           Female
+3.206 Female Rejected           Female
+3.207 Female Rejected           Female
+3.208 Female Rejected             Male
+3.209 Female Rejected           Female
+3.210 Female Rejected             Male
+3.211 Female Rejected             Male
+3.212 Female Rejected           Female
+3.213 Female Rejected           Female
+3.214 Female Rejected           Female
+3.215 Female Rejected           Female
+3.216 Female Rejected           Female
+3.217 Female Rejected           Female
+3.218 Female Rejected           Female
+3.219 Female Rejected           Female
+3.220 Female Rejected             Male
+3.221 Female Rejected           Female
+3.222 Female Rejected           Female
+3.223 Female Rejected             Male
+3.224 Female Rejected           Female
+3.225 Female Rejected             Male
+3.226 Female Rejected             Male
+3.227 Female Rejected           Female
+3.228 Female Rejected             Male
+3.229 Female Rejected           Female
+3.230 Female Rejected           Female
+3.231 Female Rejected           Female
+3.232 Female Rejected           Female
+3.233 Female Rejected           Female
+3.234 Female Rejected             Male
+3.235 Female Rejected             Male
+3.236 Female Rejected           Female
+3.237 Female Rejected           Female
+3.238 Female Rejected             Male
+3.239 Female Rejected           Female
+3.240 Female Rejected           Female
+3.241 Female Rejected             Male
+3.242 Female Rejected           Female
+3.243 Female Rejected             Male
+3.244 Female Rejected             Male
+3.245 Female Rejected             Male
+3.246 Female Rejected           Female
+3.247 Female Rejected           Female
+3.248 Female Rejected           Female
+3.249 Female Rejected             Male
+3.250 Female Rejected           Female
+3.251 Female Rejected           Female
+3.252 Female Rejected             Male
+3.253 Female Rejected           Female
+3.254 Female Rejected             Male
+3.255 Female Rejected             Male
+3.256 Female Rejected           Female
+3.257 Female Rejected             Male
+3.258 Female Rejected             Male
+3.259 Female Rejected           Female
+3.260 Female Rejected           Female
+3.261 Female Rejected           Female
+3.262 Female Rejected             Male
+3.263 Female Rejected           Female
+3.264 Female Rejected           Female
+3.265 Female Rejected           Female
+3.266 Female Rejected           Female
+3.267 Female Rejected           Female
+3.268 Female Rejected             Male
+3.269 Female Rejected           Female
+3.270 Female Rejected           Female
+3.271 Female Rejected             Male
+3.272 Female Rejected           Female
+3.273 Female Rejected           Female
+3.274 Female Rejected             Male
+3.275 Female Rejected           Female
+3.276 Female Rejected           Female
+3.277 Female Rejected           Female
+3.278 Female Rejected             Male
+3.279 Female Rejected           Female
+3.280 Female Rejected           Female
+3.281 Female Rejected           Female
+3.282 Female Rejected           Female
+3.283 Female Rejected             Male
+3.284 Female Rejected           Female
+3.285 Female Rejected           Female
+3.286 Female Rejected           Female
+3.287 Female Rejected             Male
+3.288 Female Rejected           Female
+3.289 Female Rejected             Male
+3.290 Female Rejected           Female
+3.291 Female Rejected             Male
+3.292 Female Rejected           Female
+3.293 Female Rejected           Female
+3.294 Female Rejected           Female
+3.295 Female Rejected           Female
+3.296 Female Rejected             Male
+3.297 Female Rejected             Male
+3.298 Female Rejected             Male
+3.299 Female Rejected           Female
+3.300 Female Rejected           Female
+3.301 Female Rejected           Female
+3.302 Female Rejected           Female
+3.303 Female Rejected             Male
+3.304 Female Rejected           Female
+3.305 Female Rejected             Male
+3.306 Female Rejected             Male
+3.307 Female Rejected           Female
+3.308 Female Rejected           Female
+3.309 Female Rejected           Female
+3.310 Female Rejected             Male
+3.311 Female Rejected           Female
+3.312 Female Rejected             Male
+3.313 Female Rejected             Male
+3.314 Female Rejected             Male
+3.315 Female Rejected             Male
+3.316 Female Rejected           Female
+3.317 Female Rejected             Male
+3.318 Female Rejected             Male
+3.319 Female Rejected           Female
+3.320 Female Rejected           Female
+3.321 Female Rejected             Male
+3.322 Female Rejected             Male
+3.323 Female Rejected           Female
+3.324 Female Rejected             Male
+3.325 Female Rejected             Male
+3.326 Female Rejected           Female
+3.327 Female Rejected             Male
+3.328 Female Rejected             Male
+3.329 Female Rejected             Male
+3.330 Female Rejected           Female
+3.331 Female Rejected             Male
+3.332 Female Rejected           Female
+3.333 Female Rejected           Female
+3.334 Female Rejected           Female
+3.335 Female Rejected           Female
+3.336 Female Rejected           Female
+3.337 Female Rejected           Female
+3.338 Female Rejected           Female
+3.339 Female Rejected           Female
+3.340 Female Rejected           Female
+3.341 Female Rejected           Female
+3.342 Female Rejected             Male
+3.343 Female Rejected           Female
+3.344 Female Rejected             Male
+3.345 Female Rejected           Female
+3.346 Female Rejected           Female
+3.347 Female Rejected           Female
+3.348 Female Rejected             Male
+3.349 Female Rejected             Male
+3.350 Female Rejected           Female
+3.351 Female Rejected           Female
+3.352 Female Rejected           Female
+3.353 Female Rejected             Male
+3.354 Female Rejected             Male
+3.355 Female Rejected           Female
+3.356 Female Rejected           Female
+3.357 Female Rejected           Female
+3.358 Female Rejected             Male
+3.359 Female Rejected           Female
+3.360 Female Rejected           Female
+3.361 Female Rejected           Female
+3.362 Female Rejected           Female
+3.363 Female Rejected             Male
+3.364 Female Rejected             Male
+3.365 Female Rejected             Male
+3.366 Female Rejected           Female
+3.367 Female Rejected           Female
+3.368 Female Rejected             Male
+3.369 Female Rejected             Male
+3.370 Female Rejected           Female
+3.371 Female Rejected           Female
+3.372 Female Rejected           Female
+3.373 Female Rejected           Female
+3.374 Female Rejected           Female
+3.375 Female Rejected           Female
+3.376 Female Rejected           Female
+3.377 Female Rejected           Female
+3.378 Female Rejected           Female
+3.379 Female Rejected             Male
+3.380 Female Rejected           Female
+3.381 Female Rejected             Male
+3.382 Female Rejected           Female
+3.383 Female Rejected           Female
+3.384 Female Rejected           Female
+3.385 Female Rejected             Male
+3.386 Female Rejected             Male
+3.387 Female Rejected             Male
+3.388 Female Rejected             Male
+3.389 Female Rejected             Male
+3.390 Female Rejected             Male
+4       Male Rejected           Female
+4.1     Male Rejected             Male
+4.2     Male Rejected           Female
+4.3     Male Rejected           Female
+4.4     Male Rejected           Female
+4.5     Male Rejected           Female
+4.6     Male Rejected           Female
+4.7     Male Rejected             Male
+4.8     Male Rejected           Female
+4.9     Male Rejected           Female
+4.10    Male Rejected             Male
+4.11    Male Rejected             Male
+4.12    Male Rejected           Female
+4.13    Male Rejected             Male
+4.14    Male Rejected           Female
+4.15    Male Rejected             Male
+4.16    Male Rejected           Female
+4.17    Male Rejected           Female
+4.18    Male Rejected           Female
+4.19    Male Rejected           Female
+4.20    Male Rejected           Female
+4.21    Male Rejected           Female
+4.22    Male Rejected           Female
+4.23    Male Rejected             Male
+4.24    Male Rejected           Female
+4.25    Male Rejected           Female
+4.26    Male Rejected             Male
+4.27    Male Rejected           Female
+4.28    Male Rejected           Female
+4.29    Male Rejected           Female
+4.30    Male Rejected             Male
+4.31    Male Rejected             Male
+4.32    Male Rejected           Female
+4.33    Male Rejected           Female
+4.34    Male Rejected             Male
+4.35    Male Rejected           Female
+4.36    Male Rejected           Female
+4.37    Male Rejected             Male
+4.38    Male Rejected           Female
+4.39    Male Rejected             Male
+4.40    Male Rejected             Male
+4.41    Male Rejected           Female
+4.42    Male Rejected             Male
+4.43    Male Rejected           Female
+4.44    Male Rejected           Female
+4.45    Male Rejected           Female
+4.46    Male Rejected             Male
+4.47    Male Rejected           Female
+4.48    Male Rejected           Female
+4.49    Male Rejected           Female
+4.50    Male Rejected           Female
+4.51    Male Rejected           Female
+4.52    Male Rejected           Female
+4.53    Male Rejected           Female
+4.54    Male Rejected           Female
+4.55    Male Rejected             Male
+4.56    Male Rejected           Female
+4.57    Male Rejected           Female
+4.58    Male Rejected           Female
+4.59    Male Rejected           Female
+4.60    Male Rejected           Female
+4.61    Male Rejected           Female
+4.62    Male Rejected           Female
+4.63    Male Rejected             Male
+4.64    Male Rejected           Female
+4.65    Male Rejected             Male
+4.66    Male Rejected           Female
+4.67    Male Rejected             Male
+4.68    Male Rejected           Female
+4.69    Male Rejected           Female
+4.70    Male Rejected           Female
+4.71    Male Rejected           Female
+4.72    Male Rejected           Female
+4.73    Male Rejected             Male
+4.74    Male Rejected           Female
+4.75    Male Rejected           Female
+4.76    Male Rejected           Female
+4.77    Male Rejected           Female
+4.78    Male Rejected             Male
+4.79    Male Rejected             Male
+4.80    Male Rejected             Male
+4.81    Male Rejected           Female
+4.82    Male Rejected           Female
+4.83    Male Rejected           Female
+4.84    Male Rejected           Female
+4.85    Male Rejected             Male
+4.86    Male Rejected           Female
+4.87    Male Rejected           Female
+4.88    Male Rejected           Female
+4.89    Male Rejected           Female
+4.90    Male Rejected           Female
+4.91    Male Rejected           Female
+4.92    Male Rejected           Female
+4.93    Male Rejected           Female
+4.94    Male Rejected           Female
+4.95    Male Rejected           Female
+4.96    Male Rejected           Female
+4.97    Male Rejected           Female
+4.98    Male Rejected           Female
+4.99    Male Rejected           Female
+4.100   Male Rejected             Male
+4.101   Male Rejected             Male
+4.102   Male Rejected           Female
+4.103   Male Rejected           Female
+4.104   Male Rejected           Female
+4.105   Male Rejected           Female
+4.106   Male Rejected           Female
+4.107   Male Rejected             Male
+4.108   Male Rejected           Female
+4.109   Male Rejected           Female
+4.110   Male Rejected           Female
+4.111   Male Rejected           Female
+4.112   Male Rejected           Female
+4.113   Male Rejected           Female
+4.114   Male Rejected           Female
+4.115   Male Rejected             Male
+4.116   Male Rejected             Male
+4.117   Male Rejected           Female
+4.118   Male Rejected             Male
+4.119   Male Rejected           Female
+4.120   Male Rejected           Female
+4.121   Male Rejected           Female
+4.122   Male Rejected           Female
+4.123   Male Rejected           Female
+4.124   Male Rejected           Female
+4.125   Male Rejected           Female
+4.126   Male Rejected             Male
+4.127   Male Rejected             Male
+4.128   Male Rejected           Female
+4.129   Male Rejected           Female
+4.130   Male Rejected             Male
+4.131   Male Rejected           Female
+4.132   Male Rejected           Female
+4.133   Male Rejected             Male
+4.134   Male Rejected             Male
+4.135   Male Rejected           Female
+4.136   Male Rejected           Female
+4.137   Male Rejected           Female
+4.138   Male Rejected           Female
+4.139   Male Rejected             Male
+4.140   Male Rejected           Female
+4.141   Male Rejected             Male
+4.142   Male Rejected           Female
+4.143   Male Rejected           Female
+4.144   Male Rejected             Male
+4.145   Male Rejected             Male
+4.146   Male Rejected           Female
+4.147   Male Rejected             Male
+4.148   Male Rejected           Female
+4.149   Male Rejected             Male
+4.150   Male Rejected           Female
+4.151   Male Rejected             Male
+4.152   Male Rejected           Female
+4.153   Male Rejected             Male
+4.154   Male Rejected           Female
+4.155   Male Rejected           Female
+4.156   Male Rejected             Male
+4.157   Male Rejected             Male
+4.158   Male Rejected             Male
+4.159   Male Rejected             Male
+4.160   Male Rejected           Female
+4.161   Male Rejected           Female
+4.162   Male Rejected           Female
+4.163   Male Rejected             Male
+4.164   Male Rejected             Male
+4.165   Male Rejected           Female
+4.166   Male Rejected           Female
+4.167   Male Rejected             Male
+4.168   Male Rejected           Female
+4.169   Male Rejected           Female
+4.170   Male Rejected           Female
+4.171   Male Rejected           Female
+4.172   Male Rejected           Female
+4.173   Male Rejected             Male
+4.174   Male Rejected           Female
+4.175   Male Rejected           Female
+4.176   Male Rejected           Female
+4.177   Male Rejected           Female
+4.178   Male Rejected           Female
+4.179   Male Rejected             Male
+4.180   Male Rejected           Female
+4.181   Male Rejected           Female
+4.182   Male Rejected           Female
+4.183   Male Rejected           Female
+4.184   Male Rejected           Female
+4.185   Male Rejected           Female
+4.186   Male Rejected           Female
+4.187   Male Rejected           Female
+4.188   Male Rejected           Female
+4.189   Male Rejected           Female
+4.190   Male Rejected           Female
+4.191   Male Rejected           Female
+4.192   Male Rejected             Male
+4.193   Male Rejected           Female
+4.194   Male Rejected           Female
+4.195   Male Rejected           Female
+4.196   Male Rejected           Female
+4.197   Male Rejected             Male
+4.198   Male Rejected             Male
+4.199   Male Rejected           Female
+4.200   Male Rejected           Female
+4.201   Male Rejected           Female
+4.202   Male Rejected           Female
+4.203   Male Rejected           Female
+4.204   Male Rejected           Female
+```
+
+]
+
+---
+
+
+```r
+xtabs(~ GenderRandomized + Admit, dlong)
+```
+
+```
+                Admit
+GenderRandomized Admitted Rejected
+          Female      205      388
+          Male        117      208
+```
+
+```r
+log(oddsratio(xtabs(~ GenderRandomized + Admit, dlong)))
+```
+
+```
+[1] -0.06263122
+```
+
+---
+
+* We can repeat this process as many times as we want
+
+* These are simulations from the _distribution_ of log odds ratio (under independence)
+
+
+```r
+sim_logOR <-
+    replicate(10000,
+              {
+                  dlong$GenderRandomized <- sample(dlong$Gender)
+                  log(oddsratio(xtabs(~ GenderRandomized + Admit, dlong)))
+              })
+```
+
+
+```r
+str(sim_logOR)
+```
+
+```
+ num [1:10000] 0.3191 -0.187 -0.1249 0.1474 -0.0418 ...
+```
+
+---
+
+
+```r
+histogram(~ sim_logOR, nint = 30)
+```
+
+![plot of chunk unnamed-chunk-43](figures/categorical-unnamed-chunk-43-1.svg)
+
+---
+
+
+```r
+histogram(~ sim_logOR, nint = 30) + layer(panel.abline(v = log(oddsratio(X)), col = "red"))
+```
+
+![plot of chunk unnamed-chunk-44](figures/categorical-unnamed-chunk-44-1.svg)
+
+---
+
+
+```r
+ecdfplot(~ sim_logOR, grid = TRUE) + layer(panel.abline(v = log(oddsratio(X)), col = "red"))
+```
+
+![plot of chunk unnamed-chunk-45](figures/categorical-unnamed-chunk-45-1.svg)
+
+---
+
+* Is the observed value unusual?
+
+--
+
+* Roughly 20% of simulations had log OR less than the observed value
+
+* So we should probably not consider this very strong evidence of gender bias
+
+--
+
+* This procedure is known as _Fisher's Exact Test of Independence_
+
+---
+
+* Department E had the most negative log odds ratio
+
+
+```r
+X <- t(UCBAdmissions[, c(2, 1), "E"])
+X
+```
+
+```
+        Admit
+Gender   Admitted Rejected
+  Female       94      299
+  Male         53      138
+```
+
+```r
+log(oddsratio(X))
+```
+
+```
+[1] -0.200187
+```
+
+---
+
+
+```r
+d <- array2DF(X)
+dlong <- d[rep(1:4, d$Value) , c("Gender", "Admit")]
+sim_logOR <-
+    replicate(10000,
+              {
+                  dlong$GenderRandomized <- sample(dlong$Gender)
+                  log(oddsratio(xtabs(~ GenderRandomized + Admit, dlong)))
+              })
+```
+
+---
+
+
+```r
+ecdfplot(~ sim_logOR, grid = TRUE) + layer(panel.abline(v = log(oddsratio(X)), col = "red"))
+```
+
+![plot of chunk unnamed-chunk-48](figures/categorical-unnamed-chunk-48-1.svg)
+
+---
+
+layout: false
+
+# Exercise
+
+* Try this for department A
+
+--
+
+* Do we really need to do this permutation?
+
+* Note that if row totals are fixed, log OR depends only on $X\sub{11}$
+
+--
+
+* Exercise: Explicitly calculate distribution of $X\sub{11}$ given row and column totals
+
+---
+
 layout: false
 class: center, middle
 
