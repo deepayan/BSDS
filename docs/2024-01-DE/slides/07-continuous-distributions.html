@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Continuous Distributions</title>
+    <link rel='stylesheet' href='assets/remark.css'>
+  </head>
+  <body>
+    <textarea id='source'>
+
+class: center, middle
+
+# Continuous Distributions
+
+## Statistics I — Data Exploration
+
+### Deepayan Sarkar
+
+<h1 onclick='document.documentElement.requestFullscreen();' style='cursor: pointer;'>
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrows-fullscreen' viewBox='0 0 16 16'>
+  <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'/>
+</svg>
+</h1>
+
+---
+
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\set}[1]{\left\lbrace {#1} \right\rbrace}
+\newcommand{\abs}[1]{\left\lvert {#1} \right\rvert}
+\newcommand{\nseq}[1]{ {#1}\sub{1}, {#1}\sub{2}, \dotsc, {#1}\sub{n} }
+$$
+</div>
+
+
+# Discrete vs Continuous distributions
+
+* We have mentioned the Normal distribution several times
+
+* But most specific examples we have considered are from discrete
+  populations
+ 
+--
+
+* Discrete populations are more natural
+
+* Why do we need the Normal distribution?
+
+--
+
+* One way to justify Normal and other continuous distributions are as useful approximations
+
+
+
+
+
+---
+
+layout: true
+
+# Continuous distributions
+
+---
+
+* Example: Discrete Uniform
+
+	* Equally likely outcomes on a finite set $S = \set{ s\sub{1}, \dotsc, s\sub{n}}$
+
+	* Simplest example: $S = \set{ 1, 2, \dotsc, n}$
+
+---
+
+* Distribution (probability mass function) $P(X = s)$ of Discrete Uniform on $S = \set{
+  1, 2, \dotsc, 10}$
+
+![plot of chunk unnamed-chunk-1](figures/contdist-unnamed-chunk-1-1.svg)
+
+
+---
+
+* Distribution (probability mass function) $P(X = s)$ of Discrete Uniform on $S = \set{
+  1, 2, \dotsc, 100}$
+
+![plot of chunk unnamed-chunk-2](figures/contdist-unnamed-chunk-2-1.svg)
+
+---
+
+* Cumulative Distribution Function $F(s) = P(X \leq s)$ of Discrete Uniform on $S = \set{ 1, 2, \dotsc, 10}$
+
+![plot of chunk unnamed-chunk-3](figures/contdist-unnamed-chunk-3-1.svg)
+
+---
+
+* Cumulative Distribution Function $F(s) = P(X \leq s)$ of Discrete Uniform on $S = \set{ 1, 2, \dotsc, 100}$
+
+![plot of chunk unnamed-chunk-4](figures/contdist-unnamed-chunk-4-1.svg)
+
+---
+
+* Natural limiting approximation: Uniform on interval $S = (0, 1)$
+
+![plot of chunk unnamed-chunk-5](figures/contdist-unnamed-chunk-5-1.svg)
+
+---
+
+* Cumulative Distribution Function $F(s) = P(X \leq s)$ of Discrete Uniform on $S = \set{ 1, 2, \dotsc, n}$
+
+$$
+F(s) = P(X \leq s) = \frac{s}{n} 
+= \sum\limits\sub{x = 1}^s P(X = x) = \sum\limits\sub{x = 1}^s \frac{1}{n} \text{ for } s \leq n
+$$
+
+--
+
+* Cumulative Distribution Function $F(s) = P(X \leq s)$ of Uniform on interval $S = (0, 1)$
+
+$$
+F(s) = P(X \leq s) = s = \int\limits\sub{0}^s f(x) \text{d}x = \int\limits\sub{0}^s 1 \, \text{d}x \text{ for } s \leq 1 
+$$
+
+--
+
+* This gives probabilities for intervals and other events that can be derived from them
+
+* We call this the Uniform$(0, 1)$ distribution or simply $U(0, 1)$
+
+---
+
+* In general, probabilities can be computed using any "density function" f using
+
+$$
+F(s) = P(X \leq s) = \int\limits\sub{-\infty}^s f(x) \text{d}x
+$$
+
+* To ensure total probability equals 1, $f$ must satisty $f(x) \geq 0$ for all $x \in \mathbb{R}$, and
+
+$$
+\int\limits\sub{-\infty}^\infty f(x) \, \text{d}x = 1
+$$
+
+--
+
+* Many such $f$ can be constructed, but which are important?
+
+---
+
+layout: true
+
+# Statistics based on Uniform$(0, 1)$
+
+---
+
+* Suppose $\nseq{U} \sim U(0, 1)$
+
+* How do summary statistics based on $\nseq{U}$ behave?
+
+--
+
+* Statistics we have studied: sample mean, sample median, other sample quantiles
+
+* These give rise to three fundamental distributions: Beta, Normal, and Exponential
+
+---
+
+* Distribution of $U\sub{(k)}$ is Beta$(k, n-k+1)$
+
+* Density $f: \mathbb{R} \to [0, \infty)$ of Beta$(a, b)$ is
+
+$$
+f(x) = \begin{cases}
+  C(a, b) \, x^{a-1} (1-x)^{b-1} & x \in [0, 1] \cr
+  0 & x \not\in [0, 1]
+\end{cases}
+$$
+
+* This is an exact distribution
+
+---
+
+* What happens to distribution of $U\sub{(1)}$?
+
+--
+
+* What happens to distribution of $n U\sub{(1)}$?
+
+--
+
+* The limiting distribution is the Exponential distribution $f(x) = e^{-x} 1\sub{\set{ x > 0}}$
+
+---
+
+* What happens to distribution of median $U\sub{(n/2)}$?
+
+--
+
+* To avoid ambiguity, assume $n = 2k - 1$ is odd
+
+* Median is $U\sub{(k)} \sim \text{Beta}(k, k)$
+
+* What happens to distribution of (standardized)
+
+$$
+2 \sqrt{2k + 1} \left( U\sub{(k)} - \frac12 \right)
+$$
+
+--
+
+* The limiting distribution is the Normal distribution $f(x) = C e^{-x^2}$
+
+---
+
+* In both these cases this is easy to "verify" by calculating $f(x)$ explicitly
+
+* It is also possible to verify empirically using Q-Q plots
+
+--
+
+* It can also be shown that the sample mean $\bar{U}$ has a limiting Normal distribution
+
+* The required standardization is similar to the median
+
+$$
+\sqrt{12 n} \left( \bar{U} - \frac12 \right)
+$$
+
+* Direct calculation of density of $\bar{U}$ is difficult (can be done using the [Convolution Theorem](https://en.wikipedia.org/wiki/Convolution_theorem))
+
+* Easy to verify empirically using Q-Q plots
+
+---
+
+layout: false
+
+# Central Limit Theorems
+
+* The sample mean and sample median have limiting Normal distributions in many other cases
+
+* These results are known as Central Limit Theorems, and are very useful in practice
+
+---
+
+# Estimation of density
+
+* Natural question: How to estimate density $f$ from data $\nseq{X}$?
+
+* Two approaches:
+
+	* Binning 
+	
+	* Point-wise estimation
+
+---
+
+layout: false
+class: center, middle
+
+# Questions?
+
+
+
+
+
+
+
+
+    </textarea>
+  </body>
+
+  <script 
+	  src='assets/remark-latest.min.js'
+	  type='text/javascript'></script>
+
+  <script type='text/javascript'>
+    var slideshow = remark.create(
+	{
+	    navigation: {scroll: false,},
+	    ratio: '16:9',
+	    // ratio: '4:3',
+	    countIncrementalSlides: false
+	});
+    
+    // Setup MathJax; unused if mathjax == false
+    MathJax = {
+	tex: {
+	    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+	    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ]
+	},
+	svg: {
+	    fontCache: 'global'
+	},
+    };
+
+  </script>
+
+  <script type='text/javascript' async
+	  src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'>
+  </script>
+
+</html>
+
