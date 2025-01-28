@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Introduction and Basics of R</title>
+    <link rel='stylesheet' href='assets/remark.css'>
+  </head>
+  <body>
+    <textarea id='source'>
+
+class: center, middle
+
+# Introduction and Basics of R
+
+## Data Analysis with R and Python
+
+### Deepayan Sarkar
+
+<h1 onclick='document.documentElement.requestFullscreen();' style='cursor: pointer;'>
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrows-fullscreen' viewBox='0 0 16 16'>
+  <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'/>
+</svg>
+</h1>
+
+---
+
+
+
+<!-- 
+
+# Topics to be Covered
+
+- Installing and running R and RStudio, using the command line console
+
+- R as an advanced calculator with graphics and simulation capabilities
+
+- Vectors (numeric, character, logical, factors) and indexing
+
+- Lists and Data frames
+
+- Operators and Functions, Attributes
+
+- The Help System (and S3 methods)
+
+-->
+
+
+# Review: Software for Statistics
+
+- Computation is an essential part of modern statistics
+
+    - Handling large datasets 
+
+    - Visualization
+
+--
+    - Simulation
+
+    - Iterative methods 
+
+
+--
+
+- Many options, but we will focus on R and Python
+
+	- Available as [Free](https://en.wikipedia.org/wiki/Free_software_movement) / 
+      [Open Source](https://en.wikipedia.org/wiki/The_Open_Source_Definition) Software
+
+	- Easy to try out on your own
+
+	- Contains all essential data analysis tools
+	
+	- Active community
+
+
+
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+
+---
+
+# Interacting with R
+
+* R is most commonly used as a [REPL](https://en.wikipedia.org/wiki/Read-eval-print_loop) (Read-Eval-Print-Loop)
+
+	* When it is started, R Waits for user input
+
+	* User inputs expression
+
+	* R evaluates and prints result
+
+	* Waits for more input
+
+--
+
+* Python supports exactly the same model 
+
+--
+
+* Several _interfaces_ are available to help in this process
+
+* Recommended options (representing slightly different approaches)
+
+	* RStudio
+	
+	* Jupyter
+
+---
+
+# Running R
+
+* On starting up, R shows you something like this:
+
+```
+R version 4.2.2 Patched (2022-11-17 r83375) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+>
+```
+
+* The `>` represents a _prompt_ indicating that R is waiting for input
+
+---
+
+# Running Python
+
+* Python has a similar but much shorter start-up message:
+
+```
+Python 3.9.12 (main, Apr  5 2022, 01:53:17) 
+[Clang 12.0.0 ] :: Anaconda, Inc. on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+```
+
+* The `>>>` similarly represents the _prompt_ indicating that Python is waiting
+
+
+---
+
+# The R REPL essentially works like a calculator
+
+
+```r
+34 * 23 + 10
+```
+
+```
+[1] 792
+```
+
+```r
+27 + 1 / 7
+```
+
+```
+[1] 27.14286
+```
+
+```r
+2^10
+```
+
+```
+[1] 1024
+```
+
+```r
+exp(2)
+```
+
+```
+[1] 7.389056
+```
+
+---
+
+# The Python REPL is very similar
+
+
+```python
+34 * 23 + 10
+```
+
+```
+792
+```
+
+```python
+27 + 1 / 7
+```
+
+```
+27.142857142857142
+```
+
+---
+
+# But not exactly the same
+
+
+```python
+2^10
+```
+
+```
+8
+```
+
+---
+
+# But not exactly the same
+
+
+
+```python
+2^10
+```
+
+```
+8
+```
+
+
+```python
+2 ** 10
+```
+
+```
+1024
+```
+
+---
+
+# But not exactly the same
+
+```python
+exp(2)
+```
+
+```
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'exp' is not defined
+```
+
+---
+
+# NumPy for scientific computing in Python
+
+* Python with NumPy
+
+
+```python
+from numpy import *
+exp(2)
+```
+
+```
+np.float64(7.38905609893065)
+```
+
+```python
+sin(pi / 6)
+```
+
+```
+np.float64(0.49999999999999994)
+```
+
+* Compare with R
+
+
+```r
+exp(2)
+```
+
+```
+[1] 7.389056
+```
+
+```r
+sin(pi / 6)
+```
+
+```
+[1] 0.5
+```
+
+---
+
+# Why learn both R and Python?
+
+* Both are just tools... skills are more important
+
+--
+
+* Complementary strengths
+
+--
+
+* Easy interoperability
+
+---
+
+# What about error messages?
+
+```r
+34 +* 23
+```
+
+```
+Error: unexpected '*' in "34 +*"
+```
+
+```r
+27 // 7
+```
+
+```
+Error: unexpected '/' in "27 //"
+```
+
+
+
+```r
+arcsin(1/2)
+```
+
+```
+Error in arcsin(1/2): could not find function "arcsin"
+```
+
+---
+
+class: center middle
+
+# Essential features of R
+
+---
+
+layout: true
+
+# R supports mathematical functions
+
+---
+
+
+```r
+sqrt(5 * 125)
+```
+
+```
+[1] 25
+```
+
+```r
+log(120)
+```
+
+```
+[1] 4.787492
+```
+
+```r
+factorial(10)
+```
+
+```
+[1] 3628800
+```
+
+```r
+log(factorial(10))
+```
+
+```
+[1] 15.10441
+```
+
+---
+
+
+```r
+choose(15, 5)
+```
+
+```
+[1] 3003
+```
+
+```r
+factorial(15) / (factorial(10) * factorial(5))
+```
+
+```
+[1] 3003
+```
+
+--
+
+
+```r
+choose(1500, 2)
+```
+
+```
+[1] 1124250
+```
+
+```r
+factorial(1500) / (factorial(1498) * factorial(2))
+```
+
+```
+[1] NaN
+```
+
+---
+
+layout: false
+
+# R supports variables
+
+
+```r
+x <- 2
+y <- 10
+x^y
+```
+
+```
+[1] 1024
+```
+
+```r
+y^x
+```
+
+```
+[1] 100
+```
+
+```r
+factorial(y)
+```
+
+```
+[1] 3628800
+```
+
+```r
+log(factorial(y), base = x)
+```
+
+```
+[1] 21.79106
+```
+
+---
+
+# R can compute on vectors
+
+
+```r
+N <- 15
+x <- seq(0, N)
+N
+```
+
+```
+[1] 15
+```
+
+```r
+x
+```
+
+```
+ [1]  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+```
+
+```r
+1:N
+```
+
+```
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+```
+
+```r
+choose(N, x)
+```
+
+```
+ [1]    1   15  105  455 1365 3003 5005 6435 6435 5005 3003 1365  455  105   15    1
+```
+
+---
+
+# Example: Evaluating Binomial probabilities
+
+- Binomial distribution: 
+
+$$
+P(X = x) = { n \choose x } p^x (1-p)^{n-x}
+$$
+
+--
+
+
+```r
+N <- 15
+x <- seq(0, N)
+p <- 0.25
+choose(N, x) * p^x * (1-p)^(N-x)
+```
+
+```
+ [1] 1.336346e-02 6.681731e-02 1.559070e-01 2.251991e-01 2.251991e-01 1.651460e-01
+ [7] 9.174777e-02 3.932047e-02 1.310682e-02 3.398065e-03 6.796131e-04 1.029717e-04
+[13] 1.144130e-05 8.800998e-07 4.190952e-08 9.313226e-10
+```
+
+---
+
+# _Summary functions_ that work on vectors
+
+
+```r
+p.x <- dbinom(x, size = N, prob = p)
+p.x
+```
+
+```
+ [1] 1.336346e-02 6.681731e-02 1.559070e-01 2.251991e-01 2.251991e-01 1.651460e-01
+ [7] 9.174777e-02 3.932047e-02 1.310682e-02 3.398065e-03 6.796131e-04 1.029717e-04
+[13] 1.144130e-05 8.800998e-07 4.190952e-08 9.313226e-10
+```
+
+```r
+x * p.x
+```
+
+```
+ [1] 0.000000e+00 6.681731e-02 3.118141e-01 6.755972e-01 9.007963e-01 8.257299e-01
+ [7] 5.504866e-01 2.752433e-01 1.048546e-01 3.058259e-02 6.796131e-03 1.132688e-03
+[13] 1.372956e-04 1.144130e-05 5.867332e-07 1.396984e-08
+```
+
+```r
+sum(x * p.x) / sum(p.x)
+```
+
+```
+[1] 3.75
+```
+
+```r
+N * p
+```
+
+```
+[1] 3.75
+```
+
+
+---
+
+# Example: Factorials revisited
+
+
+```r
+choose(1500, 2)
+```
+
+```
+[1] 1124250
+```
+
+```r
+log(choose(1500, 2))
+```
+
+```
+[1] 13.93263
+```
+
+```r
+factorial(1500) / (factorial(1498) * factorial(2)) # fails
+```
+
+```
+[1] NaN
+```
+
+--
+
+
+```r
+factorial(1500)
+```
+
+```
+[1] Inf
+```
+
+---
+
+layout: true
+
+# Factorials using vectorized arithmetic
+
+---
+
+
+```r
+factorial(10)
+```
+
+```
+[1] 3628800
+```
+
+```r
+prod(seq(1, 10))
+```
+
+```
+[1] 3628800
+```
+
+--
+
+
+```r
+log(prod(seq(1, 10)))
+```
+
+```
+[1] 15.10441
+```
+
+```r
+sum(log(1:10))
+```
+
+```
+[1] 15.10441
+```
+
+---
+
+
+```r
+factorial(1500)
+```
+
+```
+[1] Inf
+```
+
+```r
+prod(seq(1, 1500))
+```
+
+```
+[1] Inf
+```
+
+
+```r
+log(prod(seq(1, 1500)))
+```
+
+```
+[1] Inf
+```
+
+```r
+sum(log(1:1500))
+```
+
+```
+[1] 9474.406
+```
+
+
+---
+
+
+```r
+sum(log(1:1500)) - sum(log(1:1498)) - sum(log(1:2))
+```
+
+```
+[1] 13.93263
+```
+
+```r
+exp(sum(log(1:1500)) - sum(log(1:1498)) - sum(log(1:2)))
+```
+
+```
+[1] 1124250
+```
+
+--
+
+* Compare with
+
+
+```r
+log(choose(1500, 2))
+```
+
+```
+[1] 13.93263
+```
+
+```r
+choose(1500, 2)
+```
+
+```
+[1] 1124250
+```
+
+---
+
+layout: false
+
+# R can draw graphs
+
+
+```r
+plot(x, p.x, ylab = "Probability", pch = 16)
+title(main = sprintf("Binomial(%g, %g)", N, p))
+abline(h = 0, col = "grey")
+```
+
+![plot of chunk unnamed-chunk-24](figures/1-introunnamed-chunk-24-1.svg)
+
+---
+
+# R can simulate random variables
+
+
+```r
+cards <- as.vector(outer(c("H", "D", "C", "S"), 1:13, paste, sep = "-"))
+cards
+```
+
+```
+ [1] "H-1"  "D-1"  "C-1"  "S-1"  "H-2"  "D-2"  "C-2"  "S-2"  "H-3"  "D-3"  "C-3"  "S-3" 
+[13] "H-4"  "D-4"  "C-4"  "S-4"  "H-5"  "D-5"  "C-5"  "S-5"  "H-6"  "D-6"  "C-6"  "S-6" 
+[25] "H-7"  "D-7"  "C-7"  "S-7"  "H-8"  "D-8"  "C-8"  "S-8"  "H-9"  "D-9"  "C-9"  "S-9" 
+[37] "H-10" "D-10" "C-10" "S-10" "H-11" "D-11" "C-11" "S-11" "H-12" "D-12" "C-12" "S-12"
+[49] "H-13" "D-13" "C-13" "S-13"
+```
+
+--
+
+
+```r
+sample(cards, 13)
+```
+
+```
+ [1] "H-10" "S-7"  "D-11" "D-6"  "C-13" "C-10" "D-3"  "C-6"  "S-3"  "H-5"  "S-8"  "D-8" 
+[13] "C-11"
+```
+
+```r
+sample(cards, 13)
+```
+
+```
+ [1] "D-10" "C-3"  "C-2"  "H-5"  "H-1"  "H-11" "C-12" "C-10" "D-5"  "S-3"  "C-5"  "C-4" 
+[13] "S-13"
+```
+
+---
+
+layout: true
+
+# Demonstration: The law of large numbers
+
+---
+
+* Does proportion of tosses that turn up head converge to probability?
+
+--
+
+
+```r
+p <- 0.25
+z <- rbinom(100, size = 1, prob = p)
+z
+```
+
+```
+  [1] 0 1 1 1 1 1 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 1 0 1 1 0 0 0 0 0 0 0 0 1 0 1 0 0 0
+ [43] 0 1 0 0 0 0 1 0 0 0 1 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 1 1 0 0 0 1 0 1 0 0 1 0 0
+ [85] 0 0 0 0 0 0 0 0 1 0 0 1 0 1 0 0
+```
+
+--
+
+
+```r
+cumsum(z)
+```
+
+```
+  [1]  0  1  2  3  4  5  5  6  7  7  7  7  7  8  9  9  9  9  9  9  9  9 10 10 11 11 12 13
+ [29] 13 13 13 13 13 13 13 13 14 14 15 15 15 15 15 16 16 16 16 16 17 17 17 17 18 18 18 19
+ [57] 19 19 19 19 19 19 20 20 20 20 20 20 20 21 21 22 23 23 23 23 24 24 25 25 25 26 26 26
+ [85] 26 26 26 26 26 26 26 26 27 27 27 28 28 29 29 29
+```
+
+---
+
+
+```r
+cumsum(z) / 1:100
+```
+
+```
+  [1] 0.0000000 0.5000000 0.6666667 0.7500000 0.8000000 0.8333333 0.7142857 0.7500000
+  [9] 0.7777778 0.7000000 0.6363636 0.5833333 0.5384615 0.5714286 0.6000000 0.5625000
+ [17] 0.5294118 0.5000000 0.4736842 0.4500000 0.4285714 0.4090909 0.4347826 0.4166667
+ [25] 0.4400000 0.4230769 0.4444444 0.4642857 0.4482759 0.4333333 0.4193548 0.4062500
+ [33] 0.3939394 0.3823529 0.3714286 0.3611111 0.3783784 0.3684211 0.3846154 0.3750000
+ [41] 0.3658537 0.3571429 0.3488372 0.3636364 0.3555556 0.3478261 0.3404255 0.3333333
+ [49] 0.3469388 0.3400000 0.3333333 0.3269231 0.3396226 0.3333333 0.3272727 0.3392857
+ [57] 0.3333333 0.3275862 0.3220339 0.3166667 0.3114754 0.3064516 0.3174603 0.3125000
+ [65] 0.3076923 0.3030303 0.2985075 0.2941176 0.2898551 0.3000000 0.2957746 0.3055556
+ [73] 0.3150685 0.3108108 0.3066667 0.3026316 0.3116883 0.3076923 0.3164557 0.3125000
+ [81] 0.3086420 0.3170732 0.3132530 0.3095238 0.3058824 0.3023256 0.2988506 0.2954545
+ [89] 0.2921348 0.2888889 0.2857143 0.2826087 0.2903226 0.2872340 0.2842105 0.2916667
+ [97] 0.2886598 0.2959184 0.2929293 0.2900000
+```
+
+---
+
+* How _fast_ does the sample proportion converge?
+
+.scrollable500[
+
+
+```r
+plot(1:100, type = "n", ylim = c(0, 1), ylab = "Sample proportion")
+for (i in 1:50) {
+    z <- rbinom(100, size = 1, prob = p)
+    lines(1:100, cumsum(z) / 1:100, col = sample(colors(), 1))
+}
+```
+
+![plot of chunk unnamed-chunk-30](figures/1-introunnamed-chunk-30-1.svg)
+
+]
+
+---
+
+layout: false
+class: center, middle
+
+# Basic Usage of R
+
+---
+
+# R is a full programming language
+
+* Variables
+
+* Functions
+
+* Control flow structures
+
+	* For loops, while loops
+
+	* If-then-else (branching)
+
+--
+
+* Distinguishing features
+
+	* Focus on _vectors_ and _vectorized operations_ 
+
+	* Treatment of _functions_ at par with other object types
+
+---
+
+# R is easily extensible
+
+* Most standard data analysis methods are already implemented
+
+* Can be extended by writing add-on packages
+
+* Thousands of add-on packages are available
+
+---
+
+# Major concepts we need to know
+
+* Variables (in the context of programming)
+
+--
+
+* Data structures needed for data analyis
+
+--
+
+* Functions (set of instructions for performing a procedure)
+
+---
+
+# Variables
+
+* Variables are symbols that may be associated with different values
+
+* Computations involving variables are done using their current value
+
+```r
+sqrt(x)
+```
+
+```
+Error: object 'x' not found
+```
+
+---
+
+# Variables
+
+* Variables are symbols that may be associated with different values
+
+* Computations involving variables are done using their current value
+
+
+
+```r
+x <- 10 # assignment
+sqrt(x)
+```
+
+```
+[1] 3.162278
+```
+
+```r
+x <- -1
+sqrt(x)
+```
+
+```
+Warning in sqrt(x): NaNs produced
+```
+
+```
+[1] NaN
+```
+
+```r
+x <- -1+0i
+sqrt(x)
+```
+
+```
+[1] 0+1i
+```
+
+---
+
+# Data structures for data analysis
+
+* Vectors
+
+* Matrices 
+
+* Data frames (a spreadsheet-like data set)
+
+* Lists (general collection of objects)
+
+---
+
+# Atomic vectors
+
+* Indexed collection of homogeneous scalars, can be 
+
+    * Numeric / Integer / Complex
+
+    <!-- * Categorical (factor) -->
+
+    * Character
+
+    * Logical (`TRUE` / `FALSE`)
+	
+--
+
+* Missing values are allowed, indicated as `NA`
+
+
+--
+
+* Elements are indexed starting from 1
+
+
+--
+
+* $i$th element of vector `x` can be extracted using `x[[i]]`
+
+* There are also more sophisticated forms of (vector) indexing
+
+
+
+---
+
+# Atomic vectors: examples
+
+
+```r
+month.name # built-in 
+```
+
+```
+ [1] "January"   "February"  "March"     "April"     "May"       "June"      "July"     
+ [8] "August"    "September" "October"   "November"  "December" 
+```
+
+
+--
+
+
+```r
+x <- rnorm(10)
+x
+```
+
+```
+ [1]  0.46326179 -0.27231202  0.04175172  0.31134852 -1.57656739 -0.33885882  1.80695612
+ [8]  2.11804678 -0.27384117 -1.36470607
+```
+
+
+--
+
+
+```r
+x[[3]] # third element of x
+```
+
+```
+[1] 0.04175172
+```
+
+---
+
+# Atomic vectors: examples
+
+
+```r
+str(x) # useful function
+```
+
+```
+ num [1:10] 0.4633 -0.2723 0.0418 0.3113 -1.5766 ...
+```
+
+```r
+str(month.name)
+```
+
+```
+ chr [1:12] "January" "February" "March" "April" "May" "June" "July" "August" ...
+```
+
+---
+
+# Creating atomic vectors
+
+* Constructor functions
+
+
+```r
+numeric(10)
+```
+
+```
+ [1] 0 0 0 0 0 0 0 0 0 0
+```
+
+```r
+logical(5)
+```
+
+```
+[1] FALSE FALSE FALSE FALSE FALSE
+```
+
+```r
+character(5)
+```
+
+```
+[1] "" "" "" "" ""
+```
+
+---
+
+# Scalars are also vectors
+
+* "Scalars" are just vectors of length 1
+
+
+```r
+str(numeric(2))
+```
+
+```
+ num [1:2] 0 0
+```
+
+```r
+str(numeric(1))
+```
+
+```
+ num 0
+```
+
+```r
+str(0)
+```
+
+```
+ num 0
+```
+
+---
+
+# Vectors can have zero length
+
+* Vectors can have length zero 
+
+
+```r
+numeric(0)
+```
+
+```
+numeric(0)
+```
+
+```r
+logical(0)
+```
+
+```
+logical(0)
+```
+
+```r
+length(character(0))
+```
+
+```
+[1] 0
+```
+
+--
+
+
+```r
+length(NULL)
+```
+
+```
+[1] 0
+```
+
+---
+
+# Combining vectors using `c()` 
+
+* Vectors can also be created by combining smaller vectors
+
+* For example, vectors `x` and `y` can be combined using `c(x, y)`
+
+
+```r
+c(1:5, numeric(3))
+```
+
+```
+[1] 1 2 3 4 5 0 0 0
+```
+
+--
+
+* Any number of vectors can be combined
+
+* This is a common way to build up a vector using scalars
+
+
+```r
+c(2, 4, 6, 9, 11)
+```
+
+```
+[1]  2  4  6  9 11
+```
+
+---
+
+# Combining vectors of different types
+
+* Atomic vectors of different types cannot be combined
+
+* Attempting to do so will convert into one of the types
+
+
+```r
+c(1:5, c(TRUE, FALSE))
+```
+
+```
+[1] 1 2 3 4 5 1 0
+```
+
+```r
+c(1:5, month.name[[1]])
+```
+
+```
+[1] "1"       "2"       "3"       "4"       "5"       "January"
+```
+
+--
+
+
+
+```r
+c(1:5, c(TRUE, FALSE), month.name[[1]])
+```
+
+```
+[1] "1"       "2"       "3"       "4"       "5"       "TRUE"    "FALSE"   "January"
+```
+
+```r
+c(c(1:5, TRUE, FALSE), month.name[[1]])
+```
+
+```
+[1] "1"       "2"       "3"       "4"       "5"       "1"       "0"       "January"
+```
+
+---
+
+
+# Example: Our first dataset
+
+* Life expectancy in different countries over time
+
+
+| year| Australia| France|  India| Zimbabwe|
+|----:|---------:|------:|------:|--------:|
+| 1952|    69.120| 67.410| 37.373|   48.451|
+| 1957|    70.330| 68.930| 40.249|   50.469|
+| 1962|    70.930| 70.510| 43.605|   52.358|
+| 1967|    71.100| 71.550| 47.193|   53.995|
+| 1972|    71.930| 72.380| 50.651|   55.635|
+| 1977|    73.490| 73.830| 54.208|   57.674|
+| 1982|    74.740| 74.890| 56.596|   60.363|
+| 1987|    76.320| 76.340| 58.553|   62.351|
+| 1992|    77.560| 77.460| 60.223|   60.377|
+| 1997|    78.830| 78.640| 61.765|   46.809|
+| 2002|    80.370| 79.590| 62.879|   39.989|
+| 2007|    81.235| 80.657| 64.698|   43.487|
+
+---
+
+layout: true
+
+# Life Exepectancy in Australia
+
+---
+
+
+```r
+year <- c(1952, 1957, 1962, 1967, 1972, 1977,
+          1982, 1987, 1992, 1997, 2002, 2007)
+year
+```
+
+```
+ [1] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 2002 2007
+```
+
+???
+
+Here, we create two vectors containing the data using the C function.
+
+The first variable contains the values of _years_, 
+
+--
+
+
+```r
+lexp_aus <- c(69.12, 70.33, 70.93, 71.1, 71.93, 73.49,
+              74.74, 76.32, 77.56, 78.83, 80.37, 81.235)
+lexp_aus
+```
+
+```
+ [1] 69.120 70.330 70.930 71.100 71.930 73.490 74.740 76.320 77.560 78.830 80.370 81.235
+```
+
+???
+
+
+and the second contains the reported life expectancies in Australia in these years.
+
+Notice that the values for year are equally spaced, from 1952 to 2007
+with a gap of five years.
+
+
+---
+
+
+
+```r
+year <- seq(1952, 2007, by = 5)
+year
+```
+
+```
+ [1] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 2002 2007
+```
+
+???
+
+This means that we can use the SEQUENCE function that we have seen
+earlier to create this vector in a more efficient way.
+
+This use of S-E-Q is a little different from the use we have seen
+previously. 
+
+This raises the obvious question: Even if we _know_ that a function
+exists, how can we know the different ways in which the function can
+be used?
+
+We will address this question soon when we discuss how to use the help
+system in R.
+
+
+---
+
+
+```r
+plot(year, lexp_aus, pch = 16)
+```
+
+![plot of chunk unnamed-chunk-48](figures/1-introunnamed-chunk-48-1.svg)
+
+???
+
+Now that we have input the data, a good first step is to plot it.
+
+We will learn about more sophisticated ways of plotting later, but
+trying the PLOT function is usually a good first step.
+
+This plot shows that life expectancy in Australia has increased
+steadily, from slightly less than 70 years, to slightly more than 80
+years, in the time period under observation.
+
+But it also shows that the improvement really started from around 1970
+and not before then. So, a natural next step could be to look at the
+_changes_ in life expectancy every five years.
+
+For this, we need to compute the _successive differences_ in the
+values stored in the vector of life expectancies.
+
+This is something that should be quite simple to do, and it is.
+
+But before looking at the simple solution, let us look at a solution
+that is not so simple, but one that only uses what we already know.
+
+---
+
+
+```r
+lexp_aus[[2]] - lexp_aus[[1]]
+```
+
+```
+[1] 1.21
+```
+
+???
+
+Remember that we can extract individual elements of a vector using the
+double square bracket notation. 
+
+Extracting the first two and taking their difference gives us the
+first difference.
+
+---
+
+
+```r
+c(lexp_aus[[2]] - lexp_aus[[1]], lexp_aus[[3]] - lexp_aus[[2]],
+  lexp_aus[[4]] - lexp_aus[[3]], lexp_aus[[5]] - lexp_aus[[4]],
+  lexp_aus[[6]] - lexp_aus[[5]], lexp_aus[[7]] - lexp_aus[[6]],
+  lexp_aus[[8]] - lexp_aus[[7]], lexp_aus[[9]] - lexp_aus[[8]],
+  lexp_aus[[10]] - lexp_aus[[9]], lexp_aus[[11]] - lexp_aus[[10]],
+  lexp_aus[[12]] - lexp_aus[[11]])
+```
+
+```
+ [1] 1.210 0.600 0.170 0.830 1.560 1.250 1.580 1.240 1.270 1.540 0.865
+```
+
+???
+
+By repeating this calculation eleven times, and combining the results,
+we can get the vector of successive differences.
+
+But of course this is not a practical method, because it will not
+scale to even moderately large datasets.
+
+If you have some experience with programming before, you will know
+that a FOR LOOP can be useful for repetitive calculations like this. 
+
+Let us see how we can use a FOR LOOP in R to simplify this problem.
+
+---
+
+
+```r
+d <- numeric(0)
+```
+
+???
+
+First, we create a vector of length 0 in which the answer will be stored.
+
+--
+
+
+```r
+for (i in 1:11) {
+    d <- c(d, lexp_aus[[i+1]] - lexp_aus[[i]])
+}
+d
+```
+
+```
+ [1] 1.210 0.600 0.170 0.830 1.560 1.250 1.580 1.240 1.270 1.540 0.865
+```
+
+???
+
+Next we create a FOR LOOP, where this notation means, that the loop
+index __i__ will vary over the values in the vector containing the
+sequence from __one to eleven__.
+
+In each __iteration__ of the loop, we add the i-th component of the
+difference to the result, updating the variable named D every time.
+
+In many languages this would have been a perfectly reasonable approach.
+
+In R, unfortunately, this approach would not be considered a good
+solution because it can be inefficient.
+
+---
+
+
+```r
+lexp_aus[-1] - lexp_aus[-12]
+```
+
+```
+ [1] 1.210 0.600 0.170 0.830 1.560 1.250 1.580 1.240 1.270 1.540 0.865
+```
+
+???
+
+The __right__ solution requires one more piece of information that we
+do not yet have, namely how to do __vector indexing__. 
+
+We will learn about this in the very next video, after which the
+solution shown here will make sense.
+
+But the intuition here should already be clear: by using a negative
+integer as index, we drop the corresponding element from a vector, and
+then simply take the difference of two such vectors.
+
+--
+
+
+```r
+diff(lexp_aus)
+```
+
+```
+ [1] 1.210 0.600 0.170 0.830 1.560 1.250 1.580 1.240 1.270 1.540 0.865
+```
+
+???
+
+This operation is so common and important in data analysis that there
+is also a built-in function for it.
+
+This function is called DIFF, which takes a vector as input, and when
+no other arguments are specified, returns the vector of successive
+differences.
+
+---
+
+
+```r
+d <- diff(lexp_aus)
+median(d)
+```
+
+```
+[1] 1.24
+```
+
+```r
+mean(d)
+```
+
+```
+[1] 1.101364
+```
+
+
+---
+
+
+```r
+plot(d, pch = 16, type = "o", ylab = "difference", xlab = "period")
+```
+
+![plot of chunk unnamed-chunk-56](figures/1-introunnamed-chunk-56-1.svg)
+
+
+
+
+
+
+
+
+
+    </textarea>
+  </body>
+
+  <script 
+	  src='assets/remark-latest.min.js'
+	  type='text/javascript'></script>
+
+  <script type='text/javascript'>
+    var slideshow = remark.create(
+	{
+	    navigation: {scroll: false,},
+	    ratio: '16:9',
+	    // ratio: '4:3',
+	    countIncrementalSlides: false
+	});
+    
+    // Setup MathJax; unused if mathjax == false
+    MathJax = {
+	tex: {
+	    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+	    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ]
+	},
+	svg: {
+	    fontCache: 'global'
+	},
+    };
+
+  </script>
+
+  <script type='text/javascript' async
+	  src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'>
+  </script>
+
+</html>
+

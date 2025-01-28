@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='864.00pt' height='396.00pt' viewBox='0 0 864.00 396.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: none;'/>
+<defs>
+  <clipPath id='cpMC4wMHw4NjQuMDB8MC4wMHwzOTYuMDA='>
+    <rect x='0.00' y='0.00' width='864.00' height='396.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw4NjQuMDB8MC4wMHwzOTYuMDA=)'>
+</g>
+<defs>
+  <clipPath id='cpNzMuODB8ODI2LjIwfDczLjgwfDMwNC4yMA=='>
+    <rect x='73.80' y='73.80' width='752.40' height='230.40' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNzMuODB8ODI2LjIwfDczLjgwfDMwNC4yMA==)'>
+<circle cx='101.67' cy='283.01' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='148.11' cy='232.37' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='194.56' cy='147.97' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='241.00' cy='82.33' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='287.44' cy='82.33' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='333.89' cy='139.22' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='380.33' cy='208.75' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='426.78' cy='258.42' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='473.22' cy='283.25' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='519.67' cy='292.45' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='566.11' cy='295.02' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='612.56' cy='295.57' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='659.00' cy='295.66' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='705.44' cy='295.67' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='751.89' cy='295.67' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+<circle cx='798.33' cy='295.67' r='3.38' style='stroke-width: 0.75; stroke: none; fill: #000000;' />
+</g>
+<g clip-path='url(#cpMC4wMHw4NjQuMDB8MC4wMHwzOTYuMDA=)'>
+<line x1='101.67' y1='304.20' x2='798.33' y2='304.20' style='stroke-width: 0.75;' />
+<line x1='101.67' y1='304.20' x2='101.67' y2='313.20' style='stroke-width: 0.75;' />
+<line x1='333.89' y1='304.20' x2='333.89' y2='313.20' style='stroke-width: 0.75;' />
+<line x1='566.11' y1='304.20' x2='566.11' y2='313.20' style='stroke-width: 0.75;' />
+<line x1='798.33' y1='304.20' x2='798.33' y2='313.20' style='stroke-width: 0.75;' />
+<text x='101.67' y='336.60' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='8.34px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='333.89' y='336.60' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='8.34px' lengthAdjust='spacingAndGlyphs'>5</text>
+<text x='566.11' y='336.60' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='16.69px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text x='798.33' y='336.60' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='16.69px' lengthAdjust='spacingAndGlyphs'>15</text>
+<line x1='73.80' y1='295.67' x2='73.80' y2='106.20' style='stroke-width: 0.75;' />
+<line x1='73.80' y1='295.67' x2='64.80' y2='295.67' style='stroke-width: 0.75;' />
+<line x1='73.80' y1='248.30' x2='64.80' y2='248.30' style='stroke-width: 0.75;' />
+<line x1='73.80' y1='200.94' x2='64.80' y2='200.94' style='stroke-width: 0.75;' />
+<line x1='73.80' y1='153.57' x2='64.80' y2='153.57' style='stroke-width: 0.75;' />
+<line x1='73.80' y1='106.20' x2='64.80' y2='106.20' style='stroke-width: 0.75;' />
+<text transform='translate(52.20,295.67) rotate(-90)' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='29.20px' lengthAdjust='spacingAndGlyphs'>0.00</text>
+<text transform='translate(52.20,248.30) rotate(-90)' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='29.20px' lengthAdjust='spacingAndGlyphs'>0.05</text>
+<text transform='translate(52.20,200.94) rotate(-90)' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='29.20px' lengthAdjust='spacingAndGlyphs'>0.10</text>
+<text transform='translate(52.20,153.57) rotate(-90)' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='29.20px' lengthAdjust='spacingAndGlyphs'>0.15</text>
+<text transform='translate(52.20,106.20) rotate(-90)' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='29.20px' lengthAdjust='spacingAndGlyphs'>0.20</text>
+<polygon points='73.80,304.20 826.20,304.20 826.20,73.80 73.80,73.80 ' style='stroke-width: 0.75;' />
+<text x='450.00' y='372.60' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='7.50px' lengthAdjust='spacingAndGlyphs'>x</text>
+<text transform='translate(16.20,189.00) rotate(-90)' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='70.06px' lengthAdjust='spacingAndGlyphs'>Probability</text>
+<text x='450.00' y='43.38' text-anchor='middle' style='font-size: 18.00px; font-weight: bold; font-family: "Arial";' textLength='153.06px' lengthAdjust='spacingAndGlyphs'>Binomial(15, 0.25)</text>
+</g>
+<g clip-path='url(#cpNzMuODB8ODI2LjIwfDczLjgwfDMwNC4yMA==)'>
+<line x1='73.80' y1='295.67' x2='826.20' y2='295.67' style='stroke-width: 0.75; stroke: #BEBEBE;' />
+</g>
+</svg>
