@@ -1,0 +1,500 @@
+---
+layout: remark
+title: Introduction and Basics of R
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+<!-- 
+
+# Topics to be Covered
+
+- Installing and running R and RStudio, using the command line console
+
+- R as an advanced calculator with graphics and simulation capabilities
+
+- Vectors (numeric, character, logical, factors) and indexing
+
+- Lists and Data frames
+
+- Operators and Functions, Attributes
+
+- The Help System (and S3 methods)
+
+-->
+
+
+# Review: Software for Statistics
+
+- Computation is an essential part of modern statistics
+
+    - Handling large datasets 
+
+    - Visualization
+
+--
+    - Simulation
+
+    - Iterative methods 
+
+
+--
+
+- Many options, but we will focus on R and Python
+
+	- Available as [Free](https://en.wikipedia.org/wiki/Free_software_movement) / 
+      [Open Source](https://en.wikipedia.org/wiki/The_Open_Source_Definition) Software
+
+	- Easy to try out on your own
+
+	- Contains all essential data analysis tools
+	
+	- Active community
+	
+	
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-intro/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+               fig.width = 12, fig.height = 5.5,
+               dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
+               knitr.table.format = "html",
+               fig.path='figures/1-intro-')
+opts_chunk$set(engine.path = list(python = '/usr/local/bin/python3'))
+options(warnPartialMatchDollar = FALSE, width = 90) # 110
+```
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+
+---
+
+# Interacting with R
+
+* R is most commonly used as a [REPL](https://en.wikipedia.org/wiki/Read-eval-print_loop) (Read-Eval-Print-Loop)
+
+	* When it is started, R Waits for user input
+
+	* User inputs expression
+
+	* R evaluates and prints result
+
+	* Waits for more input
+
+--
+
+* Python supports exactly the same model 
+
+--
+
+* Several _interfaces_ are available to help in this process
+
+* Recommended options (representing slightly different approaches)
+
+	* RStudio
+	
+	* Jupyter
+
+---
+
+# Running R
+
+* On starting up, R shows you something like this:
+
+```
+R version 4.2.2 Patched (2022-11-17 r83375) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+>
+```
+
+* The `>` represents a _prompt_ indicating that R is waiting for input
+
+---
+
+# Running Python
+
+* Python has a similar but much shorter start-up message:
+
+```
+Python 3.9.12 (main, Apr  5 2022, 01:53:17) 
+[Clang 12.0.0 ] :: Anaconda, Inc. on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+```
+
+* The `>>>` similarly represents the _prompt_ indicating that Python is waiting
+
+
+---
+
+# The R REPL essentially works like a calculator
+
+```{r}
+34 * 23 + 10
+27 + 1 / 7
+2^10
+exp(2)
+```
+
+---
+
+# The Python REPL is very similar
+
+```{python}
+34 * 23 + 10
+27 + 1 / 7
+```
+
+---
+
+# But not exactly the same
+
+```{python}
+2^10
+```
+
+---
+
+# But not exactly the same
+
+
+```{python}
+2^10
+```
+
+```{python}
+2 ** 10
+```
+
+---
+
+# But not exactly the same
+
+```python
+exp(2)
+```
+
+```
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'exp' is not defined
+```
+
+---
+
+# NumPy for scientific computing in Python
+
+* Python with NumPy
+
+```{python}
+from numpy import *
+exp(2)
+sin(pi / 6)
+```
+
+* Compare with R
+
+```{r}
+exp(2)
+sin(pi / 6)
+```
+
+---
+
+# Why learn both R and Python?
+
+* Both are just tools... skills are more important
+
+--
+
+* Complementary strengths
+
+--
+
+* Easy interoperability
+
+---
+
+# What about error messages?
+
+```r
+34 +* 23
+```
+
+```
+Error: unexpected '*' in "34 +*"
+```
+
+```r
+27 // 7
+```
+
+```
+Error: unexpected '/' in "27 //"
+```
+
+
+```{r,error = TRUE}
+arcsin(1/2)
+```
+
+---
+
+class: center middle
+
+# Essential features of R
+
+---
+
+layout: true
+
+# R supports mathematical functions
+
+---
+
+```{r}
+sqrt(5 * 125)
+log(120)
+factorial(10)
+log(factorial(10))
+```
+
+---
+
+```{r}
+choose(15, 5)
+factorial(15) / (factorial(10) * factorial(5))
+```
+
+--
+
+```{r}
+choose(1500, 2)
+factorial(1500) / (factorial(1498) * factorial(2))
+```
+
+---
+
+layout: false
+
+# R supports variables
+
+```{r}
+x <- 2
+y <- 10
+x^y
+y^x
+factorial(y)
+log(factorial(y), base = x)
+```
+
+---
+
+# R can compute on vectors
+
+```{r}
+N <- 15
+x <- seq(0, N)
+N
+x
+1:N
+choose(N, x)
+```
+
+---
+
+# Example: Evaluating Binomial probabilities
+
+- Binomial distribution: 
+
+$$
+P(X = x) = { n \choose x } p^x (1-p)^{n-x}
+$$
+
+--
+
+```{r}
+N <- 15
+x <- seq(0, N)
+p <- 0.25
+choose(N, x) * p^x * (1-p)^(N-x)
+```
+
+---
+
+# _Summary functions_ that work on vectors
+
+```{r}
+p.x <- dbinom(x, size = N, prob = p)
+p.x
+x * p.x
+sum(x * p.x) / sum(p.x)
+N * p
+```
+
+
+---
+
+# Example: Factorials revisited
+
+```{r}
+choose(1500, 2)
+log(choose(1500, 2))
+factorial(1500) / (factorial(1498) * factorial(2)) # fails
+```
+
+--
+
+```{r}
+factorial(1500)
+```
+
+---
+
+layout: true
+
+# Factorials using vectorized arithmetic
+
+---
+
+```{r}
+factorial(10)
+prod(seq(1, 10))
+```
+
+--
+
+```{r}
+log(prod(seq(1, 10)))
+sum(log(1:10))
+```
+
+---
+
+```{r}
+factorial(1500)
+prod(seq(1, 1500))
+```
+
+```{r}
+log(prod(seq(1, 1500)))
+sum(log(1:1500))
+```
+
+
+---
+
+```{r}
+sum(log(1:1500)) - sum(log(1:1498)) - sum(log(1:2))
+exp(sum(log(1:1500)) - sum(log(1:1498)) - sum(log(1:2)))
+```
+
+--
+
+* Compare with
+
+```{r}
+log(choose(1500, 2))
+choose(1500, 2)
+```
+
+---
+
+layout: false
+
+# R can draw graphs
+
+```{r}
+plot(x, p.x, ylab = "Probability", pch = 16)
+title(main = sprintf("Binomial(%g, %g)", N, p))
+abline(h = 0, col = "grey")
+```
+
+---
+
+# R can simulate random variables
+
+```{r}
+cards <- as.vector(outer(c("H", "D", "C", "S"), 1:13, paste, sep = "-"))
+cards
+```
+
+--
+
+```{r}
+sample(cards, 13)
+sample(cards, 13)
+```
+
+---
+
+layout: true
+
+# Demonstration: The law of large numbers
+
+---
+
+* Does proportion of tosses that turn up head converge to probability?
+
+--
+
+```{r}
+p <- 0.25
+z <- rbinom(100, size = 1, prob = p)
+z
+```
+
+--
+
+```{r}
+cumsum(z)
+```
+
+---
+
+```{r}
+cumsum(z) / 1:100
+```
+
+---
+
+* How _fast_ does the sample proportion converge?
+
+.scrollable500[
+
+```{r,fig.height = 6}
+plot(1:100, type = "n", ylim = c(0, 1), ylab = "Sample proportion")
+for (i in 1:50) {
+    z <- rbinom(100, size = 1, prob = p)
+    lines(1:100, cumsum(z) / 1:100, col = sample(colors(), 1))
+}
+```
+
+]
+
+
+
+
+

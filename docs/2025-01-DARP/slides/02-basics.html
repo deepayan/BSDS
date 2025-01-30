@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Basic Usage of R</title>
+    <link rel='stylesheet' href='assets/remark.css'>
+  </head>
+  <body>
+    <textarea id='source'>
+
+class: center, middle
+
+# Basic Usage of R
+
+## Data Analysis with R and Python
+
+### Deepayan Sarkar
+
+<h1 onclick='document.documentElement.requestFullscreen();' style='cursor: pointer;'>
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrows-fullscreen' viewBox='0 0 16 16'>
+  <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'/>
+</svg>
+</h1>
+
+---
+
+
+
+	
+# R is a full programming language
+
+* Variables
+
+* Functions
+
+* Control flow structures
+
+	* For loops, while loops
+
+	* If-then-else (branching)
+
+--
+
+* Distinguishing features
+
+	* Focus on _vectors_ and _vectorized operations_ 
+
+	* Treatment of _functions_ at par with other object types
+
+
+
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\nseq}[1]{{#1}\sub{1}, {#1}\sub{2}, \dotc, {#1}\sub{n}}
+$$
+</div>
+
+
+---
+
+# R is easily extensible
+
+* Most standard data analysis methods are already implemented
+
+* Can be extended by writing add-on packages
+
+* Thousands of add-on packages are available
+
+---
+
+# Major concepts we need to know
+
+* Variables (in the context of programming)
+
+--
+
+* Data structures needed for data analyis
+
+--
+
+* Functions (set of instructions for performing a procedure)
+
+---
+
+# Variables
+
+* Variables are symbols that may be associated with different values
+
+* Computations involving variables are done using their current value
+
+```r
+sqrt(x)
+```
+
+```
+Error: object 'x' not found
+```
+
+---
+
+# Variables
+
+* Variables are symbols that may be associated with different values
+
+* Computations involving variables are done using their current value
+
+
+
+```r
+x <- 10 # assignment
+sqrt(x)
+```
+
+```
+[1] 3.162278
+```
+
+```r
+x <- -1
+sqrt(x)
+```
+
+```
+Warning in sqrt(x): NaNs produced
+```
+
+```
+[1] NaN
+```
+
+```r
+x <- -1+0i
+sqrt(x)
+```
+
+```
+[1] 0+1i
+```
+
+---
+
+# Data structures for data analysis
+
+* Vectors
+
+* Matrices 
+
+* Data frames (a spreadsheet-like data set)
+
+* Lists (general collection of objects)
+
+---
+
+# Atomic vectors
+
+* Indexed collection of homogeneous scalars, can be 
+
+    * Numeric / Integer / Complex
+
+    <!-- * Categorical (factor) -->
+
+    * Character
+
+    * Logical (`TRUE` / `FALSE`)
+	
+--
+
+* Missing values are allowed, indicated as `NA`
+
+
+--
+
+* Elements are indexed starting from 1
+
+
+--
+
+* $i$th element of vector `x` can be extracted using `x[[i]]`
+
+* There are also more sophisticated forms of (vector) indexing
+
+
+
+---
+
+# Atomic vectors: examples
+
+
+```r
+month.name # built-in 
+```
+
+```
+ [1] "January"   "February"  "March"     "April"     "May"       "June"      "July"     
+ [8] "August"    "September" "October"   "November"  "December" 
+```
+
+
+--
+
+
+```r
+x <- rnorm(10)
+x
+```
+
+```
+ [1]  0.1835270  0.6246906 -1.7680396  1.1349834 -0.9381819  0.3000937  0.7678891
+ [8]  1.5019791 -1.4474599  0.1974796
+```
+
+
+--
+
+
+```r
+x[[3]] # third element of x
+```
+
+```
+[1] -1.76804
+```
+
+---
+
+# Atomic vectors: examples
+
+
+```r
+str(x) # useful function
+```
+
+```
+ num [1:10] 0.184 0.625 -1.768 1.135 -0.938 ...
+```
+
+```r
+str(month.name)
+```
+
+```
+ chr [1:12] "January" "February" "March" "April" "May" "June" "July" "August" ...
+```
+
+---
+
+# Creating atomic vectors
+
+* Constructor functions
+
+
+```r
+numeric(10)
+```
+
+```
+ [1] 0 0 0 0 0 0 0 0 0 0
+```
+
+```r
+logical(5)
+```
+
+```
+[1] FALSE FALSE FALSE FALSE FALSE
+```
+
+```r
+character(5)
+```
+
+```
+[1] "" "" "" "" ""
+```
+
+---
+
+# Scalars are also vectors
+
+* "Scalars" are just vectors of length 1
+
+
+```r
+str(numeric(2))
+```
+
+```
+ num [1:2] 0 0
+```
+
+```r
+str(numeric(1))
+```
+
+```
+ num 0
+```
+
+```r
+str(0)
+```
+
+```
+ num 0
+```
+
+---
+
+# Vectors can have zero length
+
+* Vectors can have length zero 
+
+
+```r
+numeric(0)
+```
+
+```
+numeric(0)
+```
+
+```r
+logical(0)
+```
+
+```
+logical(0)
+```
+
+```r
+length(character(0))
+```
+
+```
+[1] 0
+```
+
+--
+
+
+```r
+length(NULL)
+```
+
+```
+[1] 0
+```
+
+---
+
+# Combining vectors using `c()` 
+
+* Vectors can also be created by combining smaller vectors
+
+* For example, vectors `x` and `y` can be combined using `c(x, y)`
+
+
+```r
+c(1:5, numeric(3))
+```
+
+```
+[1] 1 2 3 4 5 0 0 0
+```
+
+--
+
+* Any number of vectors can be combined
+
+* This is a common way to build up a vector using scalars
+
+
+```r
+c(2, 4, 6, 9, 11)
+```
+
+```
+[1]  2  4  6  9 11
+```
+
+---
+
+# Combining vectors of different types
+
+* Atomic vectors of different types cannot be combined
+
+* Attempting to do so will convert into one of the types
+
+
+```r
+c(1:5, c(TRUE, FALSE))
+```
+
+```
+[1] 1 2 3 4 5 1 0
+```
+
+```r
+c(1:5, month.name[[1]])
+```
+
+```
+[1] "1"       "2"       "3"       "4"       "5"       "January"
+```
+
+--
+
+
+
+```r
+c(1:5, c(TRUE, FALSE), month.name[[1]])
+```
+
+```
+[1] "1"       "2"       "3"       "4"       "5"       "TRUE"    "FALSE"   "January"
+```
+
+```r
+c(c(1:5, TRUE, FALSE), month.name[[1]])
+```
+
+```
+[1] "1"       "2"       "3"       "4"       "5"       "1"       "0"       "January"
+```
+
+---
+
+
+# Example: Our first dataset
+
+* Life expectancy in different countries over time
+
+
+| year| Australia| France|  India| Zimbabwe|
+|----:|---------:|------:|------:|--------:|
+| 1952|    69.120| 67.410| 37.373|   48.451|
+| 1957|    70.330| 68.930| 40.249|   50.469|
+| 1962|    70.930| 70.510| 43.605|   52.358|
+| 1967|    71.100| 71.550| 47.193|   53.995|
+| 1972|    71.930| 72.380| 50.651|   55.635|
+| 1977|    73.490| 73.830| 54.208|   57.674|
+| 1982|    74.740| 74.890| 56.596|   60.363|
+| 1987|    76.320| 76.340| 58.553|   62.351|
+| 1992|    77.560| 77.460| 60.223|   60.377|
+| 1997|    78.830| 78.640| 61.765|   46.809|
+| 2002|    80.370| 79.590| 62.879|   39.989|
+| 2007|    81.235| 80.657| 64.698|   43.487|
+
+---
+
+layout: true
+
+# Life Exepectancy in France
+
+---
+
+
+```r
+year <- c(1952, 1957, 1962, 1967, 1972, 1977,
+          1982, 1987, 1992, 1997, 2002, 2007)
+year
+```
+
+```
+ [1] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 2002 2007
+```
+
+
+--
+
+
+```r
+lexp_france <- c(67.41, 68.93, 70.51, 71.55, 72.38, 73.83, 74.89, 76.34,
+              77.46, 78.64, 79.59, 80.657)
+lexp_france
+```
+
+```
+ [1] 67.410 68.930 70.510 71.550 72.380 73.830 74.890 76.340 77.460 78.640 79.590 80.657
+```
+
+
+---
+
+
+
+```r
+year <- seq(1952, 2007, by = 5)
+year
+```
+
+```
+ [1] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 2002 2007
+```
+
+---
+
+
+```r
+plot(year, lexp_france, pch = 16)
+```
+
+![plot of chunk unnamed-chunk-18](figures/2-basics-unnamed-chunk-18-1.svg)
+
+
+---
+
+
+```r
+lexp_france[[2]] - lexp_france[[1]]
+```
+
+```
+[1] 1.52
+```
+
+---
+
+
+```r
+c(lexp_france[[2]] - lexp_france[[1]], lexp_france[[3]] - lexp_france[[2]],
+  lexp_france[[4]] - lexp_france[[3]], lexp_france[[5]] - lexp_france[[4]],
+  lexp_france[[6]] - lexp_france[[5]], lexp_france[[7]] - lexp_france[[6]],
+  lexp_france[[8]] - lexp_france[[7]], lexp_france[[9]] - lexp_france[[8]],
+  lexp_france[[10]] - lexp_france[[9]], lexp_france[[11]] - lexp_france[[10]],
+  lexp_france[[12]] - lexp_france[[11]])
+```
+
+```
+ [1] 1.520 1.580 1.040 0.830 1.450 1.060 1.450 1.120 1.180 0.950 1.067
+```
+
+---
+
+
+```r
+d <- numeric(0)
+```
+
+
+--
+
+
+```r
+for (i in 1:11) {
+    d <- c(d, lexp_france[[i+1]] - lexp_france[[i]])
+}
+d
+```
+
+```
+ [1] 1.520 1.580 1.040 0.830 1.450 1.060 1.450 1.120 1.180 0.950 1.067
+```
+
+---
+
+
+```r
+lexp_france[-1] - lexp_france[-12]
+```
+
+```
+ [1] 1.520 1.580 1.040 0.830 1.450 1.060 1.450 1.120 1.180 0.950 1.067
+```
+
+
+--
+
+
+```r
+diff(lexp_france)
+```
+
+```
+ [1] 1.520 1.580 1.040 0.830 1.450 1.060 1.450 1.120 1.180 0.950 1.067
+```
+
+---
+
+
+```r
+d <- diff(lexp_france)
+median(d)
+```
+
+```
+[1] 1.12
+```
+
+```r
+mean(d)
+```
+
+```
+[1] 1.204273
+```
+
+---
+
+
+```r
+plot(d, pch = 16, type = "o", ylab = "difference", xlab = "period")
+```
+
+![plot of chunk unnamed-chunk-26](figures/2-basics-unnamed-chunk-26-1.svg)
+
+---
+
+layout: false
+
+# Types of vector indexing
+
+* Indexing refers to extracting subsets of data
+
+* R supports several kinds of indexing:
+
+	* Indexing with a vector of positive integers
+
+	* Indexing with a vector of negative integers
+	
+	* Indexing with a logical vector
+
+	* Indexing with a vector of names
+
+
+---
+
+# The empty index
+
+* A vector indexing operation has the form `x[index]`
+
+???
+
+Vector indexing is done using the _single_ square bracket notation,
+where the expression inside the brackets is known as the index.
+
+The index can itself be a vector, unlike the _double_ square bracket
+notation, where it is usually a scalar.
+
+--
+
+* The most basic form is an empty index, which selects all elements
+
+
+```r
+month.name[]
+```
+
+```
+ [1] "January"   "February"  "March"     "April"     "May"       "June"      "July"     
+ [8] "August"    "September" "October"   "November"  "December" 
+```
+
+???
+
+Before seeing what the index can be, we should know that the index can
+be _missing_, which has the effect of selecting _all_ elements.
+
+This may seem pointless, but will be very useful when we get to matrix
+indexing.
+
+---
+
+# Indexing with an integer vector
+
+* For integer indexing, `index` is an integer vector
+
+
+```r
+month.name[c(2, 4, 6, 9, 11)]
+```
+
+```
+[1] "February"  "April"     "June"      "September" "November" 
+```
+
+???
+
+Indexing by integers is perhaps the most natural kind of indexing, and
+indeed, the index can be a vector of integers. 
+
+The result will have the same length as the _index_, with each
+position containing the corresponding element of the vector being indexed.
+
+--
+
+* Elements can be repeated
+
+
+```r
+month.name[c(2, 2, 6, 4, 6, 11)]
+```
+
+```
+[1] "February" "February" "June"     "April"    "June"     "November"
+```
+
+???
+
+Values can be _repeated_ in the index vector, resulting in the
+corresponding elements being selected more than once.
+
+This may seem surprising, but it is quite natural in many situations,
+for example, when sampling _with_ replacement.
+
+---
+
+# Indexing with an integer vector
+
+* "Out-of-bounds" indexing gives `NA` (missing)
+
+
+```r
+month.name[13]
+```
+
+```
+[1] NA
+```
+
+???
+
+
+An index value is permitted to go beyond the range of valid positions,
+that is, the length of the vector being indexed. This results in an NA
+or missing value in the corresponding position.
+
+--
+
+
+```r
+seq(1, by = 2, length.out = 8)
+```
+
+```
+[1]  1  3  5  7  9 11 13 15
+```
+
+???
+
+Here we use the S-E-Q, or SEQUENCE function, to generate a regularly
+spaced sequence. This is more general than creating a sequence of
+consecutive integers using the colon operator.
+
+--
+
+
+```r
+month.name[seq(1, by = 2, length.out = 8)]
+```
+
+```
+[1] "January"   "March"     "May"       "July"      "September" "November"  NA         
+[8] NA         
+```
+
+???
+
+Here we create a sequence whose last two values are out of bounds, so
+indexing with it leads to NA values in the result. 
+
+Unfortunately this does not produce an error or warning message, so we
+must be careful to check that this does not happen unintentionally.
+
+
+---
+
+# Indexing with an integer vector
+
+* Indexing with a scalar (vector of length 1) also works:
+
+
+```r
+month.name[2]
+```
+
+```
+[1] "February"
+```
+
+???
+
+Scalars are also vectors, so we can index by a scalar integer as well,
+resulting in a scalar value.
+
+--
+
+* This is usually the same as `x[[index]]`
+
+
+```r
+month.name[[2]]
+```
+
+```
+[1] "February"
+```
+
+???
+
+This is the essentially the same as scalar indexing by _double_ square
+brackets, 
+
+--
+
+* However, these differ in the behaviour when an index is out of bound
+
+
+```r
+month.name[15]
+```
+
+```
+[1] NA
+```
+
+```r
+month.name[[15]]
+```
+
+```
+Error in month.name[[15]]: subscript out of bounds
+```
+
+???
+
+except that in _scalar_ indexing, an out-of-bounds index
+_does_ lead to an error.
+
+---
+
+# Indexing with a vector of negative integers
+
+* Negative integers omit the specified entries
+
+
+```r
+month.name[-2]
+```
+
+```
+ [1] "January"   "March"     "April"     "May"       "June"      "July"      "August"   
+ [8] "September" "October"   "November"  "December" 
+```
+
+```r
+month.name[-c(2, 4, 6, 9, 11)]
+```
+
+```
+[1] "January"  "March"    "May"      "July"     "August"   "October"  "December"
+```
+
+???
+
+A more unusual type of indexing is with negative integers.
+
+This has the effect of returning all elements EXCEPT the ones
+specified. This is sometimes quite convenient, but you will probably
+not use it as much as indexing with positive integers.
+
+--
+
+* Cannot be mixed with positive integers
+
+
+```r
+month.name[c(2, -3)]
+```
+
+```
+Error in month.name[c(2, -3)]: only 0's may be mixed with negative subscripts
+```
+
+???
+
+Naturally, you cannot mix positive and negative integers in the same
+index vector, because the result would be ambiguous.
+
+
+---
+
+# Indexing with 0
+
+* Zero has a special meaning - it doesn't select anything
+
+
+```r
+month.name[0]
+```
+
+```
+character(0)
+```
+
+```r
+month.name[integer(0)] ## same as empty index
+```
+
+```
+character(0)
+```
+
+```r
+month.name[c(1, 2, 0, 11, 12)]
+```
+
+```
+[1] "January"  "February" "November" "December"
+```
+
+```r
+month.name[-c(1, 2, 0, 11, 12)]
+```
+
+```
+[1] "March"     "April"     "May"       "June"      "July"      "August"    "September"
+[8] "October"  
+```
+
+???
+
+The remaining integer, zero, has a special meaning as an index, in the
+sense that it does not select anything, and is essentially ignored
+when included in the index vector. 
+
+This is not something you are likely to use, but it _is_ something to be
+aware of.
+
+---
+
+# Indexing with a logical vector
+
+* Indexing by logical vector: select `TRUE` elements
+
+
+```r
+month.name[c(TRUE, FALSE, FALSE)] # index replicated
+```
+
+```
+[1] "January" "April"   "July"    "October"
+```
+
+???
+
+Another very important type of indexing is by _logical_ vectors. This
+may initially seem unnecessary given integer indexing, but the
+advantages will soon become clear.
+
+In theory, a logical index vector can have any length. But the rule is
+designed with the expectation that the logical vector will have the
+same length as the vector being indexed. 
+
+So, each element will be either included in the result or excluded,
+depending on whether the corresponding index position is TRUE or
+FALSE.
+
+In this example, the index vector is shorter than the vector being
+indexed.
+
+In such a case, the standard vectorization rule will be applied, and
+the index vector will be replicated as necessary to make it as long as
+the input.
+
+Make sure you understand this rule, and look carefully at the example
+to make sure that the output is what you expect.
+
+---
+
+# Indexing with a logical vector
+
+* Indexing by logical vector: select `TRUE` elements
+
+
+```r
+i <- substring(month.name, 1, 1) == "J"
+i
+```
+
+```
+ [1]  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE
+```
+
+???
+
+This example illustrates a more typical usage of logical indexing.
+
+Here, we want to select all months that start with the letter J. To do
+this, we first use the SUBSTRING function to extract the first letter
+of each month, and then check whether this letter equals J.
+
+All these operations are vectorized, so the result is a logical vector
+of length 12.
+
+--
+
+
+```r
+month.name[i]
+```
+
+```
+[1] "January" "June"    "July"   
+```
+
+???
+
+Using it as the index will now extract the months that
+we wanted.
+
+
+---
+
+# Indexing with a logical vector
+
+<!-- * Common use: extract subset satisfying a certain condition (also called "filtering") -->
+
+
+```r
+(x <- rnorm(20))
+```
+
+```
+ [1]  0.4551969 -0.4193646  0.1298366  1.7835150 -0.2016912 -0.6367525 -0.4775448
+ [8] -0.2687966  0.2538650  0.8750837 -2.1376604 -0.6995476  0.0897731  0.6781549
+[15]  0.4202109  0.6365381  1.1706711  0.7683105  0.4760369  1.1587456
+```
+
+```r
+x > 0
+```
+
+```
+ [1]  TRUE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE
+[15]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+```
+
+```r
+x[x > 0]
+```
+
+```
+ [1] 0.4551969 0.1298366 1.7835150 0.2538650 0.8750837 0.0897731 0.6781549 0.4202109
+ [9] 0.6365381 1.1706711 0.7683105 0.4760369 1.1587456
+```
+
+```r
+mean(x[x > 0])
+```
+
+```
+[1] 0.6843029
+```
+
+???
+
+This kind of filtering operation, where we extract the subset of a
+vector satisfying a certain condition, is very common. 
+
+Here is another example, where we extract the positive values from a
+vector and compute their mean.
+
+
+---
+
+# Converting a logical index vector to integer
+
+* Logical indexing may be replaced by integer indexing using `which()`
+
+
+```r
+i
+```
+
+```
+ [1]  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE
+```
+
+```r
+which(i)
+```
+
+```
+[1] 1 6 7
+```
+
+???
+
+There is a very useful function called WHICH, that converts a logical
+vector into an integer vector containing the position of the TRUE
+elements. 
+
+--
+
+
+```r
+month.name[ which(i) ]
+```
+
+```
+[1] "January" "June"    "July"   
+```
+
+???
+
+This integer vector can be used as an index instead of the logical
+vector to give the same result.
+
+This is sometimes useful, especially if the logical index vector is
+very long and only a few elements are TRUE.
+
+--
+
+
+```r
+month.name[ -which(i) ] # same as month.name[ !i ]
+```
+
+```
+[1] "February"  "March"     "April"     "May"       "August"    "September" "October"  
+[8] "November"  "December" 
+```
+
+???
+
+Using the corresponding negative integers to index has the effect of
+reversing the selection, which is also a nice symmetry.
+
+---
+
+# Converting a logical index vector to integer
+
+* But be careful about zero-length indices
+
+
+```r
+which(substring(month.name, 1, 1) == "B")
+```
+
+```
+integer(0)
+```
+
+```r
+month.name[ which( substring(month.name, 1, 1) == "B") ]
+```
+
+```
+character(0)
+```
+
+```r
+-which(substring(month.name, 1, 1) == "B") 
+```
+
+```
+integer(0)
+```
+
+```r
+month.name[ -which( substring(month.name, 1, 1) == "B") ]
+```
+
+```
+character(0)
+```
+
+???
+
+But you should be careful with this feature when there is a
+possibility that the logical vector only has FALSE values. 
+
+In this case, WHICH will return an empty vector, which will not work
+as expected when used as a negative index.
+
+---
+
+layout: true
+
+# Indexing with a vector of names
+
+---
+
+- Vectors can optionally have names — one for each element
+
+- These are usually informative labels
+
+???
+
+The last kind of indexing is with names or character strings. This
+only works for vectors that _have_ names. 
+
+Names are an optional attribute that any vector may have. When
+present, each element must have a name, and it usually conveys some
+information about the corresponding element. 
+
+This means, that the names associated with a vector is _itself_ a
+vector of character strings.
+
+--
+
+- Example: quantiles of a Normal random sample
+
+
+```r
+x <- rnorm(100)
+qx <- quantile(x)
+qx
+```
+
+```
+         0%         25%         50%         75%        100% 
+-2.45118171 -0.70671319  0.05292767  0.49462338  1.90524820 
+```
+
+```r
+names(qx)
+```
+
+```
+[1] "0%"   "25%"  "50%"  "75%"  "100%"
+```
+
+???
+
+In this example, we simulate a random sample from the standard normal
+distribution, and call the quantile function on it. 
+
+By default, this function returns a vector containing five quantiles,
+the minimum, maximum, median, and the two quartiles, with names to
+indicate the corresponding probability.
+
+--
+
+
+```r
+names(x) # no names
+```
+
+```
+NULL
+```
+
+???
+
+As we can see here, the random sample itself does not have
+names. Trying to extract the names using the NAMES function returns
+NULL.
+
+---
+
+- When present, names may be used to identify elements
+
+- Indexing with names works in the same way as positive integers
+
+- Instead of position, the corresponding named element is selected
+
+
+```r
+qx[["50%"]] ## extracting a single element using scalar indexing
+```
+
+```
+[1] 0.05292767
+```
+
+```r
+qx["50%"]   ## extracting a single element with vector indexing
+```
+
+```
+       50% 
+0.05292767 
+```
+
+```r
+qx[c("25%", "75%")]  ## extracting multiple elements
+```
+
+```
+       25%        75% 
+-0.7067132  0.4946234 
+```
+
+???
+
+For vectors that do have names, indexing with names works in the same
+way as positive integers. 
+
+Instead of positive integers, the index contains character strings,
+and the corresponding element is selected.
+
+---
+
+* Inter-quartile range
+
+
+```r
+diff(qx[c("25%", "75%")])
+```
+
+```
+     75% 
+1.201337 
+```
+
+???
+
+As you may recall, the _difference_ between the third quartile and the
+first quartile is known as the __inter-quartile range__.
+
+As a measure of variability in a dataset, it is a common alternative
+to the standard deviation, because it is more _robust_.
+
+Using the DIFF function we have seen earlier, we can now easily
+calculate the inter-quartile range.
+
+--
+
+
+```r
+IQR(x)
+```
+
+```
+[1] 1.201337
+```
+
+???
+
+Of course, being a common summary measure, there is also a built-in
+function to compute it, named I-Q-R.
+
+---
+
+- Unmatched names are treated like out-of-bound indexes
+
+
+```r
+qx[["95%"]]
+```
+
+```
+Error in qx[["95%"]]: subscript out of bounds
+```
+
+```r
+qx["95%"]
+```
+
+```
+<NA> 
+  NA 
+```
+
+
+
+
+
+
+    </textarea>
+  </body>
+
+  <script 
+	  src='assets/remark-latest.min.js'
+	  type='text/javascript'></script>
+
+  <script type='text/javascript'>
+    var slideshow = remark.create(
+	{
+	    navigation: {scroll: false,},
+	    ratio: '16:9',
+	    // ratio: '4:3',
+	    countIncrementalSlides: false
+	});
+    
+    // Setup MathJax; unused if mathjax == false
+    MathJax = {
+	tex: {
+	    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+	    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ]
+	},
+	svg: {
+	    fontCache: 'global'
+	},
+    };
+
+  </script>
+
+  <script type='text/javascript' async
+	  src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'>
+  </script>
+
+</html>
+
