@@ -411,14 +411,6 @@ layout: false
 
 * A vector indexing operation has the form `x[index]`
 
-???
-
-Vector indexing is done using the _single_ square bracket notation,
-where the expression inside the brackets is known as the index.
-
-The index can itself be a vector, unlike the _double_ square bracket
-notation, where it is usually a scalar.
-
 --
 
 * The most basic form is an empty index, which selects all elements
@@ -427,13 +419,6 @@ notation, where it is usually a scalar.
 month.name[]
 ```
 
-???
-
-Before seeing what the index can be, we should know that the index can
-be _missing_, which has the effect of selecting _all_ elements.
-
-This may seem pointless, but will be very useful when we get to matrix
-indexing.
 
 ---
 
@@ -445,13 +430,6 @@ indexing.
 month.name[c(2, 4, 6, 9, 11)]
 ```
 
-???
-
-Indexing by integers is perhaps the most natural kind of indexing, and
-indeed, the index can be a vector of integers. 
-
-The result will have the same length as the _index_, with each
-position containing the corresponding element of the vector being indexed.
 
 --
 
@@ -461,13 +439,6 @@ position containing the corresponding element of the vector being indexed.
 month.name[c(2, 2, 6, 4, 6, 11)]
 ```
 
-???
-
-Values can be _repeated_ in the index vector, resulting in the
-corresponding elements being selected more than once.
-
-This may seem surprising, but it is quite natural in many situations,
-for example, when sampling _with_ replacement.
 
 ---
 
@@ -479,12 +450,6 @@ for example, when sampling _with_ replacement.
 month.name[13]
 ```
 
-???
-
-
-An index value is permitted to go beyond the range of valid positions,
-that is, the length of the vector being indexed. This results in an NA
-or missing value in the corresponding position.
 
 --
 
@@ -492,11 +457,6 @@ or missing value in the corresponding position.
 seq(1, by = 2, length.out = 8)
 ```
 
-???
-
-Here we use the S-E-Q, or SEQUENCE function, to generate a regularly
-spaced sequence. This is more general than creating a sequence of
-consecutive integers using the colon operator.
 
 --
 
@@ -504,13 +464,6 @@ consecutive integers using the colon operator.
 month.name[seq(1, by = 2, length.out = 8)]
 ```
 
-???
-
-Here we create a sequence whose last two values are out of bounds, so
-indexing with it leads to NA values in the result. 
-
-Unfortunately this does not produce an error or warning message, so we
-must be careful to check that this does not happen unintentionally.
 
 
 ---
@@ -523,10 +476,6 @@ must be careful to check that this does not happen unintentionally.
 month.name[2]
 ```
 
-???
-
-Scalars are also vectors, so we can index by a scalar integer as well,
-resulting in a scalar value.
 
 --
 
@@ -536,10 +485,6 @@ resulting in a scalar value.
 month.name[[2]]
 ```
 
-???
-
-This is the essentially the same as scalar indexing by _double_ square
-brackets, 
 
 --
 
@@ -550,10 +495,6 @@ month.name[15]
 month.name[[15]]
 ```
 
-???
-
-except that in _scalar_ indexing, an out-of-bounds index
-_does_ lead to an error.
 
 ---
 
@@ -566,13 +507,6 @@ month.name[-2]
 month.name[-c(2, 4, 6, 9, 11)]
 ```
 
-???
-
-A more unusual type of indexing is with negative integers.
-
-This has the effect of returning all elements EXCEPT the ones
-specified. This is sometimes quite convenient, but you will probably
-not use it as much as indexing with positive integers.
 
 --
 
@@ -582,10 +516,6 @@ not use it as much as indexing with positive integers.
 month.name[c(2, -3)]
 ```
 
-???
-
-Naturally, you cannot mix positive and negative integers in the same
-index vector, because the result would be ambiguous.
 
 
 ---
@@ -601,14 +531,6 @@ month.name[c(1, 2, 0, 11, 12)]
 month.name[-c(1, 2, 0, 11, 12)]
 ```
 
-???
-
-The remaining integer, zero, has a special meaning as an index, in the
-sense that it does not select anything, and is essentially ignored
-when included in the index vector. 
-
-This is not something you are likely to use, but it _is_ something to be
-aware of.
 
 ---
 
@@ -620,29 +542,6 @@ aware of.
 month.name[c(TRUE, FALSE, FALSE)] # index replicated
 ```
 
-???
-
-Another very important type of indexing is by _logical_ vectors. This
-may initially seem unnecessary given integer indexing, but the
-advantages will soon become clear.
-
-In theory, a logical index vector can have any length. But the rule is
-designed with the expectation that the logical vector will have the
-same length as the vector being indexed. 
-
-So, each element will be either included in the result or excluded,
-depending on whether the corresponding index position is TRUE or
-FALSE.
-
-In this example, the index vector is shorter than the vector being
-indexed.
-
-In such a case, the standard vectorization rule will be applied, and
-the index vector will be replicated as necessary to make it as long as
-the input.
-
-Make sure you understand this rule, and look carefully at the example
-to make sure that the output is what you expect.
 
 ---
 
@@ -655,16 +554,6 @@ i <- substring(month.name, 1, 1) == "J"
 i
 ```
 
-???
-
-This example illustrates a more typical usage of logical indexing.
-
-Here, we want to select all months that start with the letter J. To do
-this, we first use the SUBSTRING function to extract the first letter
-of each month, and then check whether this letter equals J.
-
-All these operations are vectorized, so the result is a logical vector
-of length 12.
 
 --
 
@@ -672,10 +561,6 @@ of length 12.
 month.name[i]
 ```
 
-???
-
-Using it as the index will now extract the months that
-we wanted.
 
 
 ---
@@ -691,13 +576,6 @@ x[x > 0]
 mean(x[x > 0])
 ```
 
-???
-
-This kind of filtering operation, where we extract the subset of a
-vector satisfying a certain condition, is very common. 
-
-Here is another example, where we extract the positive values from a
-vector and compute their mean.
 
 
 ---
@@ -711,11 +589,6 @@ i
 which(i)
 ```
 
-???
-
-There is a very useful function called WHICH, that converts a logical
-vector into an integer vector containing the position of the TRUE
-elements. 
 
 --
 
@@ -723,13 +596,6 @@ elements.
 month.name[ which(i) ]
 ```
 
-???
-
-This integer vector can be used as an index instead of the logical
-vector to give the same result.
-
-This is sometimes useful, especially if the logical index vector is
-very long and only a few elements are TRUE.
 
 --
 
@@ -737,10 +603,6 @@ very long and only a few elements are TRUE.
 month.name[ -which(i) ] # same as month.name[ !i ]
 ```
 
-???
-
-Using the corresponding negative integers to index has the effect of
-reversing the selection, which is also a nice symmetry.
 
 ---
 
@@ -755,13 +617,6 @@ month.name[ which( substring(month.name, 1, 1) == "B") ]
 month.name[ -which( substring(month.name, 1, 1) == "B") ]
 ```
 
-???
-
-But you should be careful with this feature when there is a
-possibility that the logical vector only has FALSE values. 
-
-In this case, WHICH will return an empty vector, which will not work
-as expected when used as a negative index.
 
 ---
 
@@ -775,17 +630,6 @@ layout: true
 
 - These are usually informative labels
 
-???
-
-The last kind of indexing is with names or character strings. This
-only works for vectors that _have_ names. 
-
-Names are an optional attribute that any vector may have. When
-present, each element must have a name, and it usually conveys some
-information about the corresponding element. 
-
-This means, that the names associated with a vector is _itself_ a
-vector of character strings.
 
 --
 
@@ -798,14 +642,6 @@ qx
 names(qx)
 ```
 
-???
-
-In this example, we simulate a random sample from the standard normal
-distribution, and call the quantile function on it. 
-
-By default, this function returns a vector containing five quantiles,
-the minimum, maximum, median, and the two quartiles, with names to
-indicate the corresponding probability.
 
 --
 
@@ -813,11 +649,6 @@ indicate the corresponding probability.
 names(x) # no names
 ```
 
-???
-
-As we can see here, the random sample itself does not have
-names. Trying to extract the names using the NAMES function returns
-NULL.
 
 ---
 
@@ -833,13 +664,6 @@ qx["50%"]   ## extracting a single element with vector indexing
 qx[c("25%", "75%")]  ## extracting multiple elements
 ```
 
-???
-
-For vectors that do have names, indexing with names works in the same
-way as positive integers. 
-
-Instead of positive integers, the index contains character strings,
-and the corresponding element is selected.
 
 ---
 
@@ -849,16 +673,6 @@ and the corresponding element is selected.
 diff(qx[c("25%", "75%")])
 ```
 
-???
-
-As you may recall, the _difference_ between the third quartile and the
-first quartile is known as the __inter-quartile range__.
-
-As a measure of variability in a dataset, it is a common alternative
-to the standard deviation, because it is more _robust_.
-
-Using the DIFF function we have seen earlier, we can now easily
-calculate the inter-quartile range.
 
 --
 
@@ -866,10 +680,6 @@ calculate the inter-quartile range.
 IQR(x)
 ```
 
-???
-
-Of course, being a common summary measure, there is also a built-in
-function to compute it, named I-Q-R.
 
 ---
 
