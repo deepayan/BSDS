@@ -1001,16 +1001,6 @@ names(d) <- c("Constant", "Normal", "Exponential")
 d
 ```
 
-???
-
-But this round-about approach is not always convenient, so there is an
-alternative approach that is also available.
-
-This approach is to use so-called REPLACEMENT functions.
-
-The idea of such functions is that they replace PARTS of an already
-existing object, which is another way of saying that it MODIFIES the
-object.
 
 ---
 
@@ -1028,25 +1018,4 @@ attr(x, "name") <- value
 ```
 
 * Common feature: "complex" expression on the LHS of the assignment
-
-???
-
-There are many examples of replacement functions in R
-
-In fact, you have already seen some of them before, probably without
-realising that they are doing anything unusual
-
-They look just like assignments, but instead of a variable name, the
-left-hand-side looks like a complex expression involving an existing
-variable.
-
-Once you get used to them, replacement functions are very natural, but
-you will not usually encounter such usage in other programming
-languages.
-
-It is quite easy to write your own replacement functions.
-
-But we will not discuss those details as they are not important for us
-right now.
-
 

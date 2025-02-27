@@ -14528,8 +14528,8 @@ x
 ```
 
 ```
-array([ 0.28507207, -1.4669154 ,  0.40426648, -0.46224475, -0.9272652 ,
-       -0.26484412, -0.13542672,  0.12456068,  0.51107131,  0.15340835])
+array([-1.2993973 , -1.11465781, -0.31597779, -1.29471625,  0.38419193,
+        0.31589083,  1.17404954,  0.06097466,  0.33193044,  0.62444228])
 ```
 
 ```python
@@ -14537,8 +14537,8 @@ y
 ```
 
 ```
-array([ 0.28507207, -1.4669154 ,  0.40426648, -0.46224475, -0.9272652 ,
-       -0.26484412, -0.13542672,  0.12456068,  0.51107131,  0.15340835])
+array([-1.2993973 , -1.11465781, -0.31597779, -1.29471625,  0.38419193,
+        0.31589083,  1.17404954,  0.06097466,  0.33193044,  0.62444228])
 ```
 
 ---
@@ -14563,8 +14563,8 @@ z
 ```
 
 ```
-array([0.28507207, 0.        , 0.40426648, 0.        , 0.        ,
-       0.        , 0.        , 0.12456068, 0.51107131, 0.15340835])
+array([0.        , 0.        , 0.        , 0.        , 0.38419193,
+       0.31589083, 1.17404954, 0.06097466, 0.33193044, 0.62444228])
 ```
 
 ???
@@ -14579,8 +14579,8 @@ y
 ```
 
 ```
-array([0.28507207, 0.        , 0.40426648, 0.        , 0.        ,
-       0.        , 0.        , 0.12456068, 0.51107131, 0.15340835])
+array([0.        , 0.        , 0.        , 0.        , 0.38419193,
+       0.31589083, 1.17404954, 0.06097466, 0.33193044, 0.62444228])
 ```
 
 ???
@@ -14599,8 +14599,8 @@ x
 ```
 
 ```
-array([0.28507207, 0.        , 0.40426648, 0.        , 0.        ,
-       0.        , 0.        , 0.12456068, 0.51107131, 0.15340835])
+array([0.        , 0.        , 0.        , 0.        , 0.38419193,
+       0.31589083, 1.17404954, 0.06097466, 0.33193044, 0.62444228])
 ```
 
 ???
@@ -14877,16 +14877,6 @@ d
 5        1  0.2733856   0.5005642
 ```
 
-???
-
-But this round-about approach is not always convenient, so there is an
-alternative approach that is also available.
-
-This approach is to use so-called REPLACEMENT functions.
-
-The idea of such functions is that they replace PARTS of an already
-existing object, which is another way of saying that it MODIFIES the
-object.
 
 ---
 
@@ -14904,27 +14894,6 @@ attr(x, "name") <- value
 ```
 
 * Common feature: "complex" expression on the LHS of the assignment
-
-???
-
-There are many examples of replacement functions in R
-
-In fact, you have already seen some of them before, probably without
-realising that they are doing anything unusual
-
-They look just like assignments, but instead of a variable name, the
-left-hand-side looks like a complex expression involving an existing
-variable.
-
-Once you get used to them, replacement functions are very natural, but
-you will not usually encounter such usage in other programming
-languages.
-
-It is quite easy to write your own replacement functions.
-
-But we will not discuss those details as they are not important for us
-right now.
-
 
 
 

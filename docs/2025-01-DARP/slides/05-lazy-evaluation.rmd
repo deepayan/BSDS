@@ -1,0 +1,219 @@
+---
+layout: remark
+title: Lazy Evaluation
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+layout: true
+
+# Lazy Evaluation
+
+---
+
+* Consider the following function
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-lazyeval/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+               fig.width = 12, fig.height = 5.5,
+               dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
+               knitr.table.format = "html",
+               fig.path='figures/4-lazyeval-')
+options(warnPartialMatchDollar = FALSE, width = 90) # 110
+```
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\nseq}[1]{ {#1}\sub{1}, {#1}\sub{2}, \dotsc, {#1}\sub{n} }
+$$
+</div>
+
+```{r}
+choose1 <- function(u, a, b) {
+    if (u < 0.5) a else b
+}
+```
+
+---
+
+* Chooses and returns one of two arguments depending on a third argument
+
+--
+
+* Could be used for treatment randomization
+
+```{r}
+choose1(rbinom(1, size = 1, prob = 0.3), "placebo", "treatment")
+choose1(rbinom(1, size = 1, prob = 0.3), "placebo", "treatment")
+choose1(rbinom(1, size = 1, prob = 0.3), "placebo", "treatment")
+choose1(rbinom(1, size = 1, prob = 0.3), "placebo", "treatment")
+```
+
+---
+
+* How does this function work?
+
+--
+
+* Maybe
+
+	* The function is called with some arguments
+	
+	* R matches and evaluates the arguments `u`, `a`, and `b`
+
+	* Body of function executed with these values
+
+--
+
+* Does this sound reasonable?
+
+* How can we check? [Code demo](lazy-evaluation-demo.R)
+
+* What happens in Python?
+
+---
+
+layout: true
+
+# Non-standard Evaluation
+
+---
+
+* Suppose we have the following problem: 
+
+	* Find all subsets of size 2 from a set of size 5
+
+---
+
+* Easy to create all _ordered_ pairs using the `expand.grid()` function
+
+.scrollable500[
+
+```{r}
+g <- expand.grid(a = 1:5, b = 1:5)
+g
+```
+
+]
+
+---
+
+* But we want to retain only the $5 \choose 2$ distinct combinations of size 2
+
+* Also not difficult: 
+
+```{r}
+g$b > g$a            # find the rows for which $a > b$
+```
+
+--
+
+```{r}
+g[g$b > g$a, ]       # Then use this as a row index
+```
+
+---
+
+* As noted before, referring to `g` multiple times not ideal
+
+* We can avoid doing this using the `eval()` function
+
+---
+
+* We can replace
+
+```{r}
+g$b > g$a
+```
+
+* by
+
+```{r}
+eval(quote(b > a), g)
+```
+
+--
+
+* A general function that makes this even simpler is the `with()` function
+
+```{r}
+with(g, b > a)
+```
+
+---
+
+* We might guess that this is done using `substitute()`
+
+--
+
+* We can verify this by looking at the `with` function by typing its name
+
+```{r}
+with
+```
+
+---
+
+* Actually this just tells us that `with()` is a _generic_ function
+
+* The _method_ we want is the default method
+
+```{r}
+getS3method("with", "default")
+```
+
+---
+
+* All of this can now be combined to get all the $5 \choose 2$ distinct 2-subsets
+
+```{r}
+g[with(g, b > a), ]
+```
+
+---
+
+* This is a very common use case: obtaining a subset a dataset
+
+* There is an even simpler way using the `subset()` function
+
+```{r}
+subset(g, b > a)
+```
+
+---
+
+* A popular add-on package __dplyr__ has a similar function called `filter()`
+
+```{r}
+dplyr::filter(g, b > a)
+```
+
+--
+
+* Here `dplyr::filter` is the _namespace_ notation `package::function`
+
+* Allows us to use the function without attaching the whole package
+
+* Similar to the `.` accessor in Python
+
+
+---
+
+* The __dplyr__ package is very useful for routine data manipulation
+
+* We will discuss it again later
+
+* The idea of quoted expressions and _non-standard evaluation_ is
+  essential in many other contexts
+
+
+
+
+
+
