@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='864.00pt' height='432.00pt' viewBox='0 0 864.00 432.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: none;'/>
+<defs>
+  <clipPath id='cpMC4wMHw4NjQuMDB8MC4wMHw0MzIuMDA='>
+    <rect x='0.00' y='0.00' width='864.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw4NjQuMDB8MC4wMHw0MzIuMDA=)'>
+</g>
+<defs>
+  <clipPath id='cpNzMuODB8ODI2LjIwfDczLjgwfDM0MC4yMA=='>
+    <rect x='73.80' y='73.80' width='752.40' height='266.40' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNzMuODB8ODI2LjIwfDczLjgwfDM0MC4yMA==)'>
+<text x='450.00' y='87.63' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='75.04px' lengthAdjust='spacingAndGlyphs'>R Graphics</text>
+<text x='275.83' y='149.30' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='101.73px' lengthAdjust='spacingAndGlyphs'>Static Graphics</text>
+<line x1='397.75' y1='99.08' x2='310.67' y2='129.92' style='stroke-width: 0.75; stroke: #7F7F7F;' />
+<text x='624.17' y='141.72' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='140.08px' lengthAdjust='spacingAndGlyphs'>Interactive / Dynamic</text>
+<text x='624.17' y='159.72' text-anchor='middle' style='font-size: 15.00px; font-family: "Arial";' textLength='60.03px' lengthAdjust='spacingAndGlyphs'>Graphics</text>
+<line x1='502.25' y1='99.08' x2='589.33' y2='129.92' style='stroke-width: 0.75; stroke: #7F7F7F;' />
+</g>
+</svg>

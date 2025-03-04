@@ -871,4 +871,73 @@ xyplot(lifeExp ~ year | continent, data = gapminder,
        groups = country, type = "l", col = "black")
 ```
 
+---
+
+layout: true
+
+# Using the R Graphics System
+
+---
+
+* We have seen examples of statistical graphics
+
+* But how do we create such plots with our own data?
+
+--
+
+* We will now discuss the graphics tools in R in more detail
+
+---
+
+```{r, echo=FALSE,fig.height=6}
+plot(1, type = "n", axes = FALSE, xlim = c(-10, 10), ylim = c(2, 10),
+     xlab = "", ylab = "")
+text(0, 10, "R Graphics")
+text(-5, 8, "Static Graphics"); segments(-1.5, 9.5, -4, 8.5, col = "grey50")
+text(5, 8, "Interactive / Dynamic\nGraphics"); segments(1.5, 9.5, 4, 8.5, col = "grey50")
+```
+
+---
+
+```{r, echo=FALSE,fig.height=6}
+plot(1, type = "n", axes = FALSE, xlim = c(-10, 10), ylim = c(2, 10),
+     xlab = "", ylab = "")
+text(0, 10, "R Graphics")
+text(-5, 8, "Static Graphics"); segments(-1.5, 9.5, -4, 8.5, col = "grey50")
+text(5, 8, "Interactive / Dynamic\nGraphics"); segments(1.5, 9.5, 4, 8.5, col = "grey50")
+text(-8, 6, "Traditional Graphics\n"); segments(-6, 7.5, -8, 6.5, col = "grey50")
+text(-1, 6, "Grid Graphics\n"); segments(-4, 7.5, -2, 6.5, col = "grey50")
+text(-3, 3, "Lattice\n"); segments(-1, 5.5, -2.75, 3.7, col = "grey50")
+text(1, 3, "GGPlot\n"); segments(-1, 5.5, 0.75, 3.7, col = "grey50")
+```
+
+---
+
+```{r,echo=FALSE,warning=FALSE,fig.height=6}
+plot(1, type = "n", axes = FALSE, xlim = c(-10, 10), ylim = c(2, 10),
+     xlab = "", ylab = "")
+text(0, 10, "R Graphics")
+text(-5, 8, "Static Graphics"); segments(-1.5, 9.5, -4, 8.5, col = "grey50")
+text(5, 8, "Interactive / Dynamic\nGraphics"); segments(1.5, 9.5, 4, 8.5, col = "grey50")
+text(-8, 6, "Traditional Graphics\n"); segments(-6, 7.5, -8, 6.5, col = "grey50")
+text(-1, 6, "Grid Graphics\n"); segments(-4, 7.5, -2, 6.5, col = "grey50")
+text(-3, 3, "Lattice\n"); segments(-1, 5.5, -2.75, 3.7, col = "grey50")
+text(1, 3, "GGPlot\n"); segments(-1, 5.5, 0.75, 3.7, col = "grey50")
+text(-8, 6, "\n[graphics]", col = "grey50", family = "courier")
+text(-1, 6, "\n[grid]", col = "grey50", family = "courier")
+text(-3, 3, "\n[lattice]", col = "grey50", family = "courier") 
+text(1, 3, "\n[ggplot2]", col = "grey50", family = "courier") 
+```
+
+---
+
+* A good way to start exploring (any package)
+
+```r
+help(package = "graphics")
+help(package = "ggplot2")
+```
+
+* [Demo code](graphics.R) available on website
+
 

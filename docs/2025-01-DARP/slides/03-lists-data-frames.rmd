@@ -76,7 +76,7 @@ $$
 \begin{eqnarray*}
 2 * (a + b) &=& 100 \implies b = 50 - a \cr
 \text{To maximize } a * b &=& a * (50 - a) = 50a - a^2 \iff \text{to minimize } a^2 - 50a \cr
-\text{Solve } &:& 2a - 50 = 0
+\text{Differentiate and solve } &:& 2a - 50 = 0
 \end{eqnarray*}
 $$
 </div>
@@ -376,15 +376,6 @@ str(carsub)
 ```
 
 
-???
-
-In fact, let's use this feature to select a subset of the data frame
-with a more manageable number of columns. 
-
-The result is a data frame with the same number of observations, but
-fewer variables.
-
-We will save this subset in a new variable called CAR-SUB.
 
 ---
 
