@@ -1,0 +1,330 @@
+---
+layout: remark
+title: Using ggplot2
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+layout: true
+
+# ggplot2
+
+---
+
+* Traditional graphics and lattice share a common philosophy
+
+	* Plotting functions are named after plot type
+	
+	* Example: `graphics::hist()` and `lattice::histogram()`
+
+--
+
+* ggplot approaches data visualization in a different way
+
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-ggplot/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+               fig.width = 12, fig.height = 5.5,
+               dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
+               knitr.table.format = "html",
+               fig.path='figures/7-ggplot-')
+options(warnPartialMatchDollar = FALSE, width = 90) # 110
+```
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+
+
+---
+
+* Want to recreate the following histogram using ggplot2
+
+```{r}
+data(NHANES, package = "NHANES")
+lattice::histogram( ~ BPSysAve | Gender, data = NHANES,
+                    layout = c(1, 2), nint = 25)
+```
+
+---
+
+* The gg in ggplot stands for _grammar of graphics_
+
+* Approach:
+
+	* Define an abstract grammar for visualization
+
+	* Consists of various predefined components
+
+	* Plots are constructed by combining these components
+
+---
+
+* We start by specifying two of those components:
+
+	* The dataset to be used
+
+	* The faceting variable
+	
+```{r}
+library(package = "ggplot2")
+p <- ggplot(data = NHANES) + facet_wrap(~ Gender, ncol = 1)
+```
+
+---
+
+* Note that we have assigned the result to a variable
+
+--
+
+* This is an important feature of __lattice__ and __ggplot__
+
+	* Traditional graphics calls plot something as soon as they are called
+
+	* This is not true for __lattice__ and __ggplot__
+	
+	* Instead, they create objects that contain the information required for a plot
+
+---
+
+* Actual plot is created when they are 'printed' (blank because it doesn't have any geoms)
+
+```{r}
+p
+```
+
+---
+
+* Fortunately, there is a "histogram" geom  we can use
+
+```{r}
+p + geom_histogram(aes(x = BPSysAve), bins = 25)
+```
+
+---
+
+layout: true
+
+# Stats
+
+---
+
+* This approach hides an intermediate step
+
+* We map average systolic blood pressure to the x-coordinate (aesthetic mapping)
+
+* However, the y-coordinate mapping is not explicitly mapped
+
+--
+
+* What is actually plotted here are summary statistics (bin counts)
+
+* Even the x-coordinate is no longer the raw data, but only the bin locations
+
+--
+
+* So essentially raw data has been summarized to create some new data (which is plotted)
+
+* Such statistical summaries are called __"stats"__ in ggplot2 terminology
+
+---
+
+* We can make this operation explicit as follows
+
+```{r}
+p + stat_bin(aes(x = BPSysAve), bins = 25, na.rm = TRUE)
+```
+
+---
+
+* This 'stat' is applied by default in `geom_histogram()`
+
+```{r}
+str(geom_histogram)
+```
+
+--
+
+* Similarly, `stat_bin()` has a default 'geom'
+
+```{r}
+str(stat_bin)
+```
+
+---
+
+* Thus, the last plot we created is actually
+
+```{r}
+p + stat_bin(aes(x = BPSysAve), bins = 25, geom = "bar", na.rm = TRUE)
+```
+
+---
+
+* We can change the geom to get a different visualization of the same summary
+
+```{r}
+p + stat_bin(aes(x = BPSysAve), bins = 25, geom = "point", na.rm = TRUE)
+```
+
+---
+
+* A more useful choice of geom is "line" (result is a reasonable substitute for histograms)
+
+```{r}
+p + stat_bin(aes(x = BPSysAve), bins = 25, geom = "line", na.rm = TRUE)
+```
+
+---
+
+* These plots show bin counts
+
+* As we saw earlier, histograms can also be viewed as _density_ estimators
+
+* Read help page of `stat_bin()`: it also computes estimated density
+
+---
+
+* For these, y-axis mapping must be `density`, not `count`
+
+```{r}
+p + stat_bin(aes(x = BPSysAve, y = after_stat(density)), bins = 25, geom = "line", na.rm = TRUE)
+```
+
+---
+
+* Alternative method: average shifted histogram / kernel density estimation 
+
+```{r}
+p + stat_density(aes(x = BPSysAve), na.rm = TRUE)
+```
+
+---
+
+* Again, replacing the default geom ("area") by "line" gives more familiar density plot
+
+```{r}
+p + stat_density(aes(x = BPSysAve), geom = "line", na.rm = TRUE)
+```
+
+---
+
+layout: true
+
+# Aesthetic mapping
+
+---
+
+* Important feature of ggplot2: _aesthetic mapping_
+
+	* Aesthetic attributes of any geom can be mapped to specific variables
+	
+	* This includes, color, fill, size, shape, etc.
+	
+	* Details depend on specific geom
+
+--
+
+```{r}
+str(geom_line)
+```
+
+---
+
+* Example: map `Race1` (categorical variable) to line color
+
+```{r}
+p + stat_density(aes(x = BPSysAve, color = Race1), geom = "line", na.rm = TRUE)
+```
+
+---
+
+* Example: Default `position = "stack"` is useful for default geom "area"
+
+```{r}
+p + stat_density(aes(x = BPSysAve, fill = Race1), geom = "area", na.rm = TRUE)
+```
+
+---
+
+```{r}
+str(stat_density)
+```
+
+---
+
+```{r}
+p + stat_density(aes(x = BPSysAve, color = Race1),
+                 geom = "line", position = "identity", na.rm = TRUE)
+```
+
+
+---
+
+* The idea of aesthetic mapping of variables to visual attributes is very powerful
+
+* We will demonstrate this with the gapminder data
+
+```{r}
+library(gapminder)
+str(gapminder)
+```
+
+---
+
+* Create a blank ggplot object with data and a faceting variable (year)
+
+```{r}
+pgm <- ggplot(data = gapminder) + facet_wrap(~ year)
+```
+
+---
+
+* Scatter plot to study relation between `lifeExp` and `gdpPercap`
+
+```{r}
+pgm + geom_point(aes(x = gdpPercap, y = lifeExp))
+```
+
+
+---
+
+* `gdpPercap` is highly skewed, so take logarithm
+
+```{r}
+pgm + geom_point(aes(x = log(gdpPercap), y = lifeExp))
+```
+
+---
+
+* Other attributes: map continent to color
+
+```{r}
+pgm + geom_point(aes(x = log(gdpPercap), y = lifeExp, color = continent))
+```
+
+
+---
+
+* Another continuous variable is population: map to _size_ of points (bubble chart)
+
+```{r}
+pgm + geom_point(aes(x = log(gdpPercap), y = lifeExp, color = continent, size = pop))
+```
+
+
+<!-- # Summary -->
+
+<!-- # Interactive graphics from static ggplot plots -->
+
+
+

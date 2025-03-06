@@ -39,7 +39,7 @@ opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-viz-intro/', autodep
                fig.width = 12, fig.height = 5.5,
                dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
                knitr.table.format = "html",
-               fig.path='figures/2-vizintro-')
+               fig.path='figures/6-vizintro-')
 options(warnPartialMatchDollar = FALSE, width = 90) # 110
 ```
 
