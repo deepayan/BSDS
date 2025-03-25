@@ -1,0 +1,260 @@
+---
+layout: remark
+title: Data Visualization — Summary and Further Topics
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+layout: true
+
+# Traditional graphics
+
+---
+
+* Implemented in the  __graphics__ package
+
+* Add-on packages provide further functionality
+
+* Mainly two types
+
+	- High-level functions
+
+	- Low-level functions
+
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-viz-summary/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+               fig.width = 12, fig.height = 5.5,
+               dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
+               knitr.table.format = "html",
+               fig.path='figures/8-vizsummary-')
+options(warnPartialMatchDollar = FALSE, width = 90) # 110
+```
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+---
+
+layout: false
+
+# Common High-Level functions in __graphics__
+
+
+| Function         | Default Display                                   |
+|:-----------------|:--------------------------------------------------|
+| `stripchart()`   | Strip Chart (Comparative 1-D Scatter Plots)       |
+| `boxplot()`      | Comparative Box-and-Whisker Plots                 |
+| `hist()`         | Histogram                                         |
+| `plot(density())`| Kernel Density Plot                               |
+| `plot()`         | Scatter Plot, Time-series Plot (with `type="l"`)  |
+| `barplot()`      | Bar Plot                                          |
+| `dotchart()`     | Cleveland Dot Plot                                |
+| `qqnorm()`       | Normal Quantile-Quantile Plot                     |
+| `qqplot()`       | Two-sample Quantile-Quantile Plot                 |
+| `pairs()`        | Scatter-Plot Matrix                               |
+
+
+---
+
+# Common High-Level functions in __lattice__
+
+| Function         | Default Display                                   |
+|:-----------------|:--------------------------------------------------|
+| `stripplot()`    | Strip Chart (Comparative 1-D Scatter Plots)       |
+| `bwplot()`       | Comparative Box-and-Whisker Plots                 |
+| `histogram()`    | Histogram                                         |
+| `densityplot()`  | Kernel Density Plot                               |
+| `xyplot()`       | Scatter Plot, Time-series Plot (with `type="l"`)  |
+| `barchart()`     | Bar Plot                                          |
+| `dotplot()`      | Cleveland Dot Plot                                |
+| `qqmath()`       | Normal Quantile-Quantile Plot                     |
+| `qq()`           | Two-sample Quantile-Quantile Plot                 |
+| `splom()`        | Scatter-Plot Matrix                               |
+
+
+---
+
+# Some useful low-level functions in __graphics__
+
+| Function      | Purpose                               |
+|:--------------|:--------------------------------------|
+| `text()`      | Add Text to a Plot                    |
+| `lines()`     | Add Connected Line Segments to a Plot |
+| `points()`    | Add Points to a Plot                  |
+| `polygon()`   | Add Polygons to a Plot                |
+| `rect()`      | Add Rectangles to a Plot              |
+| `segments()`  | Add Line Segments to a Plot           |
+
+
+---
+
+# Some other low-level utility functions in __graphics__
+
+| Function     | Purpose                            |
+|:-------------|:-----------------------------------|
+| `abline()`   | Add Straight Lines to a Plot       |
+| `arrows()`   | Add Arrows to a Plot               |
+| `axis()`     | Add an Axis to a Plot              |
+| `box()`      | Draw a Box around a Plot           |
+| `grid()`     | Add Grid to a Plot                 |
+| `legend()`   | Add Legends to Plots               |
+| `title()`    | Add Annotation (Titles and Labels) |
+
+
+---
+
+# Common low-level functions in __lattice__
+
+| Function           | Purpose                                |
+|:-------------------|:---------------------------------------|
+| `panel.text()`     | Add Text to a Panel                    |
+| `panel.lines()`    | Add Connected Line Segments to a Panel |
+| `panel.points()`   | Add Points to a Panel                  |
+| `panel.polygon()`  | Add Polygons to a Panel                |
+| `panel.rect()`     | Add Rectangles to a Panel              |
+| `panel.segments()` | Add Line Segments to a Panel           |
+| `panel.abline()`   | Add Straight Lines to a Panel          |
+| `panel.arrows()`   | Add Arrows to a Panel                  |
+| `panel.grid()`     | Add Grid to a Panel                    |
+
+
+---
+
+# The ggplot2 approach
+
+* Specify a plot using a __grammar__ consisting of
+
+	* Geometric constructs
+
+	* Aesthetic Mappings
+
+	* Statistical Summaries
+
+---
+
+# ggplot2: List of geoms
+
+```{r}
+library(ggplot2)
+apropos("^geom_")
+```
+
+
+???
+
+---
+
+# ggplot2: List of stats
+
+```{r}
+apropos("^stat_")
+```
+
+---
+
+# Interactive Graphics
+
+* R works on many platforms: Windows, Mac, Linux, UNIX
+
+--
+
+* Static graphics achieves portability through _graphics devices_
+
+--
+
+* Cross-platform interactive graphics is even more difficult
+
+---
+
+# Interactive Graphics: Cross-platform technology
+
+- OpenGL (R package __rgl__)
+
+- Browser-based visualization technology (R packages __plotly__, __rbokeh__)
+
+---
+
+layout: true
+
+# Plotly: Example
+
+---
+
+```{r,message=FALSE}
+library(package = "ggplot2")
+library(package = "plotly")
+library(package = "gapminder")
+p1 <- 
+    ggplot(data = gapminder,
+           mapping = aes(x = log(gdpPercap), y = lifeExp,
+                         size = pop, color = continent)) +
+    facet_wrap(~ year) + geom_point()
+```
+
+---
+
+```{r}
+p1
+```
+
+---
+
+```r
+ggplotly(p1)
+```
+
+
+```{r,echo=FALSE}
+library(htmlwidgets)
+ggplotly(p1) |> saveWidget(file = "figures/8-gapminder-plotly-1.html",
+                           libdir = "plotly", selfcontained = FALSE)
+```
+
+<iframe src="figures/8-gapminder-plotly-1.html" 
+        style="border: none;"
+        width="100%" height="500px" />
+
+
+---
+
+* Want to add country name
+
+* Easiest way is to add a fake aesthetic
+
+
+```{r}
+p2 <- 
+    ggplot(data = gapminder,
+           mapping = aes(x = log(gdpPercap), y = lifeExp,
+                         size = pop, color = continent,
+                         tooltip = country)) +
+    facet_wrap(~ year) + geom_point()
+```
+
+---
+
+```r
+ggplotly(p2)
+```
+
+
+```{r,echo=FALSE}
+library(htmlwidgets)
+ggplotly(p2) |> saveWidget(file = "figures/8-gapminder-plotly-2.html",
+                           libdir = "plotly", selfcontained = FALSE)
+```
+
+<iframe src="figures/8-gapminder-plotly-2.html" 
+        style="border: none;"
+        width="100%" height="500px" />
+
+
