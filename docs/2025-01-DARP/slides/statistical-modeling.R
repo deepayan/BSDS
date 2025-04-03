@@ -143,6 +143,13 @@ ggplot(dd7) + facet_wrap(~ supp) +
              col = "orange")
 
 
+## A similar plot using lattice
+
+library(lattice)
+library(latticeExtra)
+
+segplot(dose ~ lwr + upr | supp, data = dd7, horizontal = FALSE, center = fit) + 
+  xyplot(len ~ dose | supp, ToothGrowth, grid = TRUE, jitter.x = TRUE, pch = 16, col = "orange")
 
 
 
