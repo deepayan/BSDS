@@ -3,10 +3,19 @@ str(ToothGrowth)
 
 ## Preliminary exploration
 
-library(lattice)
-library(ggplot2)
-
+geom_errorbar(aes(x = dose, ymin = lwr, ymax = upr), width = 0.2)
+ebars
+ebars +
+  geom_point(aes(x = dose, y = len),
+             data = subset(ToothGrowth, supp == "VC"),
+             col = "blue")
+ebars +
+  geom_point(aes(x = dose, y = len),
+             data = subset(ToothGrowth, supp == "VC"),
+             col = "orange")
 xyplot(len ~ supp | factor(dose), data = ToothGrowth)
+xyplot(len ~ supp | factor(dose), data = ToothGrowth)
+xyplot(len ~ dose | supp, data = ToothGrowth)
 xyplot(len ~ dose | supp, data = ToothGrowth, grid = TRUE)
 fm4 <- lm(len ~ 0 + supp, data = ToothGrowth)
 fm4
@@ -16,50 +25,39 @@ with(ToothGrowth, mean(len[supp == "OJ"]))
 xtabs(~ supp, ToothGrowth)
 xtabs(len ~ supp, ToothGrowth)
 xtabs(len ~ supp, ToothGrowth) / xtabs(~ supp, ToothGrowth)
-
 split(ToothGrowth, ~supp)
 sdf <- split(ToothGrowth, ~supp)
 str(sdf)
 for (d in sdf) print(mean(d$len))
 lapply(sdf, function(d) mean(d$len))
-
-
 split(ToothGrowth, ~supp + dose)
-sdf <- split(ToothGrowth, ~ supp + dose)
+sdf <- split(ToothGrowth, ~supp + dose)
 str(sdf)
-
+sdf <- split(ToothGrowth, ~ supp + dose)
 lapply(sdf, function(d) mean(d$len))
-
-lapply(sdf, function(d) c(mean = mean(d$len), median = median(d$len)))
-
+lapply(sdf, function(d) c(mean = mean(d$len), median = median(d$len))
+)
 tapply(ToothGrowth, ~ supp + dose, function(d) mean(d$len))
-
 getCI <- function(y) {
   fm <- lm(y ~ 1)
   predict(fm, newdata = data.frame(z = 1),
           interval = "confidence")
 }
-
 getCI(ToothGrowth$len)
 tapply(ToothGrowth, ~ supp + dose, function(d) getCI(d$len))
 res <- tapply(ToothGrowth, ~ supp + dose, function(d) getCI(d$len))
 str(res)
 res[1, 1]
 array2DF(res)
-
-
 res <- tapply(ToothGrowth, ~ supp + dose, function(d) getCI(d$len))
 str(res)
-
 getCI <- function(y) {
   fm <- lm(y ~ 1)
   predict(fm, newdata = data.frame(z = 1),
           interval = "confidence") |> as.data.frame()
 }
-
 res <- tapply(ToothGrowth, ~ supp + dose, function(d) getCI(d$len))
 array2DF(res)
-
 df_ci <- array2DF(res)
 str(df_ci)
 
@@ -307,5 +305,34 @@ ggplot(pdf11) + facet_wrap(~ Gender) +
                 width = 0, col = "yellow") + 
   geom_errorbar(aes(x = Age, ymin = lwr, ymax = upr), 
                 width = 0, col = "red")
+
+ggplot(pdf11) + facet_wrap(~ Gender) + 
+  geom_point(aes(x = Age, y = BPSysAve), data = nhsub, 
+             alpha = 0.2, cex = 0.5) + 
+  geom_line(aes(x = Age, y = fit), 
+                data = pdf10,
+                width = 0, col = "yellow") + 
+  geom_line(aes(x = Age, y = fit), 
+                width = 0, col = "red")
+
+
+## instead make the curve quadratic
+
+fm12 <- lm(BPSysAve ~ 1 + poly(Age, 2) * Gender,
+           data = nhsub)
+
+pdf12 <- cbind(udf, 
+               predict(fm12, newdata = udf, 
+                       interval = "confidence"))
+
+ggplot(pdf12) + facet_wrap(~ Gender) + 
+  geom_point(aes(x = Age, y = BPSysAve), data = nhsub, 
+             alpha = 0.2, cex = 0.5) + 
+  geom_errorbar(aes(x = Age, ymin = lwr, ymax = upr), 
+                data = pdf10,
+                width = 0, col = "blue", alpha = 0.5) +
+  geom_errorbar(aes(x = Age, ymin = lwr, ymax = upr), 
+                width = 0, col = "red", alpha = 0.5)
+
 
 
