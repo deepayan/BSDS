@@ -7,13 +7,13 @@ mathjax: true
 ---
 
 ```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
-opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/de-intro/', autodep = TRUE,
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-prelim/', autodep = TRUE,
                comment = "", warning = TRUE, message = TRUE,
 			   ## engine.path = list(python = "/usr/bin/python3"),
                fig.width = 12, fig.height = 7,
                dev = "svglite", dev.args = list(pointsize = 20),
                knitr.table.format = "html",
-			   fig.path='figures/intro-')
+			   fig.path='figures/0-prelim-')
 options(warnPartialMatchDollar = FALSE, width = 80)
 ```
 
@@ -469,7 +469,7 @@ layout: true
 
 * Imagine a city on a grid with roads connecting crossings
 
-```{r,echo=FALSE}
+```{r citygrid,echo=FALSE}
 plot(expand.grid(x = 1:20, y = 1:10), pch = 16, axes = FALSE,
      xlab = "", ylab = "",
      xlim = c(0, 21), ylim = c(0, 11))

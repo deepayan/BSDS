@@ -1,0 +1,694 @@
+---
+layout: remark
+title: Basic Usage of R
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+	
+# R is a full programming language
+
+* Variables
+
+* Functions
+
+* Control flow structures
+
+	* For loops, while loops
+
+	* If-then-else (branching)
+
+--
+
+* Distinguishing features
+
+	* Focus on _vectors_ and _vectorized operations_ 
+
+	* Treatment of _functions_ at par with other object types
+
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-basics/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+               fig.width = 12, fig.height = 5.5,
+               dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
+               knitr.table.format = "html",
+               fig.path='figures/2-basics-')
+## opts_chunk$set(engine.path = list(python = '/usr/local/bin/python3'))
+options(warnPartialMatchDollar = FALSE, width = 90) # 110
+```
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+
+---
+
+# R is easily extensible
+
+* Most standard data analysis methods are already implemented
+
+* Can be extended by writing add-on packages
+
+* Thousands of add-on packages are available
+
+---
+
+# Major concepts we need to know
+
+* Variables (in the context of programming)
+
+--
+
+* Data structures needed for data analyis
+
+--
+
+* Functions (set of instructions for performing a procedure)
+
+---
+
+# Variables
+
+* Variables are symbols that may be associated with different values
+
+* Computations involving variables are done using their current value
+
+```r
+sqrt(x)
+```
+
+```
+Error: object 'x' not found
+```
+
+---
+
+# Variables
+
+* Variables are symbols that may be associated with different values
+
+* Computations involving variables are done using their current value
+
+
+```{r}
+x <- 10 # assignment
+sqrt(x)
+x <- -1
+sqrt(x)
+x <- -1+0i
+sqrt(x)
+```
+
+---
+
+# Data structures for data analysis
+
+* Vectors
+
+* Matrices 
+
+* Data frames (a spreadsheet-like data set)
+
+* Lists (general collection of objects)
+
+---
+
+# Atomic vectors
+
+* Indexed collection of homogeneous scalars, can be 
+
+    * Numeric / Integer / Complex
+
+    <!-- * Categorical (factor) -->
+
+    * Character
+
+    * Logical (`TRUE` / `FALSE`)
+	
+--
+
+* Missing values are allowed, indicated as `NA`
+
+
+--
+
+* Elements are indexed starting from 1
+
+
+--
+
+* $i$th element of vector `x` can be extracted using `x[[i]]`
+
+* There are also more sophisticated forms of (vector) indexing
+
+
+
+---
+
+# Atomic vectors: examples
+
+```{r}
+month.name # built-in 
+```
+
+
+--
+
+```{r}
+x <- rnorm(10)
+x
+```
+
+
+--
+
+```{r}
+x[[3]] # third element of x
+```
+
+---
+
+# Atomic vectors: examples
+
+```{r}
+str(x) # useful function
+str(month.name)
+```
+
+---
+
+# Creating atomic vectors
+
+* Constructor functions
+
+```{r}
+numeric(10)
+logical(5)
+character(5)
+```
+
+---
+
+# Scalars are also vectors
+
+* "Scalars" are just vectors of length 1
+
+```{r}
+str(numeric(2))
+str(numeric(1))
+str(0)
+```
+
+---
+
+# Vectors can have zero length
+
+* Vectors can have length zero 
+
+```{r}
+numeric(0)
+logical(0)
+length(character(0))
+```
+
+--
+
+```{r}
+length(NULL)
+```
+
+---
+
+# Combining vectors using `c()` 
+
+* Vectors can also be created by combining smaller vectors
+
+* For example, vectors `x` and `y` can be combined using `c(x, y)`
+
+```{r}
+c(1:5, numeric(3))
+```
+
+--
+
+* Any number of vectors can be combined
+
+* This is a common way to build up a vector using scalars
+
+```{r}
+c(2, 4, 6, 9, 11)
+```
+
+---
+
+# Combining vectors of different types
+
+* Atomic vectors of different types cannot be combined
+
+* Attempting to do so will convert into one of the types
+
+```{r}
+c(1:5, c(TRUE, FALSE))
+c(1:5, month.name[[1]])
+```
+
+--
+
+
+```{r}
+c(1:5, c(TRUE, FALSE), month.name[[1]])
+c(c(1:5, TRUE, FALSE), month.name[[1]])
+```
+
+---
+
+
+# Example: Life Expectancy Dataset
+
+* Life expectancy in different countries over time
+
+```{r,echo=FALSE}
+## library(pander)
+g <- read.table("data/gapminder.tsv", sep = "\t", header = TRUE)
+keep.countries <- c("Australia", "France", "India", "Zimbabwe")
+lexp.long <- subset(g, country %in% keep.countries, select = c(country, year, lifeExp))
+lexp.wide <- reshape(lexp.long, direction = "wide", idvar = "year", timevar = "country")
+names(lexp.wide) <- gsub("lifeExp.", "", names(lexp.wide), fixed = TRUE)
+rownames(lexp.wide) <- NULL
+kable (lexp.wide)
+```
+
+---
+
+layout: true
+
+# Life Exepectancy in France
+
+---
+
+```{r}
+year <- c(1952, 1957, 1962, 1967, 1972, 1977,
+          1982, 1987, 1992, 1997, 2002, 2007)
+year
+```
+
+
+--
+
+```{r}
+lexp_france <- c(67.41, 68.93, 70.51, 71.55, 72.38, 73.83, 74.89, 76.34,
+              77.46, 78.64, 79.59, 80.657)
+lexp_france
+```
+
+
+---
+
+
+```{r}
+year <- seq(1952, 2007, by = 5)
+year
+```
+
+---
+
+```{r lifexp-france}
+plot(year, lexp_france, pch = 16)
+```
+
+
+---
+
+```{r}
+lexp_france[[2]] - lexp_france[[1]]
+```
+
+---
+
+```{r}
+c(lexp_france[[2]] - lexp_france[[1]], lexp_france[[3]] - lexp_france[[2]],
+  lexp_france[[4]] - lexp_france[[3]], lexp_france[[5]] - lexp_france[[4]],
+  lexp_france[[6]] - lexp_france[[5]], lexp_france[[7]] - lexp_france[[6]],
+  lexp_france[[8]] - lexp_france[[7]], lexp_france[[9]] - lexp_france[[8]],
+  lexp_france[[10]] - lexp_france[[9]], lexp_france[[11]] - lexp_france[[10]],
+  lexp_france[[12]] - lexp_france[[11]])
+```
+
+---
+
+```{r}
+d <- numeric(0)
+```
+
+
+--
+
+```{r}
+for (i in 1:11) {
+    d <- c(d, lexp_france[[i+1]] - lexp_france[[i]])
+}
+d
+```
+
+---
+
+```{r}
+lexp_france[-1] - lexp_france[-12]
+```
+
+
+--
+
+```{r}
+diff(lexp_france)
+```
+
+---
+
+```{r}
+d <- diff(lexp_france)
+median(d)
+mean(d)
+```
+
+---
+
+```{r lexp-diff-france}
+plot(d, pch = 16, type = "o", ylab = "difference", xlab = "period")
+```
+
+---
+
+layout: false
+
+# Types of vector indexing
+
+* Indexing refers to extracting subsets of data
+
+* R supports several kinds of indexing:
+
+	* Indexing with a vector of positive integers
+
+	* Indexing with a vector of negative integers
+	
+	* Indexing with a logical vector
+
+	* Indexing with a vector of names
+
+
+---
+
+# The empty index
+
+* A vector indexing operation has the form `x[index]`
+
+--
+
+* The most basic form is an empty index, which selects all elements
+
+```{r}
+month.name[]
+```
+
+
+---
+
+# Indexing with an integer vector
+
+* For integer indexing, `index` is an integer vector
+
+```{r}
+month.name[c(2, 4, 6, 9, 11)]
+```
+
+
+--
+
+* Elements can be repeated
+
+```{r}
+month.name[c(2, 2, 6, 4, 6, 11)]
+```
+
+
+---
+
+# Indexing with an integer vector
+
+* "Out-of-bounds" indexing gives `NA` (missing)
+
+```{r}
+month.name[13]
+```
+
+
+--
+
+```{r}
+seq(1, by = 2, length.out = 8)
+```
+
+
+--
+
+```{r}
+month.name[seq(1, by = 2, length.out = 8)]
+```
+
+
+
+---
+
+# Indexing with an integer vector
+
+* Indexing with a scalar (vector of length 1) also works:
+
+```{r}
+month.name[2]
+```
+
+
+--
+
+* This is usually the same as `x[[index]]`
+
+```{r}
+month.name[[2]]
+```
+
+
+--
+
+* However, these differ in the behaviour when an index is out of bound
+
+```{r}
+month.name[15]
+month.name[[15]]
+```
+
+
+---
+
+# Indexing with a vector of negative integers
+
+* Negative integers omit the specified entries
+
+```{r}
+month.name[-2]
+month.name[-c(2, 4, 6, 9, 11)]
+```
+
+
+--
+
+* Cannot be mixed with positive integers
+
+```{r}
+month.name[c(2, -3)]
+```
+
+
+
+---
+
+# Indexing with 0
+
+* Zero has a special meaning - it doesn't select anything
+
+```{r}
+month.name[0]
+month.name[integer(0)] ## same as empty index
+month.name[c(1, 2, 0, 11, 12)]
+month.name[-c(1, 2, 0, 11, 12)]
+```
+
+
+---
+
+# Indexing with a logical vector
+
+* Indexing by logical vector: select `TRUE` elements
+
+```{r}
+month.name[c(TRUE, FALSE, FALSE)] # index replicated
+```
+
+
+---
+
+# Indexing with a logical vector
+
+* Indexing by logical vector: select `TRUE` elements
+
+```{r}
+i <- substring(month.name, 1, 1) == "J"
+i
+```
+
+
+--
+
+```{r}
+month.name[i]
+```
+
+
+
+---
+
+# Indexing with a logical vector
+
+<!-- * Common use: extract subset satisfying a certain condition (also called "filtering") -->
+
+```{r}
+(x <- rnorm(20))
+x > 0
+x[x > 0]
+mean(x[x > 0])
+```
+
+
+
+---
+
+# Converting a logical index vector to integer
+
+* Logical indexing may be replaced by integer indexing using `which()`
+
+```{r}
+i
+which(i)
+```
+
+
+--
+
+```{r}
+month.name[ which(i) ]
+```
+
+
+--
+
+```{r}
+month.name[ -which(i) ] # same as month.name[ !i ]
+```
+
+
+---
+
+# Converting a logical index vector to integer
+
+* But be careful about zero-length indices
+
+```{r}
+which(substring(month.name, 1, 1) == "B")
+month.name[ which( substring(month.name, 1, 1) == "B") ]
+-which(substring(month.name, 1, 1) == "B") 
+month.name[ -which( substring(month.name, 1, 1) == "B") ]
+```
+
+
+---
+
+layout: true
+
+# Indexing with a vector of names
+
+---
+
+- Vectors can optionally have names — one for each element
+
+- These are usually informative labels
+
+
+--
+
+- Example: quantiles of a Normal random sample
+
+```{r}
+x <- rnorm(100)
+qx <- quantile(x)
+qx
+names(qx)
+```
+
+
+--
+
+```{r}
+names(x) # no names
+```
+
+
+---
+
+- When present, names may be used to identify elements
+
+- Indexing with names works in the same way as positive integers
+
+- Instead of position, the corresponding named element is selected
+
+```{r}
+qx[["50%"]] ## extracting a single element using scalar indexing
+qx["50%"]   ## extracting a single element with vector indexing
+qx[c("25%", "75%")]  ## extracting multiple elements
+```
+
+
+---
+
+* Inter-quartile range
+
+```{r}
+diff(qx[c("25%", "75%")])
+```
+
+
+--
+
+```{r}
+IQR(x)
+```
+
+
+---
+
+- Unmatched names are treated like out-of-bound indexes
+
+```{r}
+qx[["95%"]]
+qx["95%"]
+```
+
+
+
