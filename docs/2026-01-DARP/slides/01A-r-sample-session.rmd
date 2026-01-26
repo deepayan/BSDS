@@ -1,0 +1,214 @@
+---
+layout: remark
+title: A Sample Session in R
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/de-intro/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+			   ## engine.path = list(python = "/usr/bin/python3"),
+               fig.width = 12, fig.height = 7,
+               dev = "svglite", dev.args = list(pointsize = 20),
+               knitr.table.format = "html",
+			   fig.path='figures/intro-')
+options(warnPartialMatchDollar = FALSE, width = 80)
+```
+
+
+# Starting and Interacting with R
+
+* R is typically used interactively
+
+* When we start R, the command window (or console) displays a prompt, typically `>`
+
+* We use R by entering an expression to be evaluated
+
+* R evaluates the expression and prints the result
+
+```{r}
+1 + 2
+```
+
+* It then provides a new prompt and waits for more input
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+
+
+---
+
+# Infix and Prefix Notation
+
+* R uses **infix** notation for standard arithmetic operations, e.g., 
+
+```r
+1 + 2
+```
+
+--
+
+* The corresponding **prefix** notation would look something like
+
+```
++ 1 2
+```
+
+--
+
+* This is actually what R does internally, using _function notation_
+
+```{r}
+`+`(1, 2)
+```
+
+* In general, R expressions are typically function calls of the form `f(a, b)`
+
+---
+
+layout: true
+
+# Basic principles: Data types
+
+---
+
+* R can handle may different kinds of data
+
+* Basic classification: *simple data* and *compound data*
+
+* **Simple Data** includes:
+
+	* Numbers (numeric values, including integers and floating-point numbers):
+```r
+1     # an integer  
+-3.14 # a floating point number
+```
+--
+
+	*  Logical values:
+```r
+ TRUE # true  
+FALSE # false (or T and F shortcuts)
+```
+--
+
+	* Strings (enclosed in single or double quotes):
+```r
+"This is a string 1 2 3 4"
+```
+
+---
+
+* **Compound Data** primarily consists of
+
+	* **vectors** : ordered collections of elements of the same type
+	
+	* **lists** : ordered collections with elements of possibly different types
+
+--
+* We commonly define compound data using the concatenate function `c()`:
+```{r}
+c(1, 2, 3)
+```
+
+---
+
+* We can also have **Symbols** which are used for naming variables or functions:
+
+```r
+x  
+gdp.data  
+this_is_a_symbol
+```
+
+---
+
+layout: false
+
+# The REPL
+
+* An R session involves interaction between the user and the console (_listener_)
+
+* When we enter an expression, the listener passes it to the _evaluator_
+
+--
+
+* Basic rule:
+
+	* Everything is evaluated
+
+	* The results are (usually) printed
+	
+	* Once done, listener goes back to listening
+
+--
+
+<br/>
+
+.center[
+
+This is known as the __Read-Eval-Print-Loop__ or __REPL__
+
+]
+
+---
+
+layout: true
+
+# Evaluation rules
+
+---
+
+* Numbers and strings evaluate to themselves:
+
+```{r}
+10
+"Hello"  
+```
+
+---
+
+* Expressions can involve _functions_ 
+
+```{r}
+sqrt(10)
+nchar("Hello")
+```
+
+--
+
+* Functions are applied using parentheses
+
+--
+
+* Function name precedes arguments, mirroring **prefix** notation
+
+	* For example ` min(x, y) ` instead of ` min x y `
+
+	* Parentheses optional (if number of arguments are known) but helpful
+	
+	* Compare ` min(pi, sqrt(10)) ` and ` min pi sqrt 10 `
+
+	* Essential when number of arguments of function unknown
+
+---
+
+* Evaluation can be **suppressed** by _quoting_ an expression
+
+```{r}
+quote(min(pi, sqrt(10)))
+```
+
+--
+
+* This turns out to be a very interesting feature that we will return to later
+
+* Python does **not** have a similar feature (R and Python are otherwise very similar)
+

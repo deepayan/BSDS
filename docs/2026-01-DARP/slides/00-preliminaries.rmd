@@ -1,0 +1,880 @@
+---
+layout: remark
+title: Preliminaries
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/de-intro/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+			   ## engine.path = list(python = "/usr/bin/python3"),
+               fig.width = 12, fig.height = 7,
+               dev = "svglite", dev.args = list(pointsize = 20),
+               knitr.table.format = "html",
+			   fig.path='figures/intro-')
+options(warnPartialMatchDollar = FALSE, width = 80)
+```
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+$$
+</div>
+
+
+
+.center[
+
+# Welcome to Data Analysis with R and Python
+
+<br/>
+
+## Course website
+
+<br/>
+Go to
+<br/>
+<br/>
+<https://deepayan.github.io/BSDS/>
+<br/>
+
+or
+
+<https://bsds-isi.github.io/>
+<br/>
+<br/>
+
+Google Classroom link to be shared by email
+
+]
+
+
+---
+
+# What is the job of a data scientist?
+
+--
+
+* Nobody really seems to know...
+
+--
+
+* But broadly speaking, it is to
+
+.center[ extract knowledge from data, or _learn_ from data ]
+
+--
+
+* This is not an easy task!
+
+---
+
+# What are the tools required for data science?
+
+* This is something most people broadly agree on
+
+* Paraphrasing [William S. Cleveland](https://www.jstor.org/stable/1403527), data science needs
+
+	* Models and Methods for Data
+	
+	* Computing with Data
+
+	* Multidisciplinary investigations
+	
+--
+
+* __Models and Methods for Data__: Mathematics + Probability + Statistics
+
+--
+
+* __Computing with Data__: The goal of this course
+
+--
+
+* __Multidisciplinary investigations__: Important but easy to miss
+
+---
+
+# Why are multidisciplinary problems important?
+
+* Data analysis tools are designed to solve problems
+	
+* Data analysis problems necessarily come from other disciplines
+	
+* Drives innovation in the field of data science
+
+--
+
+* We will try to connect what we learn with __real world__ problems and datasets
+
+---
+
+# Grading scheme
+
+* Class Tests: 10%
+
+* Project: 20%
+
+* Midterm exam: 20%
+
+* Final exam: 50%
+
+---
+
+# Project
+
+* Group project, runs over whole semester
+
+* Each group finds an _"interesting"_ dataset and presents an analysis
+
+--
+
+* Ideally: groups of 5 or 6 students each; each student in two groups
+
+--
+
+<br/>
+
+.center[
+
+## Question
+
+Is it possible to form groups satisfying these constraints?
+
+]
+
+--
+
+<br/>
+
+.center[
+
+## Assignment
+
+Propose solutions — to be discussed in next class
+
+]
+
+---
+
+class: center middle
+
+# Questions?
+
+---
+
+# Software
+
+* Software is essential for working with data
+
+--
+
+- Popular data analysis software: Excel, R, Python, Julia
+
+--
+
+- Our goal is to become _programmers_ rather than _users_
+
+.center[
+__R__, __Python__, and __Julia__ are all good choices for this (Excel is not)
+]
+
+--
+
+- Knowledge of compiled languages can also be helpful (C, C++)
+
+- We will focus on R and Python in this course
+
+---
+
+layout: true
+
+# Background Review: What can we assume?
+
+---
+
+* Basic concepts
+
+	* Compiler vs interpreter
+
+	* REPL
+	
+	* Data types: Boolean, Integer, Floating Point, String
+
+	* Notation: Infix, Prefix, Postfix
+
+	* Algorithms
+
+---
+
+* Python and R:
+
+	* Installing and running
+
+	* Mathematical operators
+	
+	* Functions
+	
+	* Lambda functions
+	
+	* Iteration / loops
+	
+	* Branching
+	
+	* Help system
+
+---
+
+* Working with vectors / arrays
+
+	* R
+	
+	* Python - NumPy, Pandas, ...
+
+---
+
+layout: false
+
+# Tentative plan
+
+- List some problems (not data related)
+
+- Introduction to simple Data Analysis R
+
+- Introduction to simple Data Analysis in Python
+
+- More formal discussion of R
+
+--
+
+- Your assignment for the first week
+
+	- Try to use R and / or Python to solve some of the problems stated
+	
+	- Report on your progress next week
+
+---
+
+class: center, middle
+
+# Some Sample Problems
+
+---
+
+# Divisors of numbers
+
+- Supose you are given a natural number $n \in \mathbb{N}$
+
+	- Is $n$ a prime number?
+
+--
+
+	- Is $n$ a [perfect](https://en.wikipedia.org/wiki/Perfect_number) number?
+
+--
+
+	- Examples
+	   <div>
+	   \begin{eqnarray*}
+	   6   &=& 1 + 2 + 3 \cr
+	   28  &=& 1 + 2 + 4 + 7 + 14 \cr
+	   496 &=& 1 + 2 + 4 + 8 + 16 + 31 + 62 + 124 + 248
+	   \end{eqnarray*}
+	   </div>
+
+--
+
+	- Find the [aliquot sum](https://en.wikipedia.org/wiki/Aliquot_sum) of $n$
+      $$
+	  s(n) = \sum\limits\sub{d \vert n, d \neq n} d
+	  $$
+ 
+---
+
+# Review: Flowcharts and Algorithms
+
+- The fundamental building block of computer programs are algorithms
+
+- An algorithm is essentially a set of instructions to solve a problem
+
+--
+
+- It is useful to clearly understand an algorithm _before_ starting to write code
+
+--
+
+- Algorithms usually require some inputs
+
+- Instructions are executed sequentially, finally resulting in an
+  output (also called _return value_)
+
+---
+
+layout: true
+
+# Example: is a given number $n$ prime?
+
+---
+
+- Basic idea: see if $n$ is divisible by any number between $2$ and $n-1$
+
+- Obviously, enough to check whether $n$ is divisible by any number between $2$ and $\sqrt{n}$
+
+- Intuitively, the second approach is more "efficient"
+
+- Also, we can stop as soon as we find the first divisor
+
+---
+
+- Simple algorithms are often easy to understand as a _flowchart_
+
+
+![flowchart](images/isprime-flowchart.svg)
+
+
+
+---
+
+- But we will usually write algorithms in the form of _pseudo-code_ as follows:
+
+.algorithm[
+.name[`is\_prime(n)`]
+i := 2
+__while__ (i $\leq$ sqrt(n)) {
+    __if__ (n mod i == 0) {
+        __return__ FALSE
+    }
+    i := i + 1
+}
+__return__ TRUE
+]
+
+- Here we skip checking whether $n > 1$ (and that it is an integer)
+
+--
+
+- For implementation in C, R and Python, see the [appendix](#appendix)
+
+---
+
+layout: false
+
+# A Variant of the Primality Testing Problem 
+
+* Given a natural number $n$
+
+* What are _all_ the prime numbers _less_ than $n$?
+
+--
+
+* We can re-use the previous algorithm (apply it one by one on $2, 3, \dotsc, n-1$)
+
+* Is there a more “efficient” algorithm?
+
+
+---
+
+layout: false
+
+# Taxicab number: 1729
+
+- Famously identified by Ramanujan as the 
+
+	> smallest integer that can be expressed as a sum of two positive integer cubes in 2 distinct ways 
+
+	$$1729 = 1^3 + 12^3 = 9^3 + 10^3$$
+
+--
+
+- What is next such number? 
+
+- And the next, and so on?
+
+---
+
+# The house number problem
+
+- In 1914, Ramanujan and P. C. Mahalanobis (then a student) were staying together in London
+
+- Mahalanobis read a [problem](images/house-problem-fullpage.jpg) in the Strand magazine that he posed to Ramanujan
+
+<img style="width: 50%;" src="images/house-problem.jpg"></img>
+
+---
+
+# The house number problem
+
+- In 1914, Ramanujan and Prasanta Mahalanobis (then a student) were staying together in London
+
+- Mahalanobis read a [problem](images/house-problem-fullpage.jpg) in the Strand magazine that he posed to Ramanujan
+
+- In mathematical terms, the problem is to find a pair of integers $(m, n)$ such that $50 < m < 500$ and
+  $$
+  1 + 2 + \dotsc + (n-1) = (n+1) + (n+2) + \dotsc + m
+  $$
+
+--
+
+- Ramanujan of course found an elegant solution that you can read about [here](https://bhavana.org.in/timeless-geniuses-celestial-clocks-and-continued-fractions/)
+
+- Can _you_ find the solution?
+
+- Are there other solutions when there are no bounds on $m$?
+
+---
+
+layout: true
+
+# The birthday problem
+
+---
+
+- Probability $p(n)$ of no common birthdays in a group of $n$ people
+
+--
+
+- Exact answer
+  $$p(n) = \left(1 - \frac{1}{365} \right) \left(1 - \frac{2}{365} \right) \dotsm \left(1 - \frac{n-1}{365} \right)$$
+
+- Approximate answer (why?) 
+  $$p(n) = \left(1 - \frac{1}{365} \right)^{\frac{n(n-1)}{2}}$$
+
+--
+
+- How do we calculate for specific $n$?
+
+- How good is the approximation?
+
+---
+
+- Let $U_n$ be the number of unique birthdays in a group of $n$ people
+  ($U_n$ is a random variable)
+
+--
+	
+- What is the distribution of $U_n$?
+
+- What is $\text{E}[U_n]$? What is $\text{Var}[U_n]$?
+
+---
+
+layout: true
+
+# Disconnecting a grid
+
+---
+
+* Imagine a city on a grid with roads connecting crossings
+
+```{r,echo=FALSE}
+plot(expand.grid(x = 1:20, y = 1:10), pch = 16, axes = FALSE,
+     xlab = "", ylab = "",
+     xlim = c(0, 21), ylim = c(0, 11))
+segments(1:20, 1, 1:20, 10)
+segments(1, 1:10, 20, 1:10)
+text(0, 0, "(1, 1)")
+text(21, 11, "(m, n)")
+```
+
+---
+
+* How many distinct paths are there from $(1, 1)$ to $(m, n)$?
+
+* What is the minimum number of roads (connections) we must remove so
+  that no path remains?
+
+--
+
+* Suppose we randomly remove one road at a time
+
+* How many must be removed before there are no paths remaining from $(1, 1)$ to $(m, n)$?
+
+--
+
+* How many must be remove before at least one pair of crossings become disconnected?
+
+* The last two answers are random variables, so we need to find their distributions
+
+---
+
+layout: false
+
+# Next steps
+
+* We will come back to these questions later
+
+* Next: Quick review of R
+
+---
+
+class: center middle
+
+# Questions?
+
+
+
+---
+
+name: appendix
+
+class: center, middle
+
+# Appendix
+
+
+---
+
+layout: true
+
+# Algorithm for primality testing
+
+---
+
+- The algorithm we saw earlier:
+
+.algorithm[
+.name[`is\_prime(n)`]
+i := 2
+__while__ (i $\leq$ sqrt(n)) {
+    __if__ (n mod i == 0) {
+        __return__ FALSE
+    }
+    i := i + 1
+}
+__return__ TRUE
+]
+
+---
+
+layout: true
+
+# How to interpret an algorithm?
+
+---
+
+- The meaning of this algorithm / pseudo-code should be more or less obvious
+
+- Assumes availability of certain basic operators / functions (mod, sqrt)
+
+- We often employ some _conventions_ and use some _structures_ in pseudo-code
+
+- For example,
+
+.algorithm[
+.name[`is\_prime(n)`]
+i := 2                    // variable assignment
+__while__ (i $\leq$ sqrt(n)) {    // loop while condition holds
+    __if__ (n mod i == 0) {   // branch if condition holds
+        __return__ FALSE      // exits with output value
+    }                     // end of blocks within loops, branches, etc.
+    i := i + 1            // update variable value
+}
+__return__ TRUE
+]
+
+---
+
+- It is important to make sure that an algorithm makes sense
+
+- Steps are executed sequentially, so the sequence must be clear
+	
+- It must be possible to evaluate each step
+
+	- All variables used must have been defined in a previous step
+	
+	- It is OK to call other functions (or algorithms), but they must be clearly defined
+
+	- It is even OK for an algorithm to call itself (this is known as _recursion_)
+
+---
+
+layout: true
+
+# Pseudo-code
+
+---
+
+- The general structure of algorithms is derived from a language called [ALGOL](https://en.wikipedia.org/wiki/ALGOL)
+
+- However, there are no fixed rules that pseudo-code must follow
+
+- An alternative form of our `is_prime` algorithm could be:
+
+.algorithm[
+.name[`is\_prime(n)`]
+i = 2                  // different assignment operator
+__while__ i $\leq$ sqrt(n)     // end of loop indicated by indentation
+    __if__ n mod i == 0
+        __return__ FALSE
+    i = i + 1
+__return__ TRUE
+]
+
+---
+
+- Another form could be:
+
+.algorithm[
+.name[`is\_prime(n)`]
+i $\leftarrow$ 2                 // yet another assignment operator
+__while__ i $\leq$ sqrt(n)     // end of loop indicated by __end__ keyword
+    __if__ n mod i == 0
+        __return__ FALSE
+    __end__
+    i $\leftarrow$ i + 1
+__end__
+__return__ TRUE
+]
+
+- Any of these forms are fine as long as 
+
+	- the steps of the algorithm are clearly specified
+
+	- the essential ideas are expressed without ambiguity
+
+
+---
+
+layout: true
+
+# Functions and control flow structures
+
+---
+
+* The main building blocks of our programs are going to be functions
+
+* Functions are concrete implementations of algorithms
+
+* Functions usually
+
+	- have one or more input arguments,
+
+	- perform some computations, possibly calling other functions, and
+
+	- return one or more output values.
+
+* The second step is the main contribution of a function
+--
+
+* Usually a programming language will already have many built-in functions
+
+* These can be called by other functions
+
+* Knowing what is available is an essential part of "learning" a language
+
+
+<!-- * Additional libraries or packages will provide more standard functions -->
+
+
+---
+
+* The standard model for performing computations is __sequential
+  execution__
+
+* In other words, a function executes a set of instructions in a specified sequence
+
+* Some control flow structures may be used to create branches or loops
+  in the flow of execution
+  
+---
+
+* Briefly, the main ingredients used are
+
+	- Declaration of variables (implicit in some languages)
+
+	- Evaluation of expressions. _Can involve variables provided they
+	  have been defined in an earlier step_
+
+	- Assignment to variables (to store intermediate results for later use)
+
+	- Logical tests (equal?, less than?, greater than?, is more input available?)
+
+	- Logical operations (AND, OR, NOT, XOR)
+
+	- Branching — take different paths based on result of a logical
+	  operation (if-then-else)
+
+	- Loops — repeat sequence of steps, a fixed number of times, or
+	  while a condition holds (for / while)
+--
+
+* The details of how variables store values, and who can access them
+  (scope) are important
+  
+* But we will not worry about these issues for now
+
+
+---
+
+layout: false
+
+# Common operators (may have language-specific variants)
+
+- _Mathematical operators_: 
+    - `+` (addition)
+	- `*` (multiplication)
+	- `/` (division — possibly integer division)
+	- `^`, `**` (power)
+	- `%` (the modulo operation)
+
+- _Logical operators_: 
+	- `&` (AND)
+	- `|` (OR)
+	- `!` (NOT)
+
+- _Comparisons_: 
+	- `==` (equality)
+	- `!=` ($\neq$)
+	- `<`, `>` (strictly less than or greater than) 
+	- `<=` `>=` ($\leq$, $\geq$)
+
+- _Mathematical functions_: `round, floor, ceil, abs, sqrt, exp, log, sin, cos, ...`
+
+
+
+---
+
+# Practical implementation: programming languages
+
+* Some standard languages suitable for structured programming are
+
+	- [C](https://en.wikipedia.org/wiki/C_%28programming_language%29) (compiled)
+	- [C++](https://en.wikipedia.org/wiki/C_%28programming_language%29) (compiled)
+	- [R](https://en.wikipedia.org/wiki/R_%28programming_language%29) (interpreted)
+	- [Python](https://en.wikipedia.org/wiki/Python_%28programming_language%29) (interpreted)
+	- [Julia](https://en.wikipedia.org/wiki/Julia_%28programming_language%29) (interpreted)
+
+* There are also many others with various relative strengths and weaknesses
+
+
+---
+
+layout: true
+
+# Example: The `is_prime` algorithm in various languages
+
+---
+
+* We will demonstrate with a slight modification to use only integer
+  arithmetic (avoid square root)
+
+.algorithm[
+.name[`is\_prime(n)`]
+i := 2
+__while__ (i * i $\leq$ n) {
+    __if__ (n mod i == 0) {
+        __return__ FALSE
+    }
+  i := i + 1
+}
+__return__ TRUE
+]
+
+
+---
+
+* Implemented in C, the algorithm would look like this:
+
+
+```c
+int is_prime_c(int n) 
+{
+	int i = 2;
+	while (i * i <= n) {
+		if (n % i == 0) {
+			return 0;
+		}
+		i = i + 1;
+	}
+	return 1;
+}
+```
+
+* C is a compiled language, so actually running this code involves
+  some additional work
+
+* Note that all variable _types_ need to be explicitly declared
+
+* This includes the types of function arguments (inputs) and return value (output)
+
+
+---
+
+* The same algorithm would look like this in R:
+
+```{r}
+is_prime_r <- function(n)
+{
+	i <- 2
+	while (i * i <= n) {
+		if (n %% i == 0) {
+			return (FALSE)
+		}
+		i <- i + 1
+	}
+	return (TRUE)
+}
+```
+
+* The basic structure is very similar, but with some differences:
+
+    - The function declaration looks like a variable assignment
+    - Uses `%%` instead of `%`;  `TRUE` and `FALSE` instead of `1` and `0` for logical values
+	- Variable types are not declared
+	- The return value must be put in parentheses
+
+
+---
+
+* We can call this function after starting R and copy-pasting the function definition 
+
+
+```{r}
+is_prime_r(4)
+is_prime_r(10)
+is_prime_r(100)
+is_prime_r(101)
+```
+
+
+---
+
+* The implementation looks a little different in Python:
+
+```{python}
+def is_prime_py(n):
+	i = 2
+	while i * i <= n:
+		if n % i == 0:
+			return 0;
+		i = i + 1
+	return 1
+```
+
+* The main difference is in how code blocks are defined: 
+
+	- start with a colon (`:`) 
+	
+	- end is defined by indentation (amount of space in the beginning)
+
+* Changing indentation will change meaning of code, which does not happen in C or R
+
+* However, code in all languages _should be indented properly for readability_
+
+
+---
+
+* Again, we can start python, define the function, and run the following code
+
+```{python}
+print(is_prime_py(4))
+print(is_prime_py(10))
+print(is_prime_py(100))
+print(is_prime_py(101))
+```
+
+
+
