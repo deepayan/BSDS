@@ -779,6 +779,47 @@ plot(adult.lit, higher.educ)
 
 ![plot of chunk pm25-alit-hieduc](figures/1-rsession-pm25-alit-hieduc-1.svg)
 
+---
+
+layout: true
+
+# Plotting Functions
+
+---
+
+* Sometimes we are interested in plotting functions; e.g., plot $\sin(x)$ from $-\pi$ to $+\pi$
+
+
+``` r
+x_points <- seq(-pi, pi, length.out = 50) # equally spaced grid  
+plot(x_points, sin(x_points), type = "l")
+```
+
+![plot of chunk unnamed-chunk-23](figures/1-rsession-unnamed-chunk-23-1.svg)
+
+---
+
+* It is also possible to plot functions (of one argument) directly
+
+
+``` r
+plot(sin, from = -2 * pi, to = 2 * pi)
+```
+
+![plot of chunk unnamed-chunk-24](figures/1-rsession-unnamed-chunk-24-1.svg)
+
+---
+
+We can alse define a new function to plot as follows (more details later).
+
+
+``` r
+f <- function(x) { 2 * x + 3 * x^2 - x^3 }
+plot(f, from = -10, to = 10)
+```
+
+![plot of chunk unnamed-chunk-25](figures/1-rsession-unnamed-chunk-25-1.svg)
+
 
 
 

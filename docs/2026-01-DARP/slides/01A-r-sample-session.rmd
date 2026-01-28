@@ -544,4 +544,36 @@ adult.lit <- c(5, 2.5, 17.5, 2.5, 47.5, 13, 9, 7.5, 27.5, 13, 47.5,
 plot(adult.lit, higher.educ)
 ```
 
+---
+
+layout: true
+
+# Plotting Functions
+
+---
+
+* Sometimes we are interested in plotting functions; e.g., plot $\sin(x)$ from $-\pi$ to $+\pi$
+
+```{r plot-sin-grid}
+x_points <- seq(-pi, pi, length.out = 50) # equally spaced grid  
+plot(x_points, sin(x_points), type = "l")
+```
+
+---
+
+* It is also possible to plot functions (of one argument) directly
+
+```{r plot-sin-fun}
+plot(sin, from = -2 * pi, to = 2 * pi)
+```
+
+---
+
+We can alse define a new function to plot as follows (more details later).
+
+```{r plot-custom-fun}
+f <- function(x) { 2 * x + 3 * x^2 - x^3 }
+plot(f, from = -10, to = 10)
+```
+
 
