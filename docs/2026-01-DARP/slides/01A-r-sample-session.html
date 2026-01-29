@@ -947,7 +947,7 @@ for (i in 1:100) {
 
 
 ``` r
-SSD_vals2 <- sapply(theta_vals, SSD) # evaluates SSD(x) for each theta in theta_vals
+SSD_vals2 <- sapply(theta_vals, SSD) # evaluates SSD(x) for each x in theta_vals
 ```
 
 ---
@@ -1026,13 +1026,44 @@ runif(25)
 
 ---
 
+layout: true
+
 # Generating Systematic Data
+
+---
 
 * We have seen `seq(start, end)` (or `start:end`) for equally spaced integer sequences
 
+
+``` r
+seq(10, 19.5)
+```
+
+```
+ [1] 10 11 12 13 14 15 16 17 18 19
+```
+
+``` r
+1:pi
+```
+
+```
+[1] 1 2 3
+```
+
 * Also `seq(a, b, length.out = n)` for general equally spaced sequences
 
---
+
+``` r
+seq(1, pi, length.out = 10)
+```
+
+```
+ [1] 1.000000 1.237955 1.475909 1.713864 1.951819 2.189774 2.427728 2.665683
+ [9] 2.903638 3.141593
+```
+
+---
 
 * The `rep()` function is useful for generating sequences with specific patterns
 
