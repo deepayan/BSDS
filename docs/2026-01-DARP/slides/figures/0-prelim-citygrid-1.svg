@@ -267,8 +267,8 @@
 <line x1='156.42' y1='180.40' x2='755.58' y2='180.40' style='stroke-width: 0.75;' />
 <line x1='156.42' y1='156.57' x2='755.58' y2='156.57' style='stroke-width: 0.75;' />
 <line x1='156.42' y1='132.73' x2='755.58' y2='132.73' style='stroke-width: 0.75;' />
-<text x='124.89' y='376.29' text-anchor='middle' style='font-size: 20.00px; font-family: "Arial";' textLength='46.69px' lengthAdjust='spacingAndGlyphs'>(1, 1)</text>
-<text x='787.11' y='114.07' text-anchor='middle' style='font-size: 20.00px; font-family: "Arial";' textLength='52.22px' lengthAdjust='spacingAndGlyphs'>(m, n)</text>
+<text x='124.89' y='376.28' text-anchor='middle' style='font-size: 20.00px; font-family: "Arimo";' textLength='46.69px' lengthAdjust='spacingAndGlyphs'>(1, 1)</text>
+<text x='787.11' y='114.06' text-anchor='middle' style='font-size: 20.00px; font-family: "Arimo";' textLength='52.22px' lengthAdjust='spacingAndGlyphs'>(m, n)</text>
 </g>
 </g>
 </svg>
