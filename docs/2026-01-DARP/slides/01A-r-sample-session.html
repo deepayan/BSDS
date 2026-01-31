@@ -1361,6 +1361,280 @@ save(higher.educ, pm25, file = "examples.rda")
 ---
 
 
+# Loading files
+
+* Data files saved in R (using `save()`) can be read in using `load()`
+
+```r
+load("examples.rda")
+```
+
+--
+
+* R code can also be saved in a file (typically with extension `.R`)
+
+* We can run such a script, as a series of commands, using
+
+```r
+source("/path/to/script.R")
+```
+
+--
+
+* Good practice: Open an "R Script" to write / edit code instead of prompt
+
+* Saving this file keeps a record of what you have done
+
+
+---
+
+# Importing data stored in other formats
+
+* Small datasets can be typed in at the R console to illustrate basic usage
+
+* Real world datasets are too large for this to be feasible
+
+--
+
+* Typically distributed in a variety of formats
+
+* Easiest to import: text formats such as 
+
+	* CSV (comma-separated values)
+
+	* JSON (JavaScript Object Notation)
+
+--
+
+* Often distributed in proprietary or specialized formats meant for specific software:
+
+	* `.xls` or `.xlsx` files exported by Microsoft Excel
+
+	* `.xpt` files exported by SAS
+
+	* `.sav` files exported by SPSS
+
+	* `.dta` files exported by Stata.
+
+---
+
+# Importing data stored in proprietary formats
+
+* Not always guaranteed that R will be able to read data from such files
+
+* But most common formats are supported (through add-on packages)
+
+* See [R Data
+Import/Export](https://cran.isid.ac.in/doc/manuals/r-devel/R-data.html)
+manual
+
+* Also covers interacting with data stored in Database Management Systens (useful for large datasets)
+
+--
+
+* Most data import methods will import datasets as _data frames_
+
+* Data frames basically combine multiple columns in a single container
+
+---
+
+layout: true
+
+# Data Frames
+
+---
+
+* Can be constructed explicitly using the `data.frame()` function
+
+* Example: combine `higher.educ` and `adult.lit` along with country names
+
+
+``` r
+dsocial <-
+    data.frame(country = c("Nepal", "Afghanistan", "Laos", "Ethiopia",
+                           "Burma", "Libya", "Sudan", "Tanganyika",
+                           "Uganda", "Pakistan", "China", "India",
+                           "South Vietnam", "Nigeria", "Kenya", "Madagascar",
+                           "Congo", "Thailand", "Bolivia", "Cambodia"),
+               hedu = higher.educ,
+               adlit = adult.lit)
+```
+
+---
+
+* `dsocial` is now like a matrix / spreadsheet
+
+
+.scrollable500[
+
+
+``` r
+dsocial
+```
+
+```
+         country hedu adlit
+1          Nepal   56   5.0
+2    Afghanistan   12   2.5
+3           Laos    4  17.5
+4       Ethiopia    5   2.5
+5          Burma   63  47.5
+6          Libya   49  13.0
+7          Sudan   34   9.0
+8     Tanganyika    9   7.5
+9         Uganda   14  27.5
+10      Pakistan  165  13.0
+11         China   69  47.5
+12         India  220  19.3
+13 South Vietnam   83  17.5
+14       Nigeria    4  10.0
+15         Kenya    5  22.5
+16    Madagascar   21  33.5
+17         Congo    4  37.5
+18      Thailand  251  68.0
+19       Bolivia  166  32.1
+20      Cambodia   18  17.5
+```
+
+]
+
+---
+
+* Individual "columns" can be extracted using the `$` operator
+
+
+``` r
+dsocial$country
+```
+
+```
+ [1] "Nepal"         "Afghanistan"   "Laos"          "Ethiopia"     
+ [5] "Burma"         "Libya"         "Sudan"         "Tanganyika"   
+ [9] "Uganda"        "Pakistan"      "China"         "India"        
+[13] "South Vietnam" "Nigeria"       "Kenya"         "Madagascar"   
+[17] "Congo"         "Thailand"      "Bolivia"       "Cambodia"     
+```
+
+``` r
+dsocial$adlit
+```
+
+```
+ [1]  5.0  2.5 17.5  2.5 47.5 13.0  9.0  7.5 27.5 13.0 47.5 19.3 17.5 10.0 22.5
+[16] 33.5 37.5 68.0 32.1 17.5
+```
+
+``` r
+mean(dsocial$adlit)
+```
+
+```
+[1] 22.52
+```
+
+---
+
+* Can also be imported from file
+
+
+``` r
+social_indicators <- read.csv("data/social-indicators-1964.csv",
+                              comment.char = "#")
+head(social_indicators)
+```
+
+```
+      Country GNP.per.Capita Percent.Urban Percent.Adult.Literacy
+1       Nepal             45           4.4                    5.0
+2 Afghanistan             50           7.5                    2.5
+3        Laos             50           4.0                   17.5
+4        Togo             50           4.5                    7.5
+5    Ethiopia             55           1.7                    2.5
+6       Burma             57          10.0                   47.5
+  Higher.Ed.per.100000 Inhabitants.per.Physician Radios.per.1000
+1                   56                     72000              NA
+2                   12                     41000             1.7
+3                    4                    100000             8.0
+4                   NA                     58000             4.3
+5                    5                    117000             4.5
+6                   63                     15000             5.6
+```
+
+
+---
+
+layout: true
+
+# Plotting data in data frames
+
+---
+
+* Possible using what we already know (but not recommended)
+
+
+``` r
+plot(sqrt(dsocial$hedu), sqrt(dsocial$adlit))
+```
+
+![plot of chunk plot-socind-default](figures/1-rsession-plot-socind-default-1.svg)
+
+---
+
+* Formula interface (used extensively in R)
+
+
+``` r
+plot(sqrt(adlit) ~ sqrt(hedu), data = dsocial)
+```
+
+![plot of chunk plot-socind-formula](figures/1-rsession-plot-socind-formula-1.svg)
+
+---
+
+* Formula interface in __lattice__ add-on package
+
+
+``` r
+lattice::xyplot(sqrt(adlit) ~ sqrt(hedu), data = dsocial)
+```
+
+![plot of chunk xyplot-socind](figures/1-rsession-xyplot-socind-1.svg)
+
+---
+
+* Similar approach in __ggplot2__ add-on package
+
+
+``` r
+ggplot2::ggplot(dsocial, mapping = ggplot2::aes(x = sqrt(hedu), y = sqrt(adlit))) + ggplot2::geom_point()
+```
+
+![plot of chunk ggplot-socind](figures/1-rsession-ggplot-socind-1.svg)
+
+---
+
+* Same plot for all countries in Original source: World handbook of
+  political and social indicators, 1964
+
+
+``` r
+lattice::xyplot(sqrt(Percent.Adult.Literacy) ~ sqrt(Higher.Ed.per.100000), data = social_indicators)
+```
+
+![plot of chunk xyplot-socind-all](figures/1-rsession-xyplot-socind-all-1.svg)
+
+---
+
+* Data in original units
+
+
+``` r
+lattice::xyplot(Percent.Adult.Literacy ~ Higher.Ed.per.100000, data = social_indicators)
+```
+
+![plot of chunk xyplot-socind-raw](figures/1-rsession-xyplot-socind-raw-1.svg)
+
+
 
 
 
