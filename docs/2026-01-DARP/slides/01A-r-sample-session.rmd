@@ -10,7 +10,7 @@ mathjax: true
 opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-r-session/', autodep = TRUE,
                comment = "", warning = TRUE, message = TRUE,
 			   ## engine.path = list(python = "/usr/bin/python3"),
-               fig.width = 15, fig.height = 7,
+               fig.width = 16, fig.height = 7,
                dev = "svglite", dev.args = list(pointsize = 20),
                knitr.table.format = "html",
 			   fig.path='figures/1-rsession-')
@@ -232,7 +232,7 @@ layout: true
 .scrollable500[
 
 country|gnppc|pctlit_adult|highered100k
--------|----:|-----------:|-----------:
+:-------|----:|-----------:|-----------:
 Nepal|45|5|56
 Afghanistan|50|2.5|12
 Laos|50|17.5|4
@@ -266,7 +266,7 @@ Cambodia|99|17.5|18
 
 	* `gnppc` : per capita GNP (around 1957), 
 
-	* `pctlit_adult` : adult literacy (%) aoround 1960
+	* `pctlit_adult` : adult literacy (%) around 1960
 
 	* `highered100k` : enrollment in higher education per 100,000 population
 
@@ -382,7 +382,7 @@ median(log(higher.educ))
 
 * Expressions with simple nested functions can be written in _pipeline_ notation
 
-* Sometimes easier to follow because order of application is left-to-right
+* Sometimes easier to follow because order of application is left-to-right (like _postfix_ notation)
 
 ```{r}
 higher.educ |> log() |> mean()
@@ -575,5 +575,399 @@ We can alse define a new function to plot as follows (more details later).
 f <- function(x) { 2 * x + 3 * x^2 - x^3 }
 plot(f, from = -10, to = 10)
 ```
+
+---
+
+layout: true
+
+# Example: Loss Function
+
+---
+
+* The mean and median can be viewed as solutions that minimize a _loss function_
+
+* Sample mean of $X\sub{1}, X\sub{2}, \dotsc, X\sub{n}$:
+
+$$
+\arg \min\sub{\theta} \sum\limits\sub{i=1}^n (X\sub{i} - \theta)^2
+$$
+
+* Sample median of $X\sub{1}, X\sub{2}, \dotsc, X\sub{n}$:
+
+$$
+\arg \min\sub{\theta} \sum\limits\sub{i=1}^n \lvert X\sub{i} - \theta \rvert
+$$
+
+
+---
+
+* The mean and median can be viewed as solutions that minimize a _loss function_
+
+* Sample mean of $X\sub{1}, X\sub{2}, \dotsc, X\sub{n}$:
+
+$$
+\arg \min\sub{\theta} L\sub{1}(\theta) \ \text{ where } L\sub{1}(\theta) = \sum\limits\sub{i=1}^n (X\sub{i} - \theta)^2
+$$
+
+* Sample median of $X\sub{1}, X\sub{2}, \dotsc, X\sub{n}$:
+
+$$
+\arg \min\sub{\theta}  L\sub{2}(\theta) \ \text{ where } L\sub{2}(\theta) = \sum\limits\sub{i=1}^n \lvert X\sub{i} - \theta \rvert
+$$
+
+* What do the function $L\sub{1}$ and $L\sub{2}$ look like?
+
+---
+
+* How can we define $L\sub{1}$?
+
+--
+
+```{r}
+SSD <- function(theta) {
+    S <- 0
+    n <- length(higher.educ)
+    for (i in 1:n) { # for loop
+        S <- S + (higher.educ[i] - theta)^2 # indexing, scope
+    }
+    S # value returned by function
+}
+```
+
+--
+
+* Useful approach in general, but **not** recommended in R
+
+---
+
+* Implementation using vectorization
+
+```{r}
+SSD <- function(theta) {
+    dev <- higher.educ - theta
+    sum(dev * dev)
+}
+```
+
+--
+
+* Uses the fact that `-` and `*` operate elementwise on vectors
+
+* True for most mathematical functions as well
+
+---
+
+* How can we plot `SSD`?
+
+--
+
+```{r plot_loss_error}
+#| error: true
+theta_vals <- seq(0, 100, length.out = 201)
+plot(theta_vals, SSD(theta_vals), type = "l")
+```
+
+* Can you guess _why_ this fails?
+
+---
+
+* The function `SSD()` is not _vectorized_
+
+* In such cases, we cannot avoid a for loop
+
+```{r}
+SSD_vals1 <- numeric(100) # numeric array (vector)
+for (i in 1:100) {
+    SSD_vals1[i] <- SSD(theta_vals[i])
+}
+```
+
+--
+
+* But this is a special kind of for loop known as _mapping_
+
+* Here we _apply_ the same function on each element of a list
+
+* There is a function called `sapply()` which makes this very easy
+
+```{r}
+SSD_vals2 <- sapply(theta_vals, SSD) # evaluates SSD(x) for each x in theta_vals
+```
+
+---
+
+```{r plot_loss_ssd}
+plot(theta_vals, SSD_vals2, type = "l")
+```
+
+---
+
+```{r}
+SAD <- function(theta) {
+    dev <- higher.educ - theta
+    sum(abs(dev))
+}
+SAD_vals <- sapply(theta_vals, SAD)
+```
+
+---
+
+```{r plot_loss_sad}
+plot(theta_vals, SAD_vals, type = "l")
+```
+
+
+---
+
+layout: false
+
+class: center middle
+
+# Generating and Modifying Data
+
+Generating systematic and random data, modifying existing data
+
+---
+
+# Generating Random Data (Simulation)
+
+* R provides functions for generating pseudo-random numbers
+
+* `runif(n)` generates `n` Uniform random variables
+
+```{r}
+runif(10)
+```
+
+* `rnorm(n)` generates `n` Standard Normal random variables.
+
+```{r}
+runif(25)
+```
+
+
+---
+
+layout: true
+
+# Generating Systematic Data
+
+---
+
+* We have seen `seq(start, end)` (or `start:end`) for equally spaced integer sequences
+
+```{r}
+seq(10, 19.5)
+1:pi
+```
+
+* Also `seq(a, b, length.out = n)` for general equally spaced sequences
+
+```{r}
+seq(1, pi, length.out = 10)
+```
+
+---
+
+* The `rep()` function is useful for generating sequences with specific patterns
+
+* If we want to repeat a sequence:
+
+```{r}
+rep(c(1, 2, 3), 2)  
+```
+
+* If we want to repeat each element a specified number of times:
+
+```{r}
+rep(c(1, 2, 3), times = c(3, 2, 1))  
+```
+
+---
+
+layout: true
+
+# Forming Subsets and Deleting Cases
+
+---
+
+* R uses bracket indexing `[]` to select elements from a vector or list
+
+* An important difference is that **R uses 1-based indexing**, and not 0-based indexing
+
+--
+
+* Suppose we define a vector `x`:
+
+```{r}
+x <- c(3, 7, 5, 9, 12, 3, 14, 2)
+```
+
+* To retrieve the second element (index 2), we can use
+
+```{r}
+x[[2]]
+x[2]
+```
+
+---
+
+* To retrieve a _group_ of elements, we must use the second form, with a
+vector as index:
+
+```{r}
+x[c(1, 3)]
+```
+
+--
+
+* To exclude elements, we use negative indices
+
+* To exclude the 3rd element:
+
+```{r}
+x[-3]
+```
+
+---
+
+* We can also use **logical indexing**
+
+* To select all elements of `x` that are greater than 3:
+
+```{r}
+x[x > 3]
+```
+
+---
+
+layout: false
+
+# Combining Several Lists
+
+* To combine several short vectors into a single longer vector, use `c()`:
+
+```{r}
+z1 <- c(1, 2, 3)  
+z2 <- c(4)
+z3 <- c(5, 6, 7, 8)  
+c(z1, z2, z3)  
+```
+
+---
+
+# Modifying Data: Replace values in existing vector
+
+* R uses subsetting combined with assignment
+
+* To change the `12` (the 5th element) in `x` to `11`:
+
+```{r}
+x
+x[5] <- 11  
+x  
+```
+
+--
+
+* To change elements 1 and 3 to `15` and `16`:
+
+```{r}
+x[c(1, 3)] <- c(15, 16)  
+x  
+```
+
+---
+
+# Reference versus copy
+
+* R copies vectors upon modification (does not modify in-place). For example:
+
+```{r}
+x
+y <- x # y is a copy  
+x[3] <- 100  
+x
+y
+```
+
+* This behavior (implicit copying on modification) simplifies many tasks 
+
+--
+
+* Python does **not** copy implicitly in such situations
+
+* If required, copies must be made explicitly
+
+
+---
+
+layout: false
+
+class: center middle
+
+# Useful Features
+
+Interacting with the R environment
+
+---
+
+# Getting Help
+
+* Online help is available for most R functions
+
+* You can use the `?` operator followed by the function name, or the `help()` function
+
+```r
+?median  
+help("median")
+```
+
+--
+
+* You may not always know the exact function name beforehand
+
+* You can still use the `??` operator to search the documentation for keywords
+
+```r
+??normal
+```
+
+---
+
+
+# Listing and Undefining Variables
+
+* To find out which variables we have defined in the current session:
+
+```{r}
+ls()
+```
+
+* To remove a variable to free up memory / clean up your workspace:
+
+```{r}
+rm(theta_vals, SSD_vals1, SSD_vals2, SSD)
+ls()
+```
+
+---
+
+# Saving Your Work
+
+* R provides mechanisms to save variables and record sessions.
+
+* To save variables for later use:
+
+```r
+save(higher.educ, pm25, file = "examples.rda")
+```
+
+* This saves the specified variables to a file in a special binary format
+
+* Can be reloaded later in a different R session using `load("examples.rda")`
+
+---
+
 
 
