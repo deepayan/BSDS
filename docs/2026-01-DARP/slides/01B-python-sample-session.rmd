@@ -1,40 +1,40 @@
 ---
 layout: remark
-title: A Sample Session in R
+title: A Sample Session in Python
 subtitle: Data Analysis with R and Python
 author: Deepayan Sarkar
 mathjax: true
 ---
 
 ```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
-opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-r-session/', autodep = TRUE,
+opts_chunk$set(cache = FALSE, cache.path='~/knitr-cache/darp-py-session/', autodep = TRUE,
                comment = "", warning = TRUE, message = TRUE,
-			   ## engine.path = list(python = "/usr/bin/python3"),
+			   engine.path = list(python = "/usr/bin/python3"),
                fig.width = 16, fig.height = 7,
-               dev = "svglite", dev.args = list(pointsize = 20),
+               dev = "svg", dev.args = list(pointsize = 20),
                knitr.table.format = "html",
-			   fig.path='figures/1-rsession-')
+			   fig.path='figures/1-pysession-')
 options(warnPartialMatchDollar = FALSE, width = 80)
 ```
 
 
-# Starting and Interacting with R
+# Starting and Interacting with Python
 
-* R is typically used interactively
+* Python is typically used interactively
 
-* When we start R, the command window (or console) displays a prompt, typically `>`
+* When we start Python, the command window (or console) displays a prompt, typically `>>>`
 
-* We use R by entering an expression to be evaluated
+* We use Python by entering an expression to be evaluated
 
-* R evaluates the expression and prints the result
+* Python evaluates the expression and prints the result
 
-```{r}
+```{python}
 1 + 2
 ```
 
 * It then provides a new prompt and waits for more input
 
-* To **quit** R, you can use the command `q()`
+* To **quit** Python, you can use the command `exit()` or `quit()`
 
 
 <div>
@@ -43,35 +43,56 @@ $$
 $$
 </div>
 
+---
+
+# Similarities with R
+
+* User interface is very similar to R
+
+* Most concepts are transferable
+
+--
+
+* We will focus on data analysis tools in Python
+
+* We will mostly replicate what we did in the previous R tutorial
+
+---
+
+# Differences between R and Python
+
+* Python is a _general purpose_ programming language
+
+* R is a _domain specific_ programming language (designed for data analysis)
+
+--
+
+* For our purposes, this means that we need some add-on packages to do data analysis in Python
+
+	* _NumPy_ for vectorized numerical computations
+	
+	* _Matplotlib_ for plotting and visualization
+	
+	* _Pandas_ for data frames
 
 
 ---
 
 # Infix and Prefix Notation
 
-* R uses **infix** notation for standard arithmetic operations, e.g., 
+* Python uses **infix** notation for standard arithmetic operations, e.g., 
 
-```r
+```python
 1 + 2
 ```
 
 --
 
-* The corresponding **prefix** notation would look something like
+* General Python expressions are typically function calls of the form `f(a, b)`
 
+```{python}
+len("Hello")
 ```
-+ 1 2
-```
-
---
-
-* This is actually what R does internally, using _function notation_
-
-```{r}
-`+`(1, 2)
-```
-
-* In general, R expressions are typically function calls of the form `f(a, b)`
 
 ---
 
@@ -81,30 +102,45 @@ layout: true
 
 ---
 
-* R can handle many different kinds of data
+* Python can handle many different kinds of data
 
 * Basic classification: *simple data* and *compound data*
 
 * **Simple Data** includes:
 
 	* Numbers (numeric values, including integers and floating-point numbers):
-```r
+```python
 1     # an integer  
 -3.14 # a floating point number
 ```
 --
 
 	*  Logical values:
-```r
- TRUE # true  
-FALSE # false (or T and F shortcuts)
+```python
+ True # true  
+False # false (or T and F shortcuts)
 ```
 --
 
 	* Strings (enclosed in single or double quotes):
-```r
+```python
 "This is a string 1 2 3 4"
 ```
+
+---
+
+* We can also have **Symbols** which are used for naming variables or functions:
+
+```python
+x  
+gdp.data  
+this_is_a_symbol
+```
+
+* Python uses `.` as a special separator in several contexts
+
+* So unlike in R, it cannot be used in variables names
+
 
 ---
 
@@ -115,20 +151,55 @@ FALSE # false (or T and F shortcuts)
 	* **lists** : ordered collections with elements of possibly different types
 
 --
-* We commonly define compound data using the concatenate function `c()`:
-```{r}
-c(1, 2, 3)
+
+* We can define compound data using the built-in list data structure `[ ... ]`
+```{python}
+[1, 2, 3]
+```
+
+* However, these are **not** what we describe as _vectors_ with all elements of the same type
+
+```{python}
+[1, 'two', 3]
 ```
 
 ---
 
-* We can also have **Symbols** which are used for naming variables or functions:
+* The corresonding R data structure is a list
 
-```r
-x  
-gdp.data  
-this_is_a_symbol
+```{r}
+list(1, 'two', 3)
 ```
+
+
+
+---
+
+* Vectors (lists of same type) in Python need **NumPy Array** (`ndarray`)
+
+* We first need to import the NumPy library, conventionally as `np`:
+
+```{python}
+import numpy as np
+```
+
+--
+
+```{python}
+np.array([1, 2, 7])
+np.array([1, 'two', 7])
+```
+
+--
+
+* This form of _coercion_ happens in R as well
+
+```{r}
+c(1, 'two', 3)
+```
+
+
+<!-- * Higher dimensional arrays (matrices) are also supported by NumPy -->
 
 ---
 
@@ -136,7 +207,7 @@ layout: false
 
 # The REPL
 
-* An R session involves interaction between the user and the console (_listener_)
+* A Python session involves interaction between the user and the console (_listener_)
 
 * When we enter an expression, the listener passes it to the _evaluator_
 
@@ -150,15 +221,7 @@ layout: false
 	
 	* Once done, listener goes back to listening
 
---
-
-<br/>
-
-.center[
-
-This is known as the __Read-Eval-Print-Loop__ or __REPL__
-
-]
+* This is the same __Read-Eval-Print-Loop__ model used by R
 
 ---
 
@@ -170,47 +233,68 @@ layout: true
 
 * Numbers and strings evaluate to themselves:
 
-```{r}
+```{python}
 10
 "Hello"  
 ```
 
 ---
 
-* Expressions can involve _functions_ 
+* Expressions can involve _functions_
 
-```{r}
-sqrt(10)
-nchar("Hello")
+* Functions are applied using parentheses, similar to R
+
+```{python}
+sqrt(10) # fails
 ```
 
 --
 
-* Functions are applied using parentheses
-
---
-
-* Function name precedes arguments, mirroring **prefix** notation
-
-	* For example ` min(x, y) ` instead of ` min x y `
-
-	* Parentheses needed when number of arguments of functions are unknown
-	
-	* Compare ` min(pi, sqrt(10)) ` and ` min pi sqrt 10 `
+```{python}
+np.sqrt(np.array([10, 100, 1000]))
+```
 
 ---
 
-* Evaluation can be **suppressed** by _quoting_ an expression
+* Why do we need a prefix for some functions but not others?
 
-```{r}
-quote(min(pi, sqrt(10)))
+```{python}
+len(np.array([10, 100, 1000]))
+np.mean(np.array([10, 100, 1000]))
 ```
 
 --
 
-* This turns out to be a very interesting feature that we will return to later
+* Compare with R
 
-* Python does **not** have a similar feature (R and Python are otherwise very similar)
+```{r}
+length(c(10, 100, 1000))
+mean(c(10, 100, 1000))
+```
+
+---
+
+* This is largely a matter of convention
+
+* In R, we can use namespace notation
+
+```{r}
+base::mean(c(10, 100, 1000))
+stats::median(c(10, 100, 1000))
+```
+
+---
+
+* Conversely in Python, we can bypass the package prefix by importing everything
+
+```{python}
+from numpy import *
+mean(array([10, 100, 1000]))
+median(array([10, 100, 1000]))
+```
+
+* However, this is not usually done in Python
+
 
 ---
 
@@ -220,7 +304,7 @@ class: center middle
 
 # Elementary Statistical Operations
 
-Fundamental numerical and graphical statistical operations in R
+Fundamental numerical and graphical statistical operations in Python
 
 
 ---
@@ -292,61 +376,64 @@ layout: true
 
 --
 
-* In R, we represent this data as a vector using `c()` (combine):
+* In Python, we represent this data as a  NumPy array using the `np.array()` constructor:
 
-```{r}
-c(56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18)
+```{python}
+np.array([56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18])
 ```
 
 ---
 
-* The `mean()` function computes the average (**arithmetic mean**) of a vector of numbers.
+* NumPy provides the `mean()` function to compute the average of a vector of numbers
 
-```{r}
-mean(c(56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18))
+```{python}
+np.mean(np.array([56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18]))
 ```
 
 --
 
-* The **median** of these numbers can be calculated using `median()`:
+* The **median** of these numbers can be calculated using `np.median()`:
 
-```{r}
-median(c(56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18))
+```{python}
+np.median(np.array([56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18]))
 ```
 
 ---
 
-* This requires retyping the data every time
+* To avoid re-typing the data, we can assigning it to a variable using the `=` operator.
 
-* We can avoid this by assigning it a _name_ to reference by
+```{python}
+higher.educ = np.array([56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18])
+```
 
-* Done using the assignment operator `<-` or the (mostly) equivalent `=` operator.
+* This will _not_ work because `.` is not allowed in variable names
 
-```{r}
-higher.educ <- c(56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18)
+--
+
+```{python}
+higher_educ = np.array([56, 12, 4, 5, 63, 49, 34, 9, 14, 165, 69, 220, 83, 4, 5, 21, 4, 251, 166, 18])
 ```
 
 * This is known as a **variable assignment**
 
 ---
 
-* The symbol `higher.educ` now holds the vector of 20 numbers
+* The symbol `higher_educ` now holds the vector of 20 numbers
 
-* If we evaluate the symbol, R returns its value.
+* If we evaluate the symbol, Python returns its value.
 
-```{r}
-higher.educ
+```{python}
+higher_educ
 ```
 
 ---
 
 * We can easily compute numerical descriptive statistics.
 
-```{r}
-mean(higher.educ)  
-median(higher.educ)  
-sd(higher.educ) # Standard deviation  
-IQR(higher.educ) # Interquartile range
+```{python}
+np.mean(higher_educ)  
+np.median(higher_educ)  
+np.std(higher_educ, ddof = 1) # Standard deviation (ddof=1 for sample SD)
 ```
 
 ---
@@ -357,46 +444,27 @@ layout: true
 
 ---
 
-* R also supports **elementwise arithmetic operations** on vectors
+* NumPy also supports **elementwise arithmetic operations** on vectors
 
 * For example, we can add 1 to each value using
 
-```{r}
-1 + higher.educ
+```{python}
+1 + higher_educ
 ```
 
 * We can calculate the natural logarithms of the values
 
-```{r}
-log(higher.educ)
+```{python}
+np.log(higher_educ)
 ```
 
 ---
 
 * Functions can be nested, as we have been doing
 
-```{r}
-mean(log(higher.educ))
-median(log(higher.educ))
-```
-
----
-
-* Expressions with simple nested functions can be written in _pipeline_ notation
-
-* Sometimes easier to follow because order of application is left-to-right (like _postfix_ notation)
-
-```{r}
-higher.educ |> log() |> mean()
-higher.educ |> log() |> median()
-```
-
---
-
-
-```{r}
-higher.educ |> log() |> mean() |> exp()
-higher.educ |> log() |> median() |> exp()
+```{python}
+np.median(np.log(higher_educ))
+np.mean(np.log(higher_educ))
 ```
 
 ---
@@ -405,12 +473,10 @@ layout: false
 
 # Arithmetic Mean, Geometric Mean, and Median
 
-* What does the following tell us about the data?
-
-```{r}
-higher.educ |> mean() # arithmetic mean
-higher.educ |> log() |> mean() |> exp() # geometric mean
-higher.educ |> median() # median
+```{python}
+np.mean(higher_educ) # arithmetic mean
+np.median(higher_educ) # median
+np.exp(np.mean(np.log(higher_educ))) # geometric mean
 ```
 
 ---
@@ -423,26 +489,31 @@ layout: false
 
 * Over a 3-year period, from January 2021 to December 2023.
 
-```{r}
-pm25 <- c(288, 223, 167, 156, 126, 120, 102, 106, 83, 114, 259, 282, 
-          234, 183, 174, 176, 160, 139, 102, 99, 110, 173, 245, 250, 260, 
-          190, 150, 164, 161, 144, 115, 138, 123, 182, 323, 280)
+```{python}
+pm25 = np.array([288, 223, 167, 156, 126, 120, 102, 106, 83, 114, 259, 282, 
+                 234, 183, 174, 176, 160, 139, 102, 99, 110, 173, 245, 250, 260, 
+                 190, 150, 164, 161, 144, 115, 138, 123, 182, 323, 280])
 ```
 
 ---
 
 # Some numerical summaries
 
-```{r}
-mean(pm25)  
-median(pm25)  
-sd(pm25)  
-IQR(pm25)
+```{python}
+np.mean(pm25)  
+np.median(pm25)  
+np.std(pm25, ddof = 1)  
 ```
 
 --
 
 * Graphical summaries give better idea of distribution
+
+* We will use the **Matplotlib** package (conventionally imported as `plt`)
+
+```{python}
+import matplotlib.pyplot as plt
+```
 
 ---
 
@@ -450,8 +521,9 @@ IQR(pm25)
 
 * The function `hist()` draws a histogram of the data
 
-```{r pm25-hist}
-hist(pm25) # Produces a histogram plot
+```{python pm25-hist}
+plt.hist(pm25) # Produces a histogram plot
+plt.show()
 ```
 
 ---
@@ -462,21 +534,17 @@ hist(pm25) # Produces a histogram plot
 
 * Useful to compare transformations
 
-```{r}
-fivenum(pm25)
-fivenum(sqrt(pm25))
-fivenum(log(pm25))
+```{python}
+np.percentile(pm25, [0, 25, 50, 75, 100])
 ```
 
 ---
 
 # Box-and-Whisker Plot
 
-```{r pm25-boxplot}
-par(mfrow = c(1, 3))
-boxplot(pm25, main = "PM25")
-boxplot(sqrt(pm25), main = "sqrt(PM25)")
-boxplot(log(pm25), main = "log(PM25)")
+```{python pm25-boxplot}
+plt.boxplot(np.log(pm25))
+plt.show()
 ```
 
 ---
@@ -493,25 +561,25 @@ layout: true
 
 --
 
-* The `plot()` function creates a scatterplot of two variables
+* The `plt.scatter()` function creates a scatterplot of two variables
 
 * To use it, we need a sequence of integers for the time variable
 
 ---
 
-* Useful function that generates a sequence: `seq()` or the shorthand `:` operator
+* NumPy's `np.arange()` function generates sequences similar to the `seq()` function in R
 
-```{r pm25-ts1}
-time <- 0:35  
-plot(time, pm25)
+```{python pm25-ts1}
+time = np.arange(0, 36) # creates 0, 1, 2, ... 35
+plt.scatter(time, pm25)
 ```
 
 ---
 
-* It is common to connect points by lines, using the `type` argument, to emphasize the trend
+* To connect points by lines, use `plt.plot()`
 
-```{r pm25-ts2}
-plot(time, pm25, type = "o") # "o" stands for 'overlay'
+```{python pm25-ts2}
+plt.plot(time, pm25)
 ```
 
 ---
@@ -528,22 +596,22 @@ layout: true
 
 --
 
-* Recall: `higher.educ` from social indicators data
+* Recall: `higher_educ` from social indicators data
 
 * Additionally define the `adult_lit` variable to contain corresponding adult literacy (%).
 
-```{r}
-adult.lit <- c(5, 2.5, 17.5, 2.5, 47.5, 13, 9, 7.5, 27.5, 13, 47.5,
-               19.3, 17.5, 10, 22.5, 33.5, 37.5, 68, 32.1, 17.5)
+```{python}
+adult_lit = np.array([5, 2.5, 17.5, 2.5, 47.5, 13, 9, 7.5, 27.5, 13, 47.5,
+                       19.3, 17.5, 10, 22.5, 33.5, 37.5, 68, 32.1, 17.5])
 ```
 
 ---
 
-* Scatter plot of `higher.educ` against `adult.lit`
+* Scatter plot of `higher_educ` against `adult_lit`
 
 
-```{r pm25-alit-hieduc}
-plot(adult.lit, higher.educ)
+```{python pm25-alit-hieduc}
+plt.scatter(adult_lit, higher_educ)
 ```
 
 ---
@@ -556,27 +624,29 @@ layout: true
 
 * Sometimes we are interested in plotting functions; e.g., plot $\sin(x)$ from $-\pi$ to $+\pi$
 
-```{r plot-sin-grid}
-x_points <- seq(-pi, pi, length.out = 50) # equally spaced grid  
-plot(x_points, sin(x_points), type = "l")
+```{python plot-sin-grid}
+x_points = np.linspace(-np.pi, np.pi, 50) # equally spaced grid  
+plt.plot(x_points, np.sin(x_points))
 ```
 
 ---
 
-* It is also possible to plot functions (of one argument) directly
+* We can alse define a new function to plot 
 
-```{r plot-sin-fun}
-plot(sin, from = -2 * pi, to = 2 * pi)
+```{python plot-sin-fun}
+def f(x):  
+    return 2 * x + 3 * (x ** 2) - (x ** 3)
+plt.plot(x_points, f(x_points))
 ```
 
 ---
 
-We can alse define a new function to plot as follows (more details later).
+* Alternatively, we can use a Python `lambda` (R-like anonymous function).
 
-```{r plot-custom-fun}
-f <- function(x) { 2 * x + 3 * x^2 - x^3 }
-plot(f, from = -10, to = 10)
+```{python}
+plt.plot(x_points, (lambda x: 2 * x + 3 * (x ** 2) - (x ** 3))(x_points))
 ```
+
 
 ---
 
@@ -625,97 +695,33 @@ $$
 
 --
 
-```{r}
-SSD <- function(theta) {
-    S <- 0
-    n <- length(higher.educ)
-    for (i in 1:n) { # for loop
-        S <- S + (higher.educ[i] - theta)^2 # indexing, scope
-    }
-    S # value returned by function
-}
+```{python}
+def SSD0(theta):
+    S = 0
+    n = len(higher_educ)
+    for i in range(n): # for loop
+        S = S + (higher_educ[i] - theta) ** 2 # indexing, scope
+    return S # value returned by function
 ```
 
 --
 
-* Useful approach in general, but **not** recommended in R
+* Useful approach in general, but can also use NumPy vectorization
 
----
-
-* Implementation using vectorization
-
-```{r}
-SSD <- function(theta) {
-    dev <- higher.educ - theta
-    sum(dev * dev)
-}
-```
-
---
-
-* Uses the fact that `-` and `*` operate elementwise on vectors
-
-* True for most mathematical functions as well
-
----
-
-* How can we plot `SSD`?
-
---
-
-```{r plot_loss_error}
-#| error: true
-theta_vals <- seq(0, 100, length.out = 201)
-plot(theta_vals, SSD(theta_vals), type = "l")
-```
-
-* Can you guess _why_ this fails?
-
----
-
-* The function `SSD()` is not _vectorized_
-
-* In such cases, we cannot avoid a for loop
-
-```{r}
-SSD_vals1 <- numeric(100) # numeric array (vector)
-for (i in 1:100) {
-    SSD_vals1[i] <- SSD(theta_vals[i])
-}
-```
-
---
-
-* But this is a special kind of for loop known as _mapping_
-
-* Here we _apply_ the same function on each element of a list
-
-* There is a function called `sapply()` which makes this very easy
-
-```{r}
-SSD_vals2 <- sapply(theta_vals, SSD) # evaluates SSD(x) for each x in theta_vals
+```{python}
+def SSD(theta):
+    dev = higher_educ - theta
+    return np.sum(dev * dev)
 ```
 
 ---
 
-```{r plot_loss_ssd}
-plot(theta_vals, SSD_vals2, type = "l")
-```
+* Use _list comprehension_ to compute and plot `SSD()`
 
----
-
-```{r}
-SAD <- function(theta) {
-    dev <- higher.educ - theta
-    sum(abs(dev))
-}
-SAD_vals <- sapply(theta_vals, SAD)
-```
-
----
-
-```{r plot_loss_sad}
-plot(theta_vals, SAD_vals, type = "l")
+```{python plot_loss_error}
+theta_vals = np.linspace(60, 65, 100)  
+loss_vals = np.array([ SSD(t) for t in theta_vals])
+plt.plot(theta_vals, loss_vals)
 ```
 
 
@@ -737,13 +743,13 @@ Generating systematic and random data, modifying existing data
 
 * `runif(n)` generates `n` Uniform random variables
 
-```{r}
+```{python}
 runif(10)
 ```
 
 * `rnorm(n)` generates `n` Standard Normal random variables.
 
-```{r}
+```{python}
 runif(25)
 ```
 
@@ -758,14 +764,14 @@ layout: true
 
 * We have seen `seq(start, end)` (or `start:end`) for equally spaced integer sequences
 
-```{r}
+```{python}
 seq(10, 19.5)
 1:pi
 ```
 
 * Also `seq(a, b, length.out = n)` for general equally spaced sequences
 
-```{r}
+```{python}
 seq(1, pi, length.out = 10)
 ```
 
@@ -775,13 +781,13 @@ seq(1, pi, length.out = 10)
 
 * If we want to repeat a sequence:
 
-```{r}
+```{python}
 rep(c(1, 2, 3), 2)  
 ```
 
 * If we want to repeat each element a specified number of times:
 
-```{r}
+```{python}
 rep(c(1, 2, 3), times = c(3, 2, 1))  
 ```
 
@@ -801,13 +807,13 @@ layout: true
 
 * Suppose we define a vector `x`:
 
-```{r}
-x <- c(3, 7, 5, 9, 12, 3, 14, 2)
+```{python}
+x = c(3, 7, 5, 9, 12, 3, 14, 2)
 ```
 
 * To retrieve the second element (index 2), we can use
 
-```{r}
+```{python}
 x[[2]]
 x[2]
 ```
@@ -817,7 +823,7 @@ x[2]
 * To retrieve a _group_ of elements, we must use the second form, with a
 vector as index:
 
-```{r}
+```{python}
 x[c(1, 3)]
 ```
 
@@ -827,7 +833,7 @@ x[c(1, 3)]
 
 * To exclude the 3rd element:
 
-```{r}
+```{python}
 x[-3]
 ```
 
@@ -837,7 +843,7 @@ x[-3]
 
 * To select all elements of `x` that are greater than 3:
 
-```{r}
+```{python}
 x[x > 3]
 ```
 
@@ -849,10 +855,10 @@ layout: false
 
 * To combine several short vectors into a single longer vector, use `c()`:
 
-```{r}
-z1 <- c(1, 2, 3)  
-z2 <- c(4)
-z3 <- c(5, 6, 7, 8)  
+```{python}
+z1 = c(1, 2, 3)  
+z2 = c(4)
+z3 = c(5, 6, 7, 8)  
 c(z1, z2, z3)  
 ```
 
@@ -864,9 +870,9 @@ c(z1, z2, z3)
 
 * To change the `12` (the 5th element) in `x` to `11`:
 
-```{r}
+```{python}
 x
-x[5] <- 11  
+x[5] = 11  
 x  
 ```
 
@@ -874,8 +880,8 @@ x
 
 * To change elements 1 and 3 to `15` and `16`:
 
-```{r}
-x[c(1, 3)] <- c(15, 16)  
+```{python}
+x[c(1, 3)] = c(15, 16)  
 x  
 ```
 
@@ -885,10 +891,10 @@ x
 
 * R copies vectors upon modification (does not modify in-place). For example:
 
-```{r}
+```{python}
 x
-y <- x # y is a copy  
-x[3] <- 100  
+y = x # y is a copy  
+x[3] = 100  
 x
 y
 ```
@@ -942,13 +948,13 @@ help("median")
 
 * To find out which variables we have defined in the current session:
 
-```{r}
+```{python}
 ls()
 ```
 
 * To remove a variable to free up memory / clean up your workspace:
 
-```{r}
+```{python}
 rm(theta_vals, SSD_vals1, SSD_vals2, SSD)
 ls()
 ```
@@ -962,7 +968,7 @@ ls()
 * To save variables for later use:
 
 ```r
-save(higher.educ, pm25, file = "examples.rda")
+save(higher_educ, pm25, file = "examples.rda")
 ```
 
 * This saves the specified variables to a file in a special binary format
@@ -1057,17 +1063,17 @@ layout: true
 
 * Can be constructed explicitly using the `data.frame()` function
 
-* Example: combine `higher.educ` and `adult.lit` along with country names
+* Example: combine `higher_educ` and `adult_lit` along with country names
 
-```{r}
-dsocial <-
+```{python}
+dsocial =
     data.frame(country = c("Nepal", "Afghanistan", "Laos", "Ethiopia",
                            "Burma", "Libya", "Sudan", "Tanganyika",
                            "Uganda", "Pakistan", "China", "India",
                            "South Vietnam", "Nigeria", "Kenya", "Madagascar",
                            "Congo", "Thailand", "Bolivia", "Cambodia"),
-               hedu = higher.educ,
-               adlit = adult.lit)
+               hedu = higher_educ,
+               adlit = adult_lit)
 ```
 
 ---
@@ -1077,7 +1083,7 @@ dsocial <-
 
 .scrollable500[
 
-```{r}
+```{python}
 dsocial
 ```
 
@@ -1087,7 +1093,7 @@ dsocial
 
 * Individual "columns" can be extracted using the `$` operator
 
-```{r}
+```{python}
 dsocial$country
 dsocial$adlit
 mean(dsocial$adlit)
@@ -1097,8 +1103,8 @@ mean(dsocial$adlit)
 
 * Can also be imported from file
 
-```{r}
-social_indicators <-
+```{python}
+social_indicators =
     read.csv("https://deepayan.github.io/BSDS/2026-01-DARP/slides/data/social-indicators-1964.csv",
              comment.char = "#")
 head(social_indicators)
@@ -1115,7 +1121,7 @@ layout: true
 
 * Possible using what we already know (but not recommended)
 
-```{r plot-socind-default}
+```{python plot-socind-default}
 plot(sqrt(dsocial$hedu), sqrt(dsocial$adlit))
 ```
 
@@ -1123,7 +1129,7 @@ plot(sqrt(dsocial$hedu), sqrt(dsocial$adlit))
 
 * Formula interface (used extensively in R)
 
-```{r plot-socind-formula}
+```{python plot-socind-formula}
 plot(sqrt(adlit) ~ sqrt(hedu), data = dsocial)
 ```
 
@@ -1131,7 +1137,7 @@ plot(sqrt(adlit) ~ sqrt(hedu), data = dsocial)
 
 * Formula interface in __lattice__ add-on package
 
-```{r xyplot-socind, fig.width=8, fig.height=4}
+```{python xyplot-socind, fig.width=8, fig.height=4}
 lattice::xyplot(sqrt(adlit) ~ sqrt(hedu), data = dsocial)
 ```
 
@@ -1139,7 +1145,7 @@ lattice::xyplot(sqrt(adlit) ~ sqrt(hedu), data = dsocial)
 
 * Similar approach in __ggplot2__ add-on package
 
-```{r ggplot-socind, fig.width=8, fig.height=4}
+```{python ggplot-socind, fig.width=8, fig.height=4}
 ggplot2::ggplot(dsocial, mapping = ggplot2::aes(x = sqrt(hedu), y = sqrt(adlit))) + ggplot2::geom_point()
 ```
 
@@ -1148,16 +1154,16 @@ ggplot2::ggplot(dsocial, mapping = ggplot2::aes(x = sqrt(hedu), y = sqrt(adlit))
 * Same plot for all countries in Original source: World handbook of
   political and social indicators, 1964
 
-```{r xyplot-socind-all, fig.width=8, fig.height=4}
-lattice::xyplot(sqrt(Percent.Adult.Literacy) ~ sqrt(Higher.Ed.per.100000), data = social_indicators)
+```{python xyplot-socind-all, fig.width=8, fig.height=4}
+lattice::xyplot(sqrt(Percent.Adult_Literacy) ~ sqrt(Higher.Ed.per.100000), data = social_indicators)
 ```
 
 ---
 
 * Data in original units
 
-```{r xyplot-socind-raw, fig.width=8, fig.height=4}
-lattice::xyplot(Percent.Adult.Literacy ~ Higher.Ed.per.100000, data = social_indicators)
+```{python xyplot-socind-raw, fig.width=8, fig.height=4}
+lattice::xyplot(Percent.Adult_Literacy ~ Higher.Ed.per.100000, data = social_indicators)
 ```
 
 
