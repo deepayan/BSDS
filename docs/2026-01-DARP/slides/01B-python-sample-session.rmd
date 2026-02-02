@@ -730,7 +730,7 @@ plt.plot(theta_vals, loss_vals)
 
 ```{python plot_loss_map}
 lvals = np.array(list(map(SSD, theta_vals)))
-plt.plot(tvals, lvals)
+plt.plot(theta_vals, lvals)
 ```
 
 

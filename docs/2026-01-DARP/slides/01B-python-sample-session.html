@@ -789,7 +789,7 @@ plt.boxplot(np.log(pm25))
 ```
 
 ```
-{'whiskers': [<matplotlib.lines.Line2D object at 0x110c031f0>, <matplotlib.lines.Line2D object at 0x110c03490>], 'caps': [<matplotlib.lines.Line2D object at 0x110c03730>, <matplotlib.lines.Line2D object at 0x110c039d0>], 'boxes': [<matplotlib.lines.Line2D object at 0x110bf3f10>], 'medians': [<matplotlib.lines.Line2D object at 0x110c03c70>], 'fliers': [<matplotlib.lines.Line2D object at 0x110c03f10>], 'means': []}
+{'whiskers': [<matplotlib.lines.Line2D object at 0x10f2eb1f0>, <matplotlib.lines.Line2D object at 0x10f2eb490>], 'caps': [<matplotlib.lines.Line2D object at 0x10f2eb730>, <matplotlib.lines.Line2D object at 0x10f2eb9d0>], 'boxes': [<matplotlib.lines.Line2D object at 0x10f2dcf10>], 'medians': [<matplotlib.lines.Line2D object at 0x10f2ebc70>], 'fliers': [<matplotlib.lines.Line2D object at 0x10f2ebf10>], 'means': []}
 ```
 
 ``` python
@@ -1006,12 +1006,10 @@ plt.plot(theta_vals, loss_vals)
 
 ``` python
 lvals = np.array(list(map(SSD, theta_vals)))
-plt.plot(tvals, lvals)
+plt.plot(theta_vals, lvals)
 ```
 
-```
-NameError: name 'tvals' is not defined
-```
+![plot of chunk plot_loss_map](figures/1-pysession-plot_loss_map-19.svg)
 
 
 ---
@@ -1036,7 +1034,7 @@ np.random.uniform(0, 1, 5)
 ```
 
 ```
-array([0.27797012, 0.83178196, 0.60267734, 0.12890252, 0.60762816])
+array([0.86168215, 0.2425602 , 0.95244423, 0.96514176, 0.63347945])
 ```
 
 * Standard Normal random variables: `np.random.normal(loc, scale, size)`
@@ -1047,8 +1045,8 @@ np.random.normal(0, 1, [2, 5]) # 2 x 5 matrix instead of vector
 ```
 
 ```
-array([[-0.24715197, -0.59868543, -0.12536841, -1.04078655,  0.20022501],
-       [ 1.19406009, -0.28466879, -0.41407929,  0.84954375, -0.68671537]])
+array([[ 1.09914014,  0.94967164,  0.91243852,  0.83751559,  0.50090366],
+       [-1.65035285,  0.5321313 , -1.06806964,  0.79797934, -0.03800998]])
 ```
 
 --
@@ -1061,9 +1059,9 @@ rnorm(10, mean = 0, sd = 1) |> array(dim = c(2, 5))
 ```
 
 ```
-           [,1]       [,2]       [,3]       [,4]      [,5]
-[1,]  0.4614991 -0.6818753  0.0249143  0.3583637 0.3695765
-[2,] -0.8928187  2.6331864 -0.3633116 -0.7069136 0.4826758
+           [,1]       [,2]       [,3]      [,4]        [,5]
+[1,]  0.1233764  0.3418251  0.6001261 1.0955866  0.09988779
+[2,] -1.0764912 -0.2028919 -0.2465084 0.0792776 -0.79450350
 ```
 
 
