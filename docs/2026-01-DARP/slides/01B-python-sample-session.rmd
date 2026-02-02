@@ -957,7 +957,7 @@ help(np.median)
 
 * Interactive documentation in Python has less features than that of R
 
-* Online documentation of is usually very comprehensive
+* Online documentation of Python libraries is usually very comprehensive
 
 ---
 
