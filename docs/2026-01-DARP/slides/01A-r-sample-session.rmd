@@ -1160,5 +1160,12 @@ lattice::xyplot(sqrt(Percent.Adult.Literacy) ~ sqrt(Higher.Ed.per.100000), data 
 lattice::xyplot(Percent.Adult.Literacy ~ Higher.Ed.per.100000, data = social_indicators)
 ```
 
+---
+
+layout: false
+
+class: center middle
+
+# Questions?
 
 
