@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <style>
+
+
+    #webcam-feed {
+	width: 20%;
+	position: absolute;
+	left: 75%;
+	top: 5%;
+	clip-path: circle(40%);
+    }
+
+    #frame-content {
+	width: 100vw;
+	height: 96vh;
+	max-width: ;
+	max-height: 100vh;
+	/* oveflow: none; */
+    }
+    
+  </style>
+
+</head>
+
+<body>
+
+  <video id="webcam-feed" autoplay playsinline></video>
+  <iframe id="frame-content" src="index.html"></iframe>
+
+</body>
+</html>  
+
+
+<script>
+
+const videoElement = document.getElementById('webcam-feed');
+
+// Constraints object: requests both audio and video
+const constraints = {
+    audio: false,
+    video: true
+};
+
+// Use navigator.mediaDevices.getUserMedia() to request the media stream
+navigator.mediaDevices.getUserMedia(constraints)
+    .then((stream) => {
+        // Success: attach the stream to the video element
+        videoElement.srcObject = stream;
+        videoElement.onloadedmetadata = () => {
+            videoElement.play();
+        };
+    })
+    .catch((err) => {
+        // Error handling: permission denied, no devices, etc.
+        console.error(`An error occurred: ${err.name}`, err);
+    });
+
+</script>
+
+
