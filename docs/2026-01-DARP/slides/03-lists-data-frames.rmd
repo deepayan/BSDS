@@ -473,7 +473,7 @@ layout: false
 .scrollable500[
 
 ```{r}
-aqi <- read.csv("https://deepayan.github.io/BSDS/2024-01-DE/data/rkpuram-aqi.csv")
+aqi <- read.csv("https://deepayan.github.io/BSDS/2026-02-DARP/data/rkpuram-aqi.csv")
 aqi
 ```
 
