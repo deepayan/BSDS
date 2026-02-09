@@ -130,12 +130,12 @@ sqrt(x)
 
     * Numeric / Integer / Complex
 
-    <!-- * Categorical (factor) -->
-
     * Character
 
     * Logical (`TRUE` / `FALSE`)
 	
+    <!-- * Categorical (factor) -->
+
 --
 
 * Missing values are allowed, indicated as `NA`

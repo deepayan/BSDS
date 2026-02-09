@@ -1,0 +1,493 @@
+---
+layout: remark
+title: Lists and Data Frames
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+
+# Lists
+
+* Lists are vectors with arbitrary types of components
+
+--
+
+* Individual elements can be extracted using `x[[i]]`
+
+* Vector indexing by `x[i]` also works in the usual way
+
+--
+
+* A list may or may not have names
+
+* Lists with names have a special type of extraction operator: `$`
+
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-listdf/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+               fig.width = 12, fig.height = 5.5,
+               dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
+               knitr.table.format = "html",
+               fig.path='figures/3-listdf-')
+options(warnPartialMatchDollar = FALSE, width = 90) # 110
+```
+
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\nseq}[1]{ {#1}\sub{1}, {#1}\sub{2}, \dotsc, {#1}\sub{n} }
+$$
+</div>
+
+
+---
+
+layout: true
+
+# Example: Results of an optimization procedure
+
+---
+
+* Problem: 
+
+	* A farmer has 100 meters of fencing 
+	
+	* He wants to enclose a rectangular area to grow spinach
+	
+	* His goal is to maximize the enclosed area of the field
+	
+	* What dimensions (length and width) should he use?
+
+--
+
+* The answer is obviously that the area should be a square (with each side 25m)
+
+--
+
+* Easy to formulate and solve mathematically:
+
+<div>
+$$
+\begin{eqnarray*}
+2 * (a + b) &=& 100 \implies b = 50 - a \cr
+\text{To maximize } a * b &=& a * (50 - a) = 50a - a^2 \iff \text{to minimize } a^2 - 50a \cr
+\text{Differentiate and solve } &:& 2a - 50 = 0
+\end{eqnarray*}
+$$
+</div>
+
+---
+
+* Suppose we wanted to use numerical optimization instead
+
+```{r}
+L <- function(a) a^2 - 50 * a
+res <- optimize(L, interval = c(0, 100))
+str(res)
+```
+
+---
+
+layout: false
+
+# Printing lists
+
+```{r}
+res
+```
+
+---
+
+# Scalar indexing
+
+* Standard indexing using `x[[index]]`
+
+```{r}
+res[[1]]
+res[["objective"]]
+```
+
+--
+
+* Extracting element by name using `x$name`
+
+```{r}
+res$minimum
+```
+
+---
+
+# Vector indexing
+
+```{r}
+res[1]
+res["objective"]
+```
+
+--
+
+```{r}
+res[c(2, 1, 2)]
+```
+
+
+---
+
+layout: false
+
+# Lists as containers
+
+* This is an important use of lists
+
+	* Represent result of an analysis
+
+	* Collects various relevant quantities 
+	
+	* Result contains all quantities in single object
+
+---
+
+# Other algorithms for "root finding"
+
+* Exercise: Can we write our own optimization method?
+
+--
+
+* Simple algorithms (root finding)
+
+	* Grid search
+	
+	* Bisection method
+	
+	* Regula falsi
+
+---
+
+# Example: Confidence interval for probability $p$
+
+* Given data: $\nseq{X}$ i.i.d. sample from Bernoulli($p$)
+
+* We want to estimate unknown success probability $p$
+
+--
+
+* Natural estimator is the sample proportion $\hat{p} = \bar{X}$
+
+--
+
+* But $\hat{p}$ will usually not be exactly equal to $p$
+
+* What values of $p$ are _plausible_? (Consistent with observed data)
+
+---
+
+# Recall: distribution of sample proportion
+
+.scrollable500[
+
+```{r prop-rep,fig.height = 6}
+p <- 0.65
+plot(1:100, type = "n", ylim = c(0, 1), ylab = "Sample proportion")
+for (i in 1:50) {
+    z <- rbinom(100, size = 1, prob = p)
+    lines(1:100, cumsum(z) / 1:100, col = sample(colors(), 1))
+}
+```
+
+]
+
+---
+
+layout: true
+
+# Example: Does a random quadratic equation have real roots?
+
+---
+
+* Suppose $A, B, C \sim N(0, 1)$
+
+* Are the roots of $A x^2 + B x + C = 0$ real?
+
+
+--
+
+```{r}
+z <- logical(500)
+for (i in 1:500) {
+    A <- rnorm(1); B <- rnorm(1); C <- rnorm(1)
+    D <- B^2 - 4 * A * C
+    z[i] <- D >= 0
+}
+str(z)
+```
+
+---
+
+```{r real-roots}
+plot(1:500, cumsum(z) / 1:500, type = "l")
+```
+
+---
+
+* One method implemented in R function `prop.test()`
+
+```{r}
+tt500 <- prop.test(sum(z), 500)
+str(tt500, give.attr = FALSE)
+```
+
+--
+
+```{r}
+tt500$conf.int
+```
+
+---
+
+* What if we only had 100 replications?
+
+```{r}
+tt100 <- prop.test(sum(z[1:100]), 100)
+str(tt100, give.attr = FALSE)
+```
+
+```{r}
+tt100$conf.int
+```
+
+
+---
+
+layout: false
+
+# Lists as containers
+
+```{r}
+tt500
+```
+
+---
+
+# Why doesn't output look like a list?
+
+* This is an important feature of R
+
+* Uses concepts such as attributes and class
+
+* We will discuss these later
+
+---
+
+layout: false
+
+# Data Frames
+
+* R analog of a spreadsheet
+
+---
+
+# Example
+
+.scrollable500[
+
+```{r,echo=FALSE}
+kable(MASS::Cars93, "html") |> kable_styling("striped")
+```
+
+]
+
+---
+
+layout: true
+
+# Data Frames
+
+---
+
+* R analog of a spreadsheet
+
+* Rectangular (matrix-like) structure
+
+--
+
+* Each column is (usually) an atomic vector
+
+* Different columns can be of different types
+
+--
+
+* Every column must have the same length
+
+* Every column must have a name
+
+---
+
+* Most built-in data sets in R are data frames
+
+
+.scrollable500[
+
+```{r}
+data(Cars93, package = "MASS")
+Cars93
+```
+
+]
+
+
+---
+
+* Data frames are internally stored as lists (with constraints)
+
+.scrollable500[
+
+```{r}
+str(Cars93)
+```
+
+]
+
+---
+
+* List-like behaviour: Columns can be extracted like a list
+	
+```{r}
+Cars93$MPG.city
+```
+
+* Vector indexing extracts multiple columns
+
+```{r}
+head(Cars93[c(1, 4, 7)])
+```
+
+---
+
+
+```{r}
+carsub <- Cars93[c("Make", "MPG.city", "Weight", 
+                   "Length", "EngineSize", "Man.trans.avail")]
+str(carsub)
+```
+
+
+
+---
+
+* Two-dimensional indexing
+
+```{r}
+carsub[1:6, ]
+carsub[1:6, c(1, 4, 6)]
+```
+
+---
+
+* Two-dimensional indexing
+
+```{r}
+nrow(carsub)
+carsub[sample(nrow(carsub), 6), ]
+```
+
+---
+
+* Two-dimensional indexing
+
+```{r}
+carsub[sample(nrow(carsub), 6), c("MPG.city", "Weight", "Length")]
+```
+
+---
+
+layout: true
+
+# Data import
+
+---
+
+* Statistical data are usually structured like a spreadsheet (Excel / CSV)
+
+--
+
+* Typical approach: read data from spreadsheet file into data frame
+
+--
+
+* Easiest route:
+
+    * R itself cannot read Excel files directly
+
+    * Save as CSV file from Excel / LibreOffice / Google Sheets
+
+    * Read with `read.csv()` or `read.table()` (more flexible)
+
+--
+
+* Alternative: Use "Import Dataset" tool in RStudio
+
+
+--
+
+* Data frames can be exported as a spreadsheet file using
+  `write.csv()` or `write.table()`
+
+---
+
+layout: false
+
+# Exporting data as CSV file
+
+
+```{r}
+str(carsub)
+write.csv(carsub, file = "cars.csv")
+```
+
+---
+
+# Other data import / export utilities
+
+* These are the most basic data input / output functions
+
+* There are many other other specialized functions
+
+* Low-level utilties: `scan()`, `readLines()`, `readChar()`, `readBin()`
+
+* Various packages provide import / export to formats used by other software
+
+* R has its own "serialization" format using `save()` and `load()`
+
+---
+
+layout: false
+
+# Example: air quality data
+
+.scrollable500[
+
+```{r}
+aqi <- read.csv("https://deepayan.github.io/BSDS/2024-01-DE/data/rkpuram-aqi.csv")
+aqi
+```
+
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
