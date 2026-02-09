@@ -26,6 +26,8 @@ mathjax: true
 	* Focus on _vectors_ and _vectorized operations_ 
 
 	* Treatment of _functions_ at par with other object types
+	
+	* _Functional language_ with minimal _side effects_ of function calls
 
 
 ```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
