@@ -1,0 +1,1022 @@
+---
+layout: remark
+title: Functions, Attributes, and Class
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+
+# Functions
+
+* Most useful things in R happen by calling functions
+
+* Functions have one or more arguments
+
+    * All arguments have names (available as variables inside the function)
+
+	* Arguments may be compulsory or optional
+
+	* Optional arguments usually have "default" values 
+
+--
+
+* Arguments may or may not be named when the function is called
+	
+	* Unnamed arguments are matched by position
+
+	* Optional arguments are usually named
+	
+* Functions normally also have a useful "return" value
+
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-funcattr/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+               fig.width = 12, fig.height = 5.5,
+               dev = "svglite", dev.args = list(pointsize = 15, bg = "transparent"),
+               knitr.table.format = "html",
+               fig.path='figures/4-funcattr-')
+options(warnPartialMatchDollar = FALSE, width = 90) # 110
+```
+
+
+<div>
+$$
+\newcommand{\sub}{_}
+\newcommand{\nseq}[1]{ {#1}\sub{1}, {#1}\sub{2}, \dotsc, {#1}\sub{n} }
+$$
+</div>
+
+
+---
+
+layout: true
+
+# Example: Delhi Air Quality data
+
+---
+
+```{r}
+aqi <- read.csv("https://deepayan.github.io/BSDS/2026-01-DARP/slides/data/rkpuram-aqi.csv")
+str(aqi)
+```
+
+---
+
+* How is AQI (PM10) related to `no2` (Nitrogen dioxide)?
+
+--
+
+* Basic tools we are familiar with
+
+	* Scatter plot
+	
+	* Linear Regression
+
+---
+
+```{r plot-pm10-no2}
+plot(pm10 ~ no2, data = aqi)
+```
+
+---
+
+```{r plot-pm10-no2-sqrt}
+plot(sqrt(pm10) ~ sqrt(no2), data = aqi)
+```
+
+---
+
+* Formula for linear regression line
+
+<div>
+$$
+\begin{eqnarray*}
+\hat{b} &=& \frac{\sum (x\sub{i} - \bar{x}) (y\sub{i} - \bar{y})}{\sum (x\sub{i} - \bar{x})^2} \cr
+\hat{a} &=& \bar{y} - \hat{b} \bar{x}
+\end{eqnarray*}
+$$
+</div>
+	
+---
+
+* Calculation of linear regression line
+
+```{r}
+x <- sqrt(aqi$no2)
+y <- sqrt(aqi$pm10)
+xbar <- mean(x)
+ybar <- mean(y)
+sxy <- sum( (x - xbar) * (y - ybar) )
+sxx <- sum( (x - xbar)^2 )
+```
+
+--
+
+```{r}
+c(xbar, ybar, sxx, sxy)
+```
+
+---
+
+* Regression coefficients removing missing values
+
+```{r}
+x <- sqrt(aqi$no2)
+y <- sqrt(aqi$pm10)
+xbar <- mean(x, na.rm = TRUE)
+ybar <- mean(y, na.rm = TRUE)
+sxy <- sum( (x - xbar) * (y - ybar), na.rm = TRUE)
+sxx <- sum( (x - xbar)^2, na.rm = TRUE)
+```
+
+```{r}
+c(xbar, ybar, sxx, sxy)
+```
+
+---
+
+* Even this may not be correct: should remove both if only one missing!
+
+```{r}
+x <- sqrt(aqi$no2)
+y <- sqrt(aqi$pm10)
+ok <- is.finite(x) & is.finite(y)
+xbar <- mean(x[ok]); ybar <- mean(y[ok])
+sxy <- sum( (x[ok] - xbar) * (y[ok] - ybar))
+sxx <- sum( (x[ok] - xbar)^2)
+```
+
+```{r}
+c(xbar, ybar, sxx, sxy)
+```
+
+---
+
+* Coefficients of linear regression line
+
+```{r}
+bhat <- sxy / sxx
+ahat <- ybar - bhat * xbar
+c(intercept = ahat, slope = bhat)
+```
+
+--
+
+* Standard R function to do this
+
+```{r}
+lm(sqrt(pm10) ~ sqrt(no2), data = aqi)
+```
+
+---
+
+* Add regression line to scatter plot
+
+```{r plot-pm10-no2-with-regline}
+plot(sqrt(pm10) ~ sqrt(no2), data = aqi)
+abline(ahat, bhat, col = 2)
+```
+
+
+---
+
+layout: true
+
+# Functions
+
+---
+
+* We have used several functions above
+
+	* `sqrt()`, `mean()`, `sum()` — basic mathematical / summary functions
+	
+	* `plot()` — "high level" plotting function
+	
+	* `abline()` — "low level" plotting function
+	
+	* `lm()` — "high level" modeling function
+
+---
+
+* We will discuss graphics functions in more detail later
+
+--
+
+* `lm()` is a good example to study the behaviour of modeling functions in R
+
+--
+
+* Recall:
+
+	* Functions have one or more arguments
+
+    * All arguments have names (available as variables inside the function)
+
+	* Arguments may be compulsory or optional
+
+	* Optional arguments usually have "default" values 
+
+
+
+---
+
+* `lm()` fits a more general class of models known as _linear models_
+
+```{r}
+str(lm)
+```
+
+--
+
+* These calls are equivalent
+
+```{r}
+fm1 <- lm(pm10 ~ no2, aqi, (no2 < 100))
+fm2 <- lm(pm10 ~ no2, data = aqi, method = "qr", subset = (no2 < 100))
+coef(fm1)
+coef(fm2)
+```
+
+---
+
+* Rule: named arguments are matched by name, remaining by position
+
+* Convention: 
+
+	- First few "standard" arguments are usually unnamed (matched by position)
+	
+	- Usually unnamed arguments are _not_ used after named arguments
+
+--
+
+* The following call is equivalent to previous two, but not recommended
+
+```{r}
+fm3 <- lm(pm10 ~ no2, data = aqi, no2 < 100)
+coef(fm3)
+```
+
+---
+
+* The return value of `lm()` is a list
+
+.scrollable400[
+
+```{r}
+str(fm2)
+```
+
+]
+
+---
+
+* Individual elements can be extracted using list indexing
+
+```{r}
+fm2$coefficients
+fm2$residuals
+```
+
+---
+
+layout: true
+
+# Attributes
+
+---
+
+* The names (derived from row names of the data) can be used as index 
+
+```{r}
+fm2$residuals["25"]
+```
+
+* The names associated with a vector can be obtained using `names()`
+
+```{r}
+names(fm2$residuals)
+```
+
+---
+
+* These names are actually stored as an _attribute_ called "names"
+
+```{r}
+attr(fm2$residuals, "names")
+```
+
+---
+
+* This is true for all vector objects, including lists
+
+```{r}
+attr(fm2, "names")
+```
+
+---
+
+* Attributes are arbitrary R objects that can be attached to any other object
+
+* Typically used for programming convenience, normally not seen by users
+
+* However, some attributes are "special"
+
+---
+
+* The "names" attribute can be extracted using the function `names()`
+
+* `dimnames()` similarly gives row / column names for matrices and arrays
+
+```{r}
+dimnames(Titanic)
+```
+
+---
+
+* The "names" attribute can be extracted using the function `names()`
+
+* `dimnames()` similarly gives row / column names for matrices and arrays
+
+```{r}
+attr(Titanic, "dimnames")
+```
+
+
+---
+
+* For example, column names can be obtained as
+
+```{r}
+dimnames(Titanic)[[2]]
+```
+
+* There are convenient shortcuts called `rownames()` and `colnames()`
+
+```{r}
+colnames(Titanic)
+```
+
+---
+
+* In fact, we can easily verify that this is what `colnames()` is doing by printing it
+
+```{r}
+colnames
+```
+
+* All R functions can be easily inspected in this way
+
+---
+
+* Another very important attribute is "class"
+
+* For example, the return value of `lm()` has class "lm"
+
+```{r}
+attr(fm2, "class")
+```
+
+* The class of an object can also be obtained using the function `class()`
+
+```{r}
+class(fm2)
+```
+
+---
+
+* The class of an object can (usually) be "removed" by setting it to
+  `NULL` 
+  
+* This is not something you should actually do!
+
+```{r}
+class(fm2) <- NULL
+```
+
+* Such objects will no longer have a "class" attribute
+
+```{r}
+attr(fm2, "class")
+```
+
+* However, it will still have a class (implicitly)
+
+```{r}
+class(fm2)
+```
+
+<!-- * We will discuss the class attribute in more details next day -->
+
+---
+
+layout: true
+
+# Class, generic functions, and methods
+
+---
+
+* The class of an object is fundamental to how R works
+
+* Every object in R must have a class
+
+* This is true even if the object does not have a class attribute
+
+
+```{r}
+class(colnames)
+attr(colnames, "class")
+class(Titanic)
+attr(Titanic, "class")
+```
+
+---
+
+* The main use of the class of an object is in how _generic functions_ behave
+
+* Generic functions are intended to perform general tasks, like
+
+	- `print()`
+
+	- `plot()`
+
+	- `summary()`
+
+* But details of what these functions should do depends on the input
+
+
+---
+
+```{r}
+print(Titanic[, , 1, 1]) 
+fm1 <- lm(pm10 ~ no2, aqi, subset = (no2 < 100))
+print(fm1)
+```
+
+---
+
+```{r}
+summary(Titanic) 
+```
+
+---
+
+```{r}
+summary(fm1)
+```
+
+---
+
+* But suppose we make a copy of `fm1` and remove the class attribute from it
+
+```{r}
+fm2 <- fm1
+class(fm2) <- NULL
+class(fm1)
+class(fm2)
+```
+
+* `fm1` and `fm2` represent the same model fit
+
+* But the different class means that `print()` and `summary()` behave
+  differently
+
+---
+
+```{r}
+summary(fm2)
+```
+
+---
+
+.scrollable400[
+
+```{r}
+print(fm2)
+```
+
+]
+
+* This kind of customized output is achieved by _methods_
+
+---
+
+* Methods are specific implementations of a generic function customized to its input
+
+* The appropriate method is chosen by looking at the _class_ of the input argument
+
+--
+
+* The methods available for a generic function can be obtained using the `methods()` function
+
+.scrollable400[
+
+```{r}
+methods("summary")
+```
+
+]
+
+---
+
+.scrollable500[
+
+```{r}
+methods("print") # similar but much longer list
+```
+
+]
+
+---
+
+* All available methods for a given class can be similarly obtained
+
+```{r}
+methods(class = "lm")
+```
+
+---
+
+* The name of a specific method appears to have the form `generic.class`
+
+* However, one should always call the generic function, not the method directly
+
+* This is not OK:
+
+```{r,eval=FALSE}
+summary.lm(fm1)
+```
+
+* Instead, use
+
+```{r,eval=FALSE}
+summary(fm1)
+```
+
+* In fact, many methods cannot be called directly because they are "hidden"
+
+---
+
+* This is a form of _Object Oriented Programming_ (OOP) in R
+
+* Python also has OOP, but 
+
+	* Methods are usually tied to a class, not a _generic_ function
+
+	* One notable exception is the `__str__()` method, which is used by `print()`
+
+---
+
+layout: false
+
+# Getting help
+
+* R has an extensive collection of functions (even more if we include
+  add-on packages)
+
+* It is impossible for anyone to know them all, or remember details
+
+* Fortunately, R also has an excellent help system
+
+--
+
+* Every function and dataset in R (and add-on packages) must be documented
+
+* The documentation can be accessed by `help(name)` or `?name`
+
+* For example: `help(seq)`, `help(summary)`, etc.
+
+* A more general (but limited) search can be performed using `help.search("search-string")`
+
+---
+
+# Getting help
+
+* How the help is shown depends on the _interface_ being used
+
+* RStudio has a separate help tab (which also allows searching)
+
+--
+
+* However, before using the help system, you should know how methods
+  are documented
+
+---
+
+# Help for generic functions and methods
+
+* Generic functions and methods are distinct functions
+
+* They often have different help pages
+
+* In fact, many add-on packages define new methods for generics in
+  another package
+
+* These are always documented in a separate help page
+
+---
+
+# Help for generic functions and methods
+
+* To get help for the generic function `summary()`, type `help(summary)`
+
+* To get help for the `summary()` method for "matrix" objects, type `help(summary.matrix)`
+
+* To get help for the `summary()` method for "lm" objects, type `help(summary.lm)`
+
+* The first two happen to be the same help page, but the third is different
+
+--
+
+* This is slightly confusing because you are __not__ supposed to call
+  `summary.lm()` directly
+
+* More importantly, there may not actually be a `summary()` method for
+  all classes 
+  
+* For example, "list" objects are handled by a _fallback_ method `summary.default()`
+
+--
+
+* The list of available methods are obtained by `methods("summary")`
+  as shown earlier
+  
+* All these should have a corresponding help page
+
+---
+
+# Help for generic functions and methods
+
+- The system we described is called "S3" (short for "S version 3")
+
+- The documentation refers to specific methods implemented using this system as "S3 methods"
+
+- To make things more complicated, there are other systems of defining
+  classes and methods
+  
+- We will skip the details of these for now
+
+
+---
+
+# Replacement Functions
+
+* R functions are not allowed to modify its arguments
+
+--
+
+* Consider a function that sets negative inputs to 0
+$$
+f(x) = \begin{cases}
+	0 & \text{ if } x < 0 \cr
+	x & \text{ otherwise. }
+\end{cases}
+$$
+
+--
+
+* We will refer to this as the *ReLU* function
+
+---
+
+# The Scalar ReLU Function in R
+
+```{r}
+sReLU <- function(u) {
+    if (u < 0) u = 0
+    u
+}
+```
+
+???
+
+Now suppose we want to implement this function for scalar input.
+
+This is a very natural implementation.
+
+--
+
+```{r}
+x <- -5
+sReLU(x)
+x
+```
+
+
+???
+
+Let's see what happens when we call it.
+
+If we just call the function with a variable X as input, it returns
+the expected value, but the variable X does not change.
+
+---
+
+# The Scalar ReLU Function in R
+
+```{r}
+sReLU <- function(u) {
+    if (u < 0) u = 0
+    u
+}
+```
+
+```{r}
+x <- -5
+y <- sReLU(x)
+```
+
+--
+
+```{r}
+x
+y
+```
+
+???
+
+This time, when we assign the value of the function to a new variable
+Y, X remains unchanged but Y now has the expected value.
+
+This is of course more or less what we would expect.
+
+---
+
+# The Scalar ReLU Function in Python
+
+```{python,cache=FALSE}
+def sReLU(u):
+    if u < 0:
+        u = 0
+    return u
+```
+
+--
+
+```{python,cache=FALSE}
+x = -5
+y = sReLU(x)
+```
+
+--
+
+```{python,cache=FALSE}
+x
+y
+```
+
+---
+
+# The Vectorized ReLU Function in Python
+
+```{python,cache=FALSE}
+def vReLU(u):
+    for i in range(len(u)):
+        if u[i] < 0:
+            u[i] = 0
+    return u
+```
+
+--
+
+```{python,cache=FALSE}
+from numpy import *
+x = random.normal(size = 10)
+y = x
+x
+y
+```
+
+---
+
+# The Vectorized ReLU Function in Python
+
+```{python,cache=FALSE}
+z = vReLU(y)
+```
+
+???
+
+When we now call the function with Y as argument and assign the result
+to a NEW variable called Z, several interesting things happen.
+
+--
+
+```{python,cache=FALSE}
+z
+```
+
+???
+
+First of all, Z has the negative values set to 0, as expected.
+
+--
+
+```{python,cache=FALSE}
+y
+```
+
+???
+
+But Y _also_ has the same values set to 0.
+
+Even though this behaviour is not consistent with the scalar case, it
+is not _too_ surprising, because the argument Y WAS actually modified
+in the function.
+
+--
+
+```{python,cache=FALSE}
+x
+```
+
+???
+
+Perhaps more surprisingly, the value of _X_ has also changed, even
+though it was not involved in the call at all.
+
+There is actually a very good reason for this behaviour, and depending
+on your PRIOR experience with programming, you may find this perfectly
+natural.
+
+But this behaviour is often surprising to beginners, and R avoids it
+by following what is known as a FUNCTIONAL programming paradigm, which
+says that functions should not modify its arguments.
+
+---
+
+# The Vectorized ReLU Function in R
+
+```{r}
+vReLU <- function(u) {
+    for (i in seq_len(length(u))) {
+        if (u[i] < 0)
+            u[i] <- 0
+    }
+    return(u)
+}
+```
+
+???
+
+Here is the equivalent function in R.
+
+--
+
+```{r}
+x <- rnorm(10)
+y <- x
+```
+
+--
+
+```{r}
+x
+y
+```
+
+???
+
+As before, we first generate a normal random vector X and make a copy named Y.
+
+---
+
+# The Vectorized ReLU Function in R
+
+```{r}
+z <- vReLU(y)
+z
+```
+
+--
+
+```{r}
+y
+x
+```
+
+???
+
+This time, when we run the function with Y as argument and assign the
+result to Z, only Z is modified.
+
+X and Y remain unchanged.
+
+---
+
+# Alternative: Direct Assignment
+
+* We can instead use direct assignment to a 'subset'
+
+```{r}
+y[y < 0] <- 0
+```
+
+--
+
+```{r}
+x
+y
+```
+
+---
+
+# Functional programming
+
+* R generally follows a _functional programming_ paradigm
+
+* Among other things, this says that functions should not modify its arguments
+
+--
+
+* This is a key difference between Python and R
+
+--
+
+* One consequence: R needs an _unusual_ approach when it needs to modify objects
+
+---
+
+layout: true
+
+# Example: Modifying Names of a Data Frame
+
+---
+
+```{r}
+d <- data.frame(1, rnorm(5), rexp(5))
+names(d)
+```
+
+```{r}
+d
+```
+
+* Default names are not very nice
+
+---
+
+* Want to change the names to `"Constant", "Normal", "Exponential"`
+
+* Possible solution using the `setNames()` function
+
+```{r}
+setNames(d, c("Constant", "Normal", "Exponential"))
+```
+
+---
+
+* But names of `d` are not modified by this
+
+```{r}
+d
+```
+
+---
+
+* Best we can hope for
+
+```{r}
+d1 <- setNames(d, c("Constant", "Normal", "Exponential"))
+d1
+```
+
+---
+
+* In fact, the __dplyr__ package has a more convenient version of this approach
+
+```{r}
+d2 <- dplyr::rename(d, Constant = X1, Normal = rnorm.5., Exponential = rexp.5.)
+d2
+```
+
+---
+
+* The classic R Alternative: Replacement Functions
+
+```{r}
+names(d) <- c("Constant", "Normal", "Exponential")
+d
+```
+
+
+---
+
+layout: false
+
+# Replacement Functions
+
+* Other similar examples:
+
+```r
+y[ y < 0 ] <- 0
+class(x)  <- NULL
+d$Normal[ d$Normal < 0 ] <- 0
+attr(x, "name") <- value
+```
+
+* Common feature: "complex" expression on the LHS of the assignment
+
