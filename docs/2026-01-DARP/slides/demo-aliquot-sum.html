@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Demo: Aliquot Sum</title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous'>
+    <link rel='stylesheet' href='assets/remark.css'>
+  </head>
+  <body>
+    <textarea id='source'>
+
+class: center, middle
+
+# Demo: Aliquot Sum
+
+## Data Analysis with R and Python
+
+### Deepayan Sarkar
+
+<h1 onclick='document.documentElement.requestFullscreen();' style='cursor: pointer;'>
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrows-fullscreen' viewBox='0 0 16 16'>
+  <path fill-rule='evenodd' d='M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z'/>
+</svg>
+</h1>
+
+---
+
+
+
+
+
+$$
+\newcommand{\sub}{_}
+$$
+
+
+
+# Calculating Aliquot Sum
+
+* We will compare the speed of some implementations
+
+	* R using for loop
+	
+	* R using vectorization
+	
+	* C++ through Rcpp
+
+
+---
+
+	
+# The Basic Algorithm
+
+.algorithm[
+.name[`aliquot\_sum(n)`]
+__if__ (n < 4) __return__ 1
+k = $\lfloor \sqrt{ \texttt{n}} \rfloor$
+S = 1
+__for__ (i = 2, 3, ..., k) {
+    __if__ (n mod i == 0) {
+        S = S + i + (n/i)
+    }
+}
+__if__ (k * k == n) {
+    S = S - k           // avoid double counting
+}
+__return__ S
+]
+
+
+---
+
+# R Implementation: Version 1 using for loop
+
+
+``` r
+aliquot_sum_1 <- function(n) {
+    if (n < 4) return(1)
+    k = floor(sqrt(n))
+    S = 1
+    for (i in seq(2, k))
+        if (n %% i == 0)
+            S <-  S + i + (n/i)
+    if (k * k == n) S  <- S - k
+    S
+}
+```
+
+---
+
+# R Implementation: Version 2 using vectorization
+
+
+``` r
+aliquot_sum_2 <- function(n) {
+    if (n < 4) return(1)
+    k <- floor(sqrt(n))
+    i <- seq(2, k)
+    div <- i[n %% i == 0]
+    S <- 1 + sum(div) + sum(n / div)
+    if (k * k == n) S  <- S - k
+    S
+}
+```
+
+---
+
+# R Implementation: Variation of version 2
+
+
+``` r
+aliquot_sum_3 <- function(n) {
+    if (n < 4) return(1)
+    k <- floor(sqrt(n))
+    i <- seq(2, k)
+    div <- i[n %% i == 0]
+    1 + sum(div) + sum(n / div) - k * (k * k == n)
+}
+```
+
+---
+
+# R Implementation: Version 4 (direct calculation)
+
+
+``` r
+aliquot_sum_0 <- function(n) {
+    if (n == 1) return(1)
+    i <- seq(1, n-1)
+    sum(i[n %% i == 0])
+}
+```
+
+
+
+
+---
+
+# Check for correctness
+
+
+.scrollable500[
+
+
+``` r
+k <- 1:30
+data.frame(v0 = sapply(k, aliquot_sum_0),
+           v1 = sapply(k, aliquot_sum_1),
+           v2 = sapply(k, aliquot_sum_2),
+           v3 = sapply(k, aliquot_sum_3))
+```
+
+```
+   v0 v1 v2 v3
+1   1  1  1  1
+2   1  1  1  1
+3   1  1  1  1
+4   3  3  3  3
+5   1  1  1  1
+6   6  6  6  6
+7   1  1  1  1
+8   7  7  7  7
+9   4  4  4  4
+10  8  8  8  8
+11  1  1  1  1
+12 16 16 16 16
+13  1  1  1  1
+14 10 10 10 10
+15  9  9  9  9
+16 15 15 15 15
+17  1  1  1  1
+18 21 21 21 21
+19  1  1  1  1
+20 22 22 22 22
+21 11 11 11 11
+22 14 14 14 14
+23  1  1  1  1
+24 36 36 36 36
+25  6  6  6  6
+26 16 16 16 16
+27 13 13 13 13
+28 28 28 28 28
+29  1  1  1  1
+30 42 42 42 42
+```
+
+]
+
+---
+
+layout: true
+
+# Timing comparison
+
+---
+
+* R function `system.time()`
+
+--
+
+* Argument is the "expression" to be evaluated
+
+--
+
+
+``` r
+k <- 1:40000
+system.time(v0 <- sapply(k, aliquot_sum_0))
+```
+
+```
+   user  system elapsed 
+  7.042   3.840  10.989 
+```
+
+--
+
+
+``` r
+k[v0 == k]
+```
+
+```
+[1]    1    6   28  496 8128
+```
+
+---
+
+
+``` r
+system.time(v1 <- sapply(k, aliquot_sum_1))
+```
+
+```
+   user  system elapsed 
+  0.970   0.003   0.974 
+```
+
+``` r
+k[v1 == k]
+```
+
+```
+[1]    1    6   28  496 8128
+```
+
+
+---
+
+
+``` r
+system.time(v2 <- sapply(k, aliquot_sum_2))
+```
+
+```
+   user  system elapsed 
+  0.389   0.042   0.433 
+```
+
+``` r
+k[v2 == k]
+```
+
+```
+[1]    1    6   28  496 8128
+```
+
+
+---
+
+
+``` r
+system.time(v3 <- sapply(k, aliquot_sum_3))
+```
+
+```
+   user  system elapsed 
+  0.369   0.040   0.409 
+```
+
+``` r
+k[v3 == k]
+```
+
+```
+[1]    1    6   28  496 8128
+```
+
+
+---
+
+* How large can we go?
+
+
+``` r
+k2 <- 1:1e6 # 10^6 = 1 million
+system.time(v <- sapply(k2, aliquot_sum_3))
+```
+
+```
+   user  system elapsed 
+ 16.473   1.131  17.669 
+```
+
+``` r
+k2[v == k2]
+```
+
+```
+[1]    1    6   28  496 8128
+```
+
+---
+
+layout: false
+
+# C / C++ Implementation: For even better performance
+
+```c
+int aliquot_sum_4(int n) {
+  if (n < 4) return 1;
+  int k = floor(sqrt(n));
+  int S = 1;
+  for (int i = 2; i <= k; i++) {
+	if (n % i == 0) S = S + i + (n/i);
+  }
+  if (k * k == n) S = S - k;
+  return S;
+}
+```
+
+---
+
+# R can easily interface to C++ through Rcpp
+
+
+``` cpp
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+int aliquot_sum_4(int n) {
+  if (n < 4) return 1;
+  int k = floor(sqrt(n));
+  int S = 1;
+  for (int i = 2; i <= k; i++) {
+	if (n % i == 0) S = S + i + (n/i);
+  }
+  if (k * k == n) S = S - k;
+  return S;
+}
+```
+
+---
+
+# Using Rcpp compiled code from R
+
+
+``` r
+k2 <- 1:1e6 # 10^6 = 1 million
+system.time(w6 <- sapply(k2, aliquot_sum_4))
+```
+
+```
+   user  system elapsed 
+  2.268   0.016   2.295 
+```
+
+``` r
+k2[w6 == k2]
+```
+
+```
+[1]    1    6   28  496 8128
+```
+
+---
+
+layout: true
+
+# Timing for large inputs
+
+---
+
+
+``` r
+system.time(aliquot_sum_4(33550336) |> print())
+```
+
+```
+[1] 33550336
+```
+
+```
+   user  system elapsed 
+      0       0       0 
+```
+
+---
+
+
+``` r
+system.time(aliquot_sum_3(33550336) |> print())
+```
+
+```
+[1] 33550336
+```
+
+```
+   user  system elapsed 
+      0       0       0 
+```
+
+
+``` r
+system.time(aliquot_sum_1(33550336) |> print())
+```
+
+```
+[1] 33550336
+```
+
+```
+   user  system elapsed 
+  0.001   0.000   0.001 
+```
+
+--
+
+
+``` r
+system.time(aliquot_sum_0(33550336) |> print())
+```
+
+```
+[1] 33550336
+```
+
+```
+   user  system elapsed 
+  0.859   0.185   1.047 
+```
+
+
+---
+
+layout: false
+
+# Application: Aliquot Sum Sequence
+
+* For integer $N$, define
+
+	* $a_0 = N$
+
+	* $a\sub{i+1} = \texttt{aliquot_sum}(a\sub{i})$ for $i \geq 0$
+	
+* How does this sequence behave?
+
+---
+
+# Simple implementation
+
+
+``` r
+aliquot_seq <- function(n, length = 25) {
+    ans <- c(n, numeric(length))
+    for (i in 1:length)
+        ans[i+1] <- aliquot_sum_4(ans[i])
+    ans
+}
+```
+
+---
+
+layout: true
+
+# Examples
+
+---
+
+
+``` r
+plot(aliquot_seq(190), type = "o")
+```
+
+![plot of chunk aseq190](figures/demo-aliqseq-aseq190-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(200), type = "o")
+```
+
+![plot of chunk aseq200](figures/demo-aliqseq-aseq200-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(220), type = "o")
+```
+
+![plot of chunk aseq220](figures/demo-aliqseq-aseq220-1.svg)
+
+
+---
+
+
+``` r
+plot(aliquot_seq(222), type = "o")
+```
+
+![plot of chunk aseq222](figures/demo-aliqseq-aseq222-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(224), type = "o")
+```
+
+![plot of chunk aseq224](figures/demo-aliqseq-aseq224-1.svg)
+
+---
+
+* Look for interesting ones
+
+
+``` r
+for (i in 10:1000)
+    if (aliquot_seq(i, 100)[100] > 1000)
+        print(i)
+```
+
+```
+[1] 138
+[1] 150
+[1] 168
+[1] 222
+[1] 234
+[1] 312
+[1] 528
+[1] 570
+[1] 726
+[1] 870
+[1] 960
+```
+
+---
+
+
+``` r
+plot(aliquot_seq(960), type = "o")
+```
+
+![plot of chunk aseq960](figures/demo-aliqseq-aseq960-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(960), type = "o", log = "y")
+```
+
+![plot of chunk logaseq960](figures/demo-aliqseq-logaseq960-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(870), type = "o", log = "y")
+```
+
+![plot of chunk logaseq870](figures/demo-aliqseq-logaseq870-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(726), type = "o", log = "y")
+```
+
+![plot of chunk logaseq726](figures/demo-aliqseq-logaseq726-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(570), type = "o", log = "y")
+```
+
+![plot of chunk logaseq570](figures/demo-aliqseq-logaseq570-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(528), type = "o", log = "y")
+```
+
+![plot of chunk logaseq528](figures/demo-aliqseq-logaseq528-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(312), type = "o", log = "y")
+```
+
+![plot of chunk logaseq312](figures/demo-aliqseq-logaseq312-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(138, 100), type = "o", log = "y")
+```
+
+![plot of chunk logaseq138](figures/demo-aliqseq-logaseq138-1.svg)
+
+---
+
+
+``` r
+plot(aliquot_seq(276, 100), type = "o", log = "y")
+```
+
+```
+Warning in xy.coords(x, y, xlabel, ylabel, log): 1 y value <= 0 omitted from
+logarithmic plot
+```
+
+![plot of chunk logaseq276](figures/demo-aliqseq-logaseq276-1.svg)
+
+---
+
+
+``` r
+aliquot_seq(276, 50)
+```
+
+```
+ [1]         276         396         696        1104        1872        3770
+ [7]        3790        3050        2716        2772        5964       10164
+[13]       19628       19684       22876       26404       30044       33796
+[19]       38780       54628       54684      111300      263676      465668
+[25]      465724      465780     1026060     2325540     5335260    11738916
+[31]    23117724    45956820   121129260   266485716   558454764  1092873236
+[37]  1470806764  1471882804  1642613196 -1557278412           1           1
+[43]           1           1           1           1           1           1
+[49]           1           1           1
+```
+
+--
+
+* How can we fix this? 
+
+---
+
+layout: false
+
+class: center middle
+
+# If you want to learn more about this...
+
+<iframe width="840" height="472" src="https://www.youtube.com/embed/OtYKDzXwDEE?si=vlpuB6eYglqceGUa" title="YouTube video player" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+
+
+
+
+    </textarea>
+  </body>
+
+  <script 
+	  src='assets/remark-latest.min.js'
+	  type='text/javascript'></script>
+
+  <script type='text/javascript'>
+    var slideshow = remark.create(
+	{
+	    navigation: {scroll: false,},
+	    ratio: '16:9',
+	    // ratio: '4:3',
+	    countIncrementalSlides: false
+	});
+
+    // Function to add copy buttons
+    function addCopyButtons() {
+      const codeBlocks = document.querySelectorAll('.remark-code');
+      codeBlocks.forEach((codeBlock) => {
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+    
+        button.addEventListener('click', () => {
+          button.textContent = '';
+          const code = codeBlock.innerText;
+          navigator.clipboard.writeText(code).then(() => {
+            button.textContent = 'Copied!';
+            setTimeout(() => button.textContent = 'Copy', 2000);
+          });
+        });
+    
+        codeBlock.style.position = 'relative'; // Ensure button is positioned correctly
+        codeBlock.appendChild(button);
+      });
+    }
+
+    // Run after slide load
+    window.onload = addCopyButtons;
+
+    // Setup MathJax; unused if mathjax == false
+    MathJax = {
+	tex: {
+	    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+	    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ]
+	},
+	svg: {
+	    fontCache: 'global'
+	},
+    };
+
+  </script>
+
+  <script type='text/javascript' async
+	  src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'>
+  </script>
+
+</html>
+

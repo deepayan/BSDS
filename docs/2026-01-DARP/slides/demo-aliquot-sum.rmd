@@ -1,0 +1,426 @@
+---
+layout: remark
+title: Demo: Aliquot Sum
+subtitle: Data Analysis with R and Python
+author: Deepayan Sarkar
+mathjax: true
+---
+
+```{r opts, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+opts_chunk$set(cache = TRUE, cache.path='~/knitr-cache/darp-demo-aliquot/', autodep = TRUE,
+               comment = "", warning = TRUE, message = TRUE,
+			   ## engine.path = list(python = "/usr/bin/python3"),
+               fig.width = 16, fig.height = 7,
+               dev = "svglite", dev.args = list(pointsize = 20),
+               knitr.table.format = "html",
+			   fig.path='figures/demo-aliqseq-')
+options(warnPartialMatchDollar = FALSE, width = 80)
+```
+
+$$
+\newcommand{\sub}{_}
+$$
+
+
+
+# Calculating Aliquot Sum
+
+* We will compare the speed of some implementations
+
+	* R using for loop
+	
+	* R using vectorization
+	
+	* C++ through Rcpp
+
+
+---
+
+	
+# The Basic Algorithm
+
+.algorithm[
+.name[`aliquot\_sum(n)`]
+__if__ (n < 4) __return__ 1
+k = $\lfloor \sqrt{ \texttt{n}} \rfloor$
+S = 1
+__for__ (i = 2, 3, ..., k) {
+    __if__ (n mod i == 0) {
+        S = S + i + (n/i)
+    }
+}
+__if__ (k * k == n) {
+    S = S - k           // avoid double counting
+}
+__return__ S
+]
+
+
+---
+
+# R Implementation: Version 1 using for loop
+
+```{r}
+aliquot_sum_1 <- function(n) {
+    if (n < 4) return(1)
+    k = floor(sqrt(n))
+    S = 1
+    for (i in seq(2, k))
+        if (n %% i == 0)
+            S <-  S + i + (n/i)
+    if (k * k == n) S  <- S - k
+    S
+}
+```
+
+---
+
+# R Implementation: Version 2 using vectorization
+
+```{r}
+aliquot_sum_2 <- function(n) {
+    if (n < 4) return(1)
+    k <- floor(sqrt(n))
+    i <- seq(2, k)
+    div <- i[n %% i == 0]
+    S <- 1 + sum(div) + sum(n / div)
+    if (k * k == n) S  <- S - k
+    S
+}
+```
+
+---
+
+# R Implementation: Variation of version 2
+
+```{r}
+aliquot_sum_3 <- function(n) {
+    if (n < 4) return(1)
+    k <- floor(sqrt(n))
+    i <- seq(2, k)
+    div <- i[n %% i == 0]
+    1 + sum(div) + sum(n / div) - k * (k * k == n)
+}
+```
+
+---
+
+# R Implementation: Version 4 (direct calculation)
+
+```{r}
+aliquot_sum_0 <- function(n) {
+    if (n == 1) return(1)
+    i <- seq(1, n-1)
+    sum(i[n %% i == 0])
+}
+```
+
+
+
+
+---
+
+# Check for correctness
+
+
+.scrollable500[
+
+```{r}
+k <- 1:30
+data.frame(v0 = sapply(k, aliquot_sum_0),
+           v1 = sapply(k, aliquot_sum_1),
+           v2 = sapply(k, aliquot_sum_2),
+           v3 = sapply(k, aliquot_sum_3))
+```
+
+]
+
+---
+
+layout: true
+
+# Timing comparison
+
+---
+
+* R function `system.time()`
+
+--
+
+* Argument is the "expression" to be evaluated
+
+--
+
+```{r}
+k <- 1:40000
+system.time(v0 <- sapply(k, aliquot_sum_0))
+```
+
+--
+
+```{r}
+k[v0 == k]
+```
+
+---
+
+```{r}
+system.time(v1 <- sapply(k, aliquot_sum_1))
+k[v1 == k]
+```
+
+
+---
+
+```{r}
+system.time(v2 <- sapply(k, aliquot_sum_2))
+k[v2 == k]
+```
+
+
+---
+
+```{r}
+system.time(v3 <- sapply(k, aliquot_sum_3))
+k[v3 == k]
+```
+
+
+---
+
+* How large can we go?
+
+```{r}
+k2 <- 1:1e6 # 10^6 = 1 million
+system.time(v <- sapply(k2, aliquot_sum_3))
+k2[v == k2]
+```
+
+---
+
+layout: false
+
+# C / C++ Implementation: For even better performance
+
+```c
+int aliquot_sum_4(int n) {
+  if (n < 4) return 1;
+  int k = floor(sqrt(n));
+  int S = 1;
+  for (int i = 2; i <= k; i++) {
+	if (n % i == 0) S = S + i + (n/i);
+  }
+  if (k * k == n) S = S - k;
+  return S;
+}
+```
+
+---
+
+# R can easily interface to C++ through Rcpp
+
+```{Rcpp}
+#include <Rcpp.h>
+
+// [[Rcpp::export]]
+int aliquot_sum_4(int n) {
+  if (n < 4) return 1;
+  int k = floor(sqrt(n));
+  int S = 1;
+  for (int i = 2; i <= k; i++) {
+	if (n % i == 0) S = S + i + (n/i);
+  }
+  if (k * k == n) S = S - k;
+  return S;
+}
+```
+
+---
+
+# Using Rcpp compiled code from R
+
+```{r}
+k2 <- 1:1e6 # 10^6 = 1 million
+system.time(w6 <- sapply(k2, aliquot_sum_4))
+k2[w6 == k2]
+```
+
+---
+
+layout: true
+
+# Timing for large inputs
+
+---
+
+```{r}
+system.time(aliquot_sum_4(33550336) |> print())
+```
+
+---
+
+```{r}
+system.time(aliquot_sum_3(33550336) |> print())
+```
+
+```{r}
+system.time(aliquot_sum_1(33550336) |> print())
+```
+
+--
+
+```{r}
+system.time(aliquot_sum_0(33550336) |> print())
+```
+
+
+---
+
+layout: false
+
+# Application: Aliquot Sum Sequence
+
+* For integer $N$, define
+
+	* $a_0 = N$
+
+	* $a\sub{i+1} = \texttt{aliquot_sum}(a\sub{i})$ for $i \geq 0$
+	
+* How does this sequence behave?
+
+---
+
+# Simple implementation
+
+```{r}
+aliquot_seq <- function(n, length = 25) {
+    ans <- c(n, numeric(length))
+    for (i in 1:length)
+        ans[i+1] <- aliquot_sum_4(ans[i])
+    ans
+}
+```
+
+---
+
+layout: true
+
+# Examples
+
+---
+
+```{r aseq190}
+plot(aliquot_seq(190), type = "o")
+```
+
+---
+
+```{r aseq200}
+plot(aliquot_seq(200), type = "o")
+```
+
+---
+
+```{r aseq220}
+plot(aliquot_seq(220), type = "o")
+```
+
+
+---
+
+```{r aseq222}
+plot(aliquot_seq(222), type = "o")
+```
+
+---
+
+```{r aseq224}
+plot(aliquot_seq(224), type = "o")
+```
+
+---
+
+* Look for interesting ones
+
+```{r}
+for (i in 10:1000)
+    if (aliquot_seq(i, 100)[100] > 1000)
+        print(i)
+```
+
+---
+
+```{r aseq960}
+plot(aliquot_seq(960), type = "o")
+```
+
+---
+
+```{r logaseq960}
+plot(aliquot_seq(960), type = "o", log = "y")
+```
+
+---
+
+```{r logaseq870}
+plot(aliquot_seq(870), type = "o", log = "y")
+```
+
+---
+
+```{r logaseq726}
+plot(aliquot_seq(726), type = "o", log = "y")
+```
+
+---
+
+```{r logaseq570}
+plot(aliquot_seq(570), type = "o", log = "y")
+```
+
+---
+
+```{r logaseq528}
+plot(aliquot_seq(528), type = "o", log = "y")
+```
+
+---
+
+```{r logaseq312}
+plot(aliquot_seq(312), type = "o", log = "y")
+```
+
+---
+
+```{r logaseq138}
+plot(aliquot_seq(138, 100), type = "o", log = "y")
+```
+
+---
+
+```{r logaseq276}
+plot(aliquot_seq(276, 100), type = "o", log = "y")
+```
+
+---
+
+```{r}
+aliquot_seq(276, 50)
+```
+
+--
+
+* How can we fix this? 
+
+---
+
+layout: false
+
+class: center middle
+
+# If you want to learn more about this...
+
+<iframe width="840" height="472" src="https://www.youtube.com/embed/OtYKDzXwDEE?si=vlpuB6eYglqceGUa" title="YouTube video player" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+
