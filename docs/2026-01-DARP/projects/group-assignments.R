@@ -103,7 +103,7 @@ G <- cbind(G1, best_G2)
 
 rowSums(G) # each student (row) is in two groups
 colSums(G) # each group (column) has 6 students
-lattice::levelplot(crossprod(G), main = "Number of common students in group i and group j")
+lattice::levelplot(crossprod(G) - 6 * diag(24), main = "Number of common students in group i and group j")
 
 
 ## Final groups (each column of G is a group)
@@ -113,6 +113,7 @@ for (j in seq(1, ncol(G))) {
     cat(ROLLNUM[G[, j] == 1], sep = ", ")
     cat("\n\n")
 }
+
 
 
 
