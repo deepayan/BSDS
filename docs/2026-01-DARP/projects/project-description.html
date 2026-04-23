@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Deepayan Sarkar" />
+  <title>Data Analysis with R and Python</title>
+
+  <link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Serif" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Sans" >
+  
+
+</head>
+
+<body>
+  <div id="page-content">
+    <section>
+
+      <div class="container-sm">
+	<header>
+	  <h1><p>Bachelor of Statistical Data Science (BSDS)</p></h1>
+	  <h2><p>Indian Statistical Institute</p></h2>
+	  <h3><p>Data Analysis with R and Python</p></h3>
+	</header>
+
+<br>
+
+	<h4>Project Descriptions</h3>
+
+<div class="card">
+  <div class="card-header">
+    <strong>Group 1</strong>: Garg Parashar (BSDBG2507), Sejal Kashyap (BSDDH2520), Tenzing Shedup Bhutia (BSDCC2522), Muskan Kumari (BSDBG2524), Shreyas Rohtagi (BSDDH2521), Md Danish (BSDCC2510)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Analysis of Road Safety Trends in India</h5>
+    <p class="card-text">The analysis is based on a comprehensive longitudinal dataset titled "Road Accidents in India 2019," which provides a historical record of traffic-related metrics across five decades. The data captures the evolution of Indian road safety through three primary lenses: absolute incident counts (total accidents, injuries, and fatalities), demographic growth (national population statistics), and infrastructural expansion (total registered motor vehicles and road network length in kilometers). By integrating these diverse variables, the dataset allows for the calculation of normalized risk factors, such as accident rates per 1,00,000 people and fatality rates per 10,000 vehicles, transforming raw historical figures into actionable insights regarding the true trajectory of road safety in India.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 2</strong>: Saurav Kumar (BSDBG2517), Saptarshi Datta (BSDDH2519), Abinaya S (BSDCC2501), Arka Roy (BSDBG2501), Aarav Chugh (BSDDH2501), Mayank Kumar Sahu (BSDCC2509)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Growth Rate of GSDP at Current Prices (1997-98 to 2013-14)</h5>
+    <p class="card-text">The dataset selected for this analysis focuses on the Growth Rate of Gross State Domes
+tic Product (GSDP) at Current Prices for various States and Union Territories (UTs)
+in India. GSDP represents the total value of goods and services produced within the
+boundaries of a state/UT.
+1. Number of Cases: Approximately 33 entities (including Indian States and Union Territories).
+2. Number of Variables: This dataset contains 18 variables (States/UTs and 17 annual growth rate columns).</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 3</strong>: Ashish (BSDBG2502), Pawan Kumar (BSDDH2517), Swapnil Mondal (BSDCC2521), Gagan Krishna S (BSDBG2506), NA (BSDDH2421), Dudam Tridham Sai (BSDCC2505)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">States of India</h5>
+    <p class="card-text">Of the three datasets, the first contains info about states for 37 variables, the second is on DCC banks in the states and, the third is about donation by people in different states. Variables for crimes, development, economy, and demographics are there in the CMIE dataset. The DCC Banks dataset by MoSPI comprehensively lists all the liabilities & assets e.g., deposits, reserves, loans etc., in the states. Only two or three columns from the Donation dataset (by Ashoka University) were used along with columns from the other DF's for analysis. Another dataset by MoSPI on per capita NSDP has also been used.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 4</strong>: Veesam Siva Lakshmi (BSDBG2523), Divyansh Sikka (BSDDH2505), Anmol Sriwastava (BSDCC2503), Ch Bavesh Sai Satya Prakash (BSDBG2504), Omhari Indoria (BSDDH2516), Raunak Kumar Rajak (BSDCC2514)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">State‑wise Analysis of IPC Convictions (2019–2023)</h5>
+    <p class="card-text">The dataset consists of five CSV files, one for each year from 2019 to 2023. Each file records the number of persons convicted under sections of the Indian Penal Code across all states and union territories. The columns list specific crime categories such as murder, rape, kidnapping, theft, robbery, dacoity, dowry deaths, cruelty by husband, etc. Each row lists a single state or union territory of India.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 5</strong>: Thangella Jeevantej (BSDBG2519), Vansh Makhija (BSDDH2523), Shaurya Swaraj (BSDCC2517), Pritham Prajwin V (BSDBG2512), Gagan Shehra (BSDDH2506), Sourish Chaubey (BSDCC2520)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Exploratory Data Analysis of Global Shark Attack Incidents</h5>
+    <p class="card-text">The dataset used in this project contains records of shark attack incidents reported across different countries over multiple years. It includes various attributes such as the year of occurrence, geographic location, activity during the incident, and other contextual details related to each case. This dataset provides a global perspective on shark attack events, enabling the study of how their frequency and characteristics vary across regions and over time. By analyzing this data, it is possible to identify patterns, trends, and relationships that offer insights into the distribution and nature of shark attacks worldwide. For e.g., we will find the correlation b/w the age of victims and fatality rate to find out if age affects the fatality ratio,etc.
+Also, the dataset we have chosen is large and unstructured, which will allow us to clean our dataset, stretching R to its boundaries </p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 6</strong>: Maddikuntla Pavankumar (BSDBG2509), Lakshya Khorwal (BSDDH2510), Yenni Akshay (BSDCC2523), Priyansh Srivastava (BSDBG2513), Disha Monga (BSDDH2504), Shinjan Goswami (BSDCC2518)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Import-Export analysis of various commodities</h5>
+    <p class="card-text">the dataset consists of 5 variables namely : Principle.Commodity, Country, Unit, Quantity, Value(U.S $ in million); for the years 2017-18 to 2020-23. We intend to look for trend in the trade of commodities over years and across countries also whether trade with countries affect the relationship with other.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 7</strong>: Tinku (BSDBG2520), Valluri Leela Sai Krishna (BSDDH2522), Nehal Sachdev (BSDCC2511), Rishikesh Utthari (BSDBG2515), Priyanshu Goyal (BSDDH2518), Rabi Shankar Sah (BSDCC2513)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Impact of Internet Usage on Unemployment</h5>
+    <p class="card-text">The dataset used in this project is taken from the World Bank World Development Indicators database. It contains yearly data for 18 countries from 2005 to 2024, with around 360 observations in total. The dataset includes variables such as internet usage, GDP growth, total unemployment rate, youth unemployment, wage and salaried workers, vulnerable employment, self-employment, and employment in services and industry. This dataset is used to study how internet usage is related to unemployment and how it affects different types of employment across countries over time.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 8</strong>: Boreddy Naga Viswanadh (BSDBG2503), Maharshi Joshi (BSDDH2511), Pinak Majumdar (BSDCC2512), Varshini Tumuluri (BSDBG2522), Diksha (BSDDH2503), Ankesh Raj Aniket (BSDCC2502)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Fast Food Nutrition Analysis</h5>
+    <p class="card-text">The dataset used in this project is the Fast Food Nutrition Dataset, sourced from the TidyTuesday GitHub repository (2018). It contains nutritional information about 515 menu items from popular fast-food restaurant chains such as McDonald's, Burger King, Taco Bell, Sonic, and Chick-fil-A. The dataset consists of 17 variables, where each row represents a unique food item and each column represents a nutritional attribute — including calories, total fat, saturated fat, trans fat, cholesterol, sodium, total carbohydrates, fiber, sugar, protein, and micronutrients such as Vitamin A, Vitamin C, Calcium, and Iron. This dataset is ideal for exploring patterns in fast-food nutrition and understanding the relationship between calorie content and key macronutrients.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 9</strong>: Sagnik Das (BSDBG2516), Neerav Bhuyan (BSDDH2515), Manvi Garodia (BSDCC2508), Manogna Tejaswini Thadaka (BSDDH2513), Utkarsh Bharadwaj (BSDBG2521), Sandip Manna (BSDCC2516)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Billboard Top Songs Analysis (2018–2025)</h5>
+    <p class="card-text">Our dataset contains the top 100 songs for each year 2018-2025 from the Billboard top 100 charts and respective high-level and low-level attributes of them such as tempo, danceability, acousticness, dynamic complexity, loudness and many more (computed utilizing data from AcousticBrainz.). We will be answering questions about the evolution of sound over the years, emotional drivers, optimal duration and production patterns in music using this dataset.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 10</strong>: Manish Gwra Basumatary (BSDBG2510), Harsh Kumar (BSDDH2507), Daksh Kumar (BSDCC2504), Parnika Garg (BSDBG2511), Kavadi Shyam (BSDDH2508), Samriddha Dutta (BSDCC2515)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Global CO₂ Emissions Analysis</h5>
+    <p class="card-text">This dataset, compiled by Our World in Data, provides comprehensive country-level and global data on CO₂ and greenhouse gas emissions spanning from the 19th century to the present day. The dataset contains approximately 50,000 observations with variables such as country, year, CO₂ emissions, GDP, population, and per-capita emissions. By examining these dimensions, our project seeks to understand how industrialization and economic development have shaped global environmental impact over time.
+https://github.com/owid/co2-data/blob/master/owid-co2-data.csv</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 11</strong>: NA (BSDDH2425), NA (BSDDH2411), Dunga Pardha Saradhi (BSDCC2506), Eluri Sai Yashwanth (BSDBG2505), Ketan Vishnoi (BSDDH2509), Kaustubh Agtey (BSDCC2507)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Evolution of Global Meat Production: A Statistical Analysis of Animal Slaughter Trends (1961-2023)</h5>
+    <p class="card-text">We are using R to analyze a global dataset of animal slaughter figures from 1961 to 2023. The goal is to identify structural shifts in human diets, map geographic production trends, and visualize historical anomalies in the meat industry.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 12</strong>: Guravana Lakshmi Narayana Naidu (BSDBG2508), Mahima (BSDDH2512), Shinjan Majumdar (BSDCC2519), Rachapudi Chinmay (BSDBG2514), Abhinav (BSDDH2502)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Socio-Economic (State Level Data) Analysis</h5>
+    <p class="card-text">The dataset selected for analysis focuses on the Socio-Demographic and Labour Statistics of State level data. (Source: OGD, censusindia.gov.in) . Variables-49, Total state population categorised into multiple strata, like gender, Urban-Rural, Working, Occupation, non-working, age group, literacy count. The goal is to analyse the data and answer the research questions in-depth. </p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 13</strong>: Sejal Kashyap (BSDDH2520), Ch Bavesh Sai Satya Prakash (BSDBG2504), Thangella Jeevantej (BSDBG2519), Tinku (BSDBG2520), Pinak Majumdar (BSDCC2512), Parnika Garg (BSDBG2511)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Analysis of Bike Sharing in Seoul</h5>
+    <p class="card-text">The UCI Seoul Bike dataset provides an hourly record of public bicycle rentals within the Seoul Bike Sharing System, spanning a full year from December 2017 to November 2018
+. It contains the Rented Bike Count for each hour paired with multiple weather variables, including temperature, humidity, wind speed, visibility, dew point temperature, solar radiation, rainfall, and snowfall
+.
+The dataset is  interesting because it serves as a mirror of urban behavior, reflecting how the daily movements of a major capital city are influenced by environmental shifts and social schedules
+. By analyzing this information, we can identify peak demand periods and determine the optimal conditions, such as the ideal temperature range, for bike rentals
+. Furthermore, analysis allows for a precise understanding of how adverse weather events, such as heavy rainfall or snowfall, and public holidays impact the overall efficiency and usage of the sharing system</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 14</strong>: Muskan Kumari (BSDBG2524), Abinaya S (BSDCC2501), Lakshya Khorwal (BSDDH2510), Ankesh Raj Aniket (BSDCC2502), Manogna Tejaswini Thadaka (BSDDH2513), Eluri Sai Yashwanth (BSDBG2505)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">“State-wise Quantitative Analysis of Juvenile Crime Categories in India (NCRB 2023)”</h5>
+    <p class="card-text">This project uses the NCRB 2023 juvenile crime dataset, which contains state/UT-wise data for one year (2023) with variables representing the number of juveniles involved in different crime categories (such as theft, burglary, etc.) along with total counts. Each row corresponds to a state, making it a cross-sectional multivariate dataset. What makes this dataset interesting is the variation across states, where some states show higher concentration and different compositions of crime types. The dataset also allows analysis of relationships between crime categories, since certain crimes tend to occur together. Using this, I will perform descriptive analysis, correlation, clustering, and outlier detection to identify patterns, similarities between states, and unusual observations.
+“Unlike synthetic or market-driven data, this dataset captures real human behavior, making every insight directly meaningful for understanding society.”</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 15</strong>: Saurav Kumar (BSDBG2517), Vansh Makhija (BSDDH2523), Yenni Akshay (BSDCC2523), Priyanshu Goyal (BSDDH2518), Manvi Garodia (BSDCC2508), NA (BSDDH2411)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Global Patterns in Military Expenditure: A Cross-Country Analysis</h5>
+    <p class="card-text">This project analyses cross-country data on military expenditure (% of GDP) covering the period 1960–2024, with varying availability across countries and years. The aim is to study long-term trends, persistence in high-spending countries, and structural responses to major geopolitical events.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 16</strong>: Dudam Tridham Sai (BSDCC2505), Shaurya Swaraj (BSDCC2517), Maharshi Joshi (BSDDH2511), NA (BSDDH2425), Ketan Vishnoi (BSDDH2509), Rachapudi Chinmay (BSDBG2514)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Tracking Health Wealth: Analyzing Cross-Country Healthcare Spending and GDP Trends </h5>
+    <p class="card-text">We are analyzing a cross-country economic dataset detailing national healthcare expenditures over several decades. The goal is to perform exploratory data analysis to understand how medical spending per capita and health expenditure as a percentage of GDP vary across different nations and evolve over time.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 17</strong>: Arka Roy (BSDBG2501), Swapnil Mondal (BSDCC2521), Sourish Chaubey (BSDCC2520), Nehal Sachdev (BSDCC2511), Varshini Tumuluri (BSDBG2522), Daksh Kumar (BSDCC2504)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">India's Bilateral Trade Analysis</h5>
+    <p class="card-text">This dataset shows India’s bilateral trade with partner countries using the export import trade balance, partner shares, product diversification, and tariff structures across years and how it affects the trade. It allows analysis of India’s trade relationships, tariff policies, import dependence, export patterns, and changes in trade dynamics over time.The dataset is obtained from World Integrated Trade solution world bank website https://wits.worldbank.org/CountryProfile/en/Country/IND/Year/2013/TradeFlow/EXPIMP#</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 18</strong>: Gagan Krishna S (BSDBG2506), Anmol Sriwastava (BSDCC2503), Pritham Prajwin V (BSDBG2512), Boreddy Naga Viswanadh (BSDBG2503), Neerav Bhuyan (BSDDH2515), Samriddha Dutta (BSDCC2515)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Data Analysis on Indian Tourism </h5>
+    <p class="card-text">The dataset is a collection of 8 official CSV files from India Tourism Statistics, covering the period 1981–2021. It contains long-term trends in Foreign Tourist Arrivals (FTAs), NRI arrivals, and International Tourist Arrivals (in millions) with year-over-year percentage changes; age-group and quarterly distributions of FTAs (2001–2019); comparison of India’s performance with global tourist arrivals; detailed 2019 data on arrivals by region, country of nationality, and purpose of visit (Business & Professional, Leisure & Recreation, Medical, Indian Diaspora, and Others); regional market share (2017–2019); state/UT-wise domestic and foreign tourist visits for 2019–2020 (clearly showing the massive COVID-19 impact); and visitor statistics to major monuments across India for 2019-20 versus 2020-21 with percentage growth rates. This multi-dimensional dataset is ideal for analyzing tourism trends, underrated segments (especially Medical tourism), state potential, regional imbalances, and post-pandemic recovery patterns.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 19</strong>: Saptarshi Datta (BSDDH2519), Priyansh Srivastava (BSDBG2513), Valluri Leela Sai Krishna (BSDDH2522), Kavadi Shyam (BSDDH2508), Dunga Pardha Saradhi (BSDCC2506), Shinjan Majumdar (BSDCC2519)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Net migration </h5>
+    <p class="card-text">The dataset selected for this analysis is sourced from the World Bank’s World Development Indicators (WDI), specifically focusing on Net Migration. Net migration is the
+total number of immigrants (people arriving in a country) minus the number of emigrants
+(people leaving the country) over a specific period.
+1. Number of Cases: Approximately 266 entities (including sovereign nations and regional aggregates like ”Low Income Countries” or ”European Union”).
+2. Number of Variables: This dataset contains 69 variables. These include three categorical descriptors—Country Name, Country Code, and Indicator Code — and multiple numerical variables representing each recorded year (1960 through 2025)
+3. Net Migration (Numerical): The primary variable of interest. A positive value indicates a             pull” factor (more people entering), while a negative value indicates a ”push” factor (more     people leaving due to conflict, economic hardship, or climate change).
+4. Yearly Time-Series: These variables allow for longitudinal analysis to identify historical  spikes corresponding to global events </p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 20</strong>: Mayank Kumar Sahu (BSDCC2509), NA (BSDDH2421), Divyansh Sikka (BSDDH2505), Diksha (BSDDH2503), Kaustubh Agtey (BSDCC2507)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Analysis of Chess Data</h5>
+    <p class="card-text">The dataset contains online chess games from the Lichess database, where each entry represents a game with information on player ratings (Elo), game outcome, opening played, and number of moves. It is used to analyze how player strength and game characteristics influence results.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 21</strong>: Shreyas Rohtagi (BSDDH2521), Raunak Kumar Rajak (BSDCC2514), Disha Monga (BSDDH2504), Sandip Manna (BSDCC2516), Manish Gwra Basumatary (BSDBG2510), Mahima (BSDDH2512)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Clinical Trials on Diabetes from 2003-2024</h5>
+    <p class="card-text">This dataset has been compiled from ClinicalTrials.gov, and contains observations of 50 completed clinical trials focused on Diabetes spanning from 2003 to 2024. The dataset consists of 7 variables. By investigating these variables, our project seeks to understand the evolution of diabetes research over time, and the relationship between diabetes and comorbidities like hypertension, obesity, and heart failure.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 22</strong>: Md Danish (BSDCC2510), Pawan Kumar (BSDDH2517), Omhari Indoria (BSDDH2516), Gagan Shehra (BSDDH2506), Shinjan Goswami (BSDCC2518), Rishikesh Utthari (BSDBG2515)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Nutrition Databank</h5>
+    <p class="card-text">It lists amounts of nearly 40 nutrients and minerals for 1014 dishes (mostly Indian; few are from US and UK). The data for each item is present in two forms: per 100g and unit serving. The data collected by Anuvaad is sourced from several official journals e.g., ICMR, CoFID etc., as well as blog posts.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 23</strong>: Tenzing Shedup Bhutia (BSDCC2522), Ashish (BSDBG2502), Veesam Siva Lakshmi (BSDBG2523), Sagnik Das (BSDBG2516), Harsh Kumar (BSDDH2507), Guravana Lakshmi Narayana Naidu (BSDBG2508)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Handling Imbalanced Aerospace Data: A case study on the Wilt Dataset</h5>
+    <p class="card-text">Our dataset is the Wilt Dataset, and it is sourced from the UCI Machine Learning Repository. It contains 4,839 observations derived from high-resolution Quick bird satellite imagery designed to detect a deadly plant disease("Wilt") in forested areas. The dataset features six variables. Among those 5 are continuous independent variables measuring spectral line bands and physical texture and one is categorical target variable classifying the tree's health as either "Wilt" or "Healthy". This dataset is highly imbalanced, with nearly 95% of the observations are classified as healthy, presenting a unique opportunity to apply advanced predictive modeling and data analysis techniques to accurately detect ecological decay from orbit.</p>
+  </div>
+</div>
+
+<br>
+<div class="card">
+  <div class="card-header">
+    <strong>Group 24</strong>: Garg Parashar (BSDBG2507), Aarav Chugh (BSDDH2501), Maddikuntla Pavankumar (BSDBG2509), Rabi Shankar Sah (BSDCC2513), Utkarsh Bharadwaj (BSDBG2521), Abhinav (BSDDH2502)
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Beyond the Deficit: A 35-Year Empirical Analysis of India's Foreign Trade Dynamics (1990–2025)</h5>
+    <p class="card-text">The dataset utilised in this study, sourced from the Reserve Bank of India (RBI) Database on the Indian Economy ("Table No. 32: Foreign Trade"), provides a comprehensive view of India's macroeconomic trade performance. Spanning a 35-year time frame from January 1990 to December 2025, it encompasses 429 monthly observations across 20 distinct variables. The data tracks total merchandise Exports, Imports, and the resulting Trade Balance, with all values quantified in both Indian Rupees (Crores) and US Dollars (Millions) to account for currency fluctuations. Crucially, for observations from 2011 onwards, the dataset further dis-aggregates these figures into "Oil" and "Non-oil" components, offering a highly granular perspective on India's domestic manufacturing competitiveness and its heavy dependency on global energy markets.</p>
+  </div>
+</div>
+
+	
+
+      </div>
+    </section>
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+	crossorigin="anonymous">
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+	crossorigin="anonymous">
+</script>
+
+
+</body>
+</html>
